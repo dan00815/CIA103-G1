@@ -20,25 +20,25 @@ public class BBVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Integer msgid;
-	
+
 	private Byte msgtype;
-	
+
 	private String msgtitle;
-	
+
 	private String msgcon;
-	
+
 	private Byte poststat;
 
 	private Timestamp posttime;
-	
+
 	@Column(name = "isPinned", nullable = false)
 	private Boolean isPinned = false;
-	
+
 	public BBVO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public BBVO(Integer msgid, Byte msgtype, String msgtitle, String msgcon, Byte poststat, Timestamp posttime,
 			Boolean isPinned) {
 		super();
@@ -60,7 +60,7 @@ public class BBVO implements java.io.Serializable{
 	public void setMsgid(Integer msgid) {
 		this.msgid = msgid;
 	}
-	
+
 	@Column(name = "msgType")
 	@NotNull(message="公告類型: 請勿空白")
 	@Min(value = 0, message = "公告類型值無效")
@@ -71,7 +71,7 @@ public class BBVO implements java.io.Serializable{
 	public void setMsgtype(Byte msgtype) {
 		this.msgtype = msgtype;
 	}
-	
+
 	@Column(name = "msgTitle")
 	@NotEmpty(message="公告標題: 請勿空白")
 	public String getMsgtitle() {
@@ -80,7 +80,7 @@ public class BBVO implements java.io.Serializable{
 	public void setMsgtitle(String msgtitle) {
 		this.msgtitle = msgtitle;
 	}
-	
+
 	@Column(name = "msgCon")
 	@NotEmpty(message="公告內容: 請勿空白")
 	public String getMsgcon() {
@@ -89,7 +89,7 @@ public class BBVO implements java.io.Serializable{
 	public void setMsgcon(String msgcon) {
 		this.msgcon = msgcon;
 	}
-	
+
 	@Column(name = "postStat")
 	@NotNull(message="發布狀態: 請勿空白")
 	@Min(value = 0, message = "發布狀態只能為發佈或未發佈")
@@ -100,7 +100,7 @@ public class BBVO implements java.io.Serializable{
 	public void setPoststat(Byte poststat) {
 		this.poststat = poststat;
 	}
-	
+
 	@Column(name = "postTime")
 	public Timestamp getPosttime() {
 		return this.posttime;
@@ -108,7 +108,7 @@ public class BBVO implements java.io.Serializable{
 	public void setPosttime(Timestamp posttime) {
 		this.posttime = posttime;
 	}
-	
+
 	public Boolean getIsPinned() {
 	    return isPinned;
 	}
@@ -116,6 +116,6 @@ public class BBVO implements java.io.Serializable{
 	public void setIsPinned(Boolean isPinned) {
 	    this.isPinned = isPinned;
 	}
-	
+
 
 }
