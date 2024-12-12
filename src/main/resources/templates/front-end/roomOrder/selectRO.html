@@ -19,15 +19,14 @@
 <body>
 	<div th:insert="~{/front-end/nav :: nav}"></div>
     <div id="header"><i class="fa-solid fa-box"></i> 訂單管理</div>
-   	<div id="sub-header"><i class="fa-solid fa-clipboard-list"></i> 查詢訂房明細</div>
+   	<div id="sub-header"><i class="fa fa-search"></i> 查詢訂房明細</div>
 		<form class="cus_form" method="post" th:action="@{roomOrderList}">
 			<div>
 			<label for="search-Id">輸入行程訂單編號 (如: 1):</label>
 			<input class="form-control" id="search-Id" name="planOrderId" type="text" th:value="${param.planOrderId}">
-			<div th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></div>
-			<small id="error-msg" class="text-danger d-none">此欄位不可為空，請輸入行程訂單編號！</small>
-			<button type="submit" class="btn">
-				送出查詢
+			<span th:if="${errorMessage2}" th:text="${errorMessage2}" class="text-danger"></span>
+			<br><button type="submit" class="btn">
+				<i class="fa fa-search"></i> 送出查詢
 				<span class="inner">
 					<span class="blob"></span>
 					<span class="blob"></span>

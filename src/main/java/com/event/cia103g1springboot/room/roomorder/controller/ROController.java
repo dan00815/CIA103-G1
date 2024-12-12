@@ -2,10 +2,12 @@ package com.event.cia103g1springboot.room.roomorder.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,6 +66,54 @@ public class ROController {
 		return "back-end/roomOrder/select_page_RO";
 	}
 	
+	
+	@PostMapping("roomOrderListBack")
+	public String roomOrderList(@RequestParam(value = "planOrderId", required = false) String planOrderId, ModelMap model) {
+	    if (planOrderId == null || planOrderId.trim().isEmpty()) {
+	        model.addAttribute("errorMessage2", "行程訂單編號不可為空白");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+
+	    // 確保轉換為數字時不報錯
+	    Integer planOrderIdInt;
+	    try {
+	        planOrderIdInt = Integer.valueOf(planOrderId);
+	    } catch (NumberFormatException e) {
+	        model.addAttribute("errorMessage2", "行程訂單編號格式不正確");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+
+	    // 查詢計劃訂單
+	    PlanOrder newPO = poSvc.getOnePlanOrder(planOrderIdInt);
+	    if (newPO == null) {
+	        model.addAttribute("errorMessage2", "查無此行程訂單資料");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+	    // 查詢房型訂單
+	    List<ROVO> roListByPOId = roSvc.getByPlan(newPO.getPlanOrderId());
+	    if (roListByPOId == null || roListByPOId.isEmpty()) {
+	        model.addAttribute("planOrder", newPO);
+	        model.addAttribute("errorMessage2", "該行程訂單下無任何房型訂單資料");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+
+	    // 確保非空後處理
+	    ROVO firstRO = roListByPOId.get(0);
+	    RTVO newRT = rtSvc.getOneRT(firstRO.getRtVO().getRoomTypeId());
+	    if (newRT == null) {
+	        model.addAttribute("errorMessage2", "無法查詢到對應的房型資訊");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+
+	    // 將查詢結果放入 model
+	    model.addAttribute("planOrder", newPO);
+	    model.addAttribute("roListData", roListByPOId);
+	    model.addAttribute("rtVO", newRT);
+
+	    return "back-end/roomOrder/listAllRO";
+	}
+
+	
 	@PostMapping("insertRO")
 	public String insertRO (@ModelAttribute("roVO")@Valid ROVO roVO ,BindingResult result , ModelMap model)throws IOException{
 		try {
@@ -84,28 +134,6 @@ public class ROController {
 		}
 	}
 	
-//	@PostMapping("insertROByPO")
-//	public String insertROByPO (@Valid PlanOrder order, Map<Object, Object> roomData,BindingResult result,ModelMap model)throws IOException{ 
-//		ROVO roVO = new ROVO();
-//		model.addAttribute("roVO",roVO);
-//		if(result.hasErrors()) {
-//			model.addAttribute("errorMessage","房型訂單明細新增失敗");			
-//			return "redirect:/planord/detail/";
-//		}
-//		
-//    	PlanOrder newPO = poSvc.getOnePlanOrder(order.getPlanOrderId());
-//    	RTVO rtVO = rtSvc.getOneRT(Integer.parseInt(roomData.get("roomTypeId").toString()));
-//    	roVO.setPlanOrder(newPO);
-//    	roVO.setOrderQty(Integer.parseInt(roomData.get("roomQty").toString()));
-//    	roVO.setRtVO(rtVO);
-//    	roVO.setRoomPrice(Integer.parseInt(roomData.get("roomPrice").toString()));
-//    	roVO.setOrderQty(Integer.parseInt(roomData.get("roomQty").toString()));
-//		roSvc.addRO(roVO);
-//		List<ROVO> list = roSvc.getAllRO();
-//		model.addAttribute("roListData",list);
-//		model.addAttribute("success","-(新增成功)");
-//		return "back-end/roomOrder/listAllRO";
-//	}
 	
 	@PostMapping("getRO_For_Update")
 	public String getRO_For_Update (@RequestParam("roomOrderId")String roomOrderId,ModelMap model) {
