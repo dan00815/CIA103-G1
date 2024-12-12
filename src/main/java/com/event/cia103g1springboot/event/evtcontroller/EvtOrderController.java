@@ -34,6 +34,7 @@ public class EvtOrderController {
     EvtOrderService evtOrderService;
     @Autowired
     EvtService evtService;
+    
     @Autowired
     private JavaMailSender mailSender;
 
@@ -42,6 +43,8 @@ public class EvtOrderController {
 
     @Autowired
     private MemService memService;
+    
+
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;

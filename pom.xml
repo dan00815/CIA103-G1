@@ -70,7 +70,26 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- ========================================================================================== -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <!-- <version>5.6.9.Final</version> -->
+        </dependency>
 
+        <!-- hibernate-c3p0 連線池 -->                  <!-- spring-boot 已內建依賴，但預設未下載 -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <!-- <version>5.6.9.Final</version> -->
+        </dependency>
+
+        <!-- hibernate-proxool 連線池 -->               <!-- spring-boot 已內建依賴，但預設未下載 -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-proxool</artifactId>
+            <!-- <version>5.6.9.Final</version> -->
+        </dependency>
         <!-- ========================================================================================== -->
         <!-- ●以下為 Web App 預備使用● -->
 
@@ -125,7 +144,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <!-- <version>6.2.3.Final</version> -->
+             <version>6.2.3.Final</version>
         </dependency>
 
 

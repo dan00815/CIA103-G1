@@ -20,6 +20,7 @@ import com.event.cia103g1springboot.bb.model.BBVO;
 
 
 
+
 public class HibernateUtil_CompositeQuery_BB {
 
 	public static Predicate get_aPredicate_For_AnyDB(CriteriaBuilder builder,Root<BBVO> root, String columnName, String value) {

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{back-end/emp/base}">
+<head>
+    <title>員工登錄</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <form id="loginForm" th:action="@{/api/employee/login}" method="post" class="form">
+            <h2>員工登錄</h2>
+            
+            <div class="form-group">
+                <label for="empAcct">帳號：</label>
+                <input type="text" id="empAcct" name="empAcct" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label for="empPwd">密碼：</label>
+                <input type="password" id="empPwd" name="empPwd" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <button type="submit" class="btn">
+                登錄
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+            </button>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a th:href="@{/emp/register}" class="btn">
+                    註冊新帳號
+                    <span class="inner">
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                    </span>
+                </a>
+                <a th:href="@{/emp/reset-password}" class="btn">
+                    忘記密碼
+                    <span class="inner">
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                    </span>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            $(function() {
+                $("#loginForm").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            empAcct: $("#empAcct").val(),
+                            empPwd: $("#empPwd").val()
+                        }),
+                        success: function(response) {
+                            // 將用戶訊息保存到localStorage
+                            localStorage.setItem('loginUser', JSON.stringify(response));
+                            alert("登錄成功");
+                            window.location.href = "/emp/list";
+                        },
+                        error: function() {
+                            alert("登錄失敗，請檢查帳號密碼");
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

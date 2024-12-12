@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" />
 	<link rel="stylesheet" th:href="@{/css/bb.css}" />
 	<link rel="stylesheet" th:href="@{/css/elm.css}" />
+	<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
+    />
 	<style>
         #pdt th, #pdt td {
             text-align: center;
@@ -35,6 +39,7 @@
 	</style>
 </head>
 <body>
+	<div th:insert="~{/front-end/nav :: nav}"></div>
     <div id="header" class="text-center py-3 bg-primary text-white">
         <i class="fa-solid fa-box"></i> 房型訂單
     </div>
@@ -99,7 +104,7 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    
+    <script type="text/javascript" th:src="@{/js/nav.js}"></script>
     <script type="text/javascript">
 	   $(document).ready(function () {
 	       $('#ro').DataTable({

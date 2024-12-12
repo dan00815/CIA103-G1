@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>新增訂房明細 - addRO.html</title>
-    <link rel="stylesheet" th:href="@{/css/bb.css}" />
-    <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>訂房明細修改 - update_RO_input.html</title>
+	<link rel="stylesheet" th:href="@{/css/bb.css}" />
+	<link rel="stylesheet" th:href="@{/css/elm.css}" />
 </head>
 <body>
-	<div th:insert="~{/back-end/elm/nav :: nav}"></div>
+	
 	<div id="header">房型管理</div>
-    <div id="sub-header">新增訂房明細</div>
+    <div id="sub-header">訂房明細修改</div>
     
     <div>
-        <h3>以下欄位皆為必填</h3>
-        <form class="cus_form" th:action="@{insertRO}" method="post" th:object="${roVO}">
+        <form class="cus_form" th:action="@{updateRO}" method="post" th:object="${roVO}">
+        	
+        	<div>
+				<label for="roid-text" >訂房明細編號:</label>
+				<input class="form-control" id="roid-text" type="text" th:field="*{roomOrderId}" readonly /><br/>
+			</div>
         	
         	<div>
                 <label for="rtp-sel">房型編號:</label>
@@ -48,20 +52,19 @@
                 <span th:if="${#fields.hasErrors('orderQty')}" th:errors="*{orderQty}" class="error" id="orderQty.errors"></span>
             </div>
         	
-	      <button type="submit" class="btn">
-	        新增訂房明細
-	        <span class="inner">
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	        </span>
-	      </button>
-    </form>
-        
+		      <button type="submit" class="btn">
+		        送出修改
+		        <span class="inner">
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		        </span>
+		      </button>
+	    </form>
        </div>
-	        <div class="button-container">
-		        <div>
+        <div class="button-container">
+	        	<div>
 		    		<a th:href="@{/roomOrder/select_page_RO}" class="btn">
 		    			<span class="inner">
 				        <span class="blob"></span>
@@ -69,7 +72,7 @@
 				        <span class="blob"></span>
 				        <span class="blob"></span>
 				      </span>
-				      訂房明細查詢
+				      <i class="fa fa-search"></i> 訂房明細查詢
 		    		</a>
 		    	</div>
 			    <div>
@@ -84,13 +87,11 @@
 		    		</a>
 		    	</div>
 	    </div>
-	<div th:insert="~{/back-end/elm/footer :: footer}"></div>
-   
-    <script type="text/javascript">
-        // 清除提示信息
+	<div th:insert="~{/back-end/footer :: footer}"></div>
+	<script type="text/javascript">
         function hideContent(d) {
             document.getElementById(d).style.display = "none";
         }
-    </script>
+   </script>
 </body>
 </html>

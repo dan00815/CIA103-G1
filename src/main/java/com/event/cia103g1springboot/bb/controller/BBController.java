@@ -151,7 +151,7 @@ public class BBController {
 	public String listAllMsg(HttpServletRequest req,Model model) {
 		try {
 			Map<String, String[]> map = req.getParameterMap();
-			List<com.bb.model.BBVO> list = bbSvc.getAll(map);
+			List<BBVO> list = bbSvc.getAll(map);
 			model.addAttribute("bbListData",list);
 			return "back-end/bb/listAllMsg";
 		}catch (Exception e) {

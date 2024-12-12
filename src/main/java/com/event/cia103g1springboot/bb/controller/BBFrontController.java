@@ -26,6 +26,12 @@ import com.event.cia103g1springboot.bb.model.BBVO;
 @RequestMapping("/bulletinBoard")
 public class BBFrontController {
 	
+	@ModelAttribute("bbPostList")
+	protected List<BBVO> referenceListData_bbPost(Model model){
+		List<BBVO> list = bbSvc.getPostMsg();
+		return list;
+	}
+	
 	@Autowired
 	BBService bbSvc;
 	@GetMapping("/bbList")
@@ -33,11 +39,7 @@ public class BBFrontController {
 		return "front-end/bulletinBoard/bbList";
 	}
 	
-	@ModelAttribute("bbPostList")
-	protected List<BBVO> referenceListData_bbPost(Model model){
-		List<BBVO> list = bbSvc.getPostMsg();
-		return list;
-	}
+	
 	
 	@PostMapping("listPostMsg_ByCompositeQuery")
 	public String listPostMsg(HttpServletRequest req, Model model) {

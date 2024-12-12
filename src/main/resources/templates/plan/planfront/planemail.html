@@ -25,8 +25,8 @@
 <p>感謝您預訂我們的行程，以下是您的訂單詳情：</p>
 
 <div class="order-info">
-    <p>訂單編號：<span th:text="${orderId}"></span></p>
-    <p>訂單日期：<span th:text="${#temporals.format(orderDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p>訂單編號：<span th:text="${PlanOrderId}"></span></p>
+    <p>訂單日期：<span th:text="${#temporals.format(orderdate, 'yyyy-MM-dd HH:mm')}"></span></p>
     <p>行程名稱：<span th:text="${planName}"></span></p>
     <p>行程日期：<span th:text="${#temporals.format(startDate, 'yyyy-MM-dd')}"></span> 至
         <span th:text="${#temporals.format(endDate, 'yyyy-MM-dd')}"></span></p>
@@ -41,7 +41,7 @@
 </div>
 
 <div class="price-summary">
-    <p>行程費用：<span th:text="${planPrice}"></span> 元</p>
+    <p>行程費用：<span th:text="${tripTotal}"></span> 元</p>
     <p>住宿費用：<span th:text="${totalRoomPrice}"></span> 元</p>
     <p>總計金額：<span th:text="${totalPrice}"></span> 元</p>
     <p>付款方式：<span th:text="${payMethod == 0 ? '信用卡' : '銀行轉帳'}"></span></p>

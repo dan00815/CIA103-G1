@@ -40,6 +40,12 @@ public class ROController {
 	@Autowired
 	PlanOrderService poSvc;
 	
+	@ModelAttribute("roListData")
+	protected List<ROVO> referenceListData_RO(){
+		List<ROVO> list = roSvc.getAllRO();
+		return list;
+	}
+	
 	@GetMapping("addRO")
 	public String addRO (ModelMap model) {
 		ROVO roVO = new ROVO();
@@ -49,6 +55,8 @@ public class ROController {
 	
 	@GetMapping("/listAllRO")
 	public String listAllRO(Model model) {
+		List<ROVO> list = roSvc.getAllRO();
+		model.addAttribute("roListData",list);
 		return "back-end/roomOrder/listAllRO";
 	}
 	@GetMapping("/select_page_RO")
@@ -57,16 +65,23 @@ public class ROController {
 	}
 	
 	@PostMapping("insertRO")
-	public String insertRO (@Valid ROVO roVO ,BindingResult result , ModelMap model)throws IOException{
-
-		if(result.hasErrors()) {
-			return "back-end/roomOrder/addRO";
+	public String insertRO (@ModelAttribute("roVO")@Valid ROVO roVO ,BindingResult result , ModelMap model)throws IOException{
+		try {
+			if(!result.hasErrors()) {
+				model.addAttribute("errorMessage","請檢察錯誤");
+				return "back-end/roomOrder/addRO";
+			}
+			roSvc.addRO(roVO);
+			List<ROVO> list = roSvc.getAllRO();
+			model.addAttribute("roListData",list);
+			model.addAttribute("success","-(新增成功)");
+			return "back-end/roomOrder/listAllRO";
+		}catch(Exception e) {
+			 System.out.println("處理失敗：" + e.getMessage());
+			   e.printStackTrace();
+			   model.addAttribute("errorMessage", "新增失敗:欄位不可空白!");
+			   return "back-end/roomOrder/addRO";
 		}
-		roSvc.addRO(roVO);
-		List<ROVO> list = roSvc.getAllRO();
-		model.addAttribute("roListData",list);
-		model.addAttribute("success","-(新增成功)");
-		return "back-end/roomOrder/listAllRO";
 	}
 	
 //	@PostMapping("insertROByPO")

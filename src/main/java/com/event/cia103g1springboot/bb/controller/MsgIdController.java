@@ -29,10 +29,10 @@ import com.event.cia103g1springboot.bb.model.BBVO;
 @Validated
 @RequestMapping("/bb")
 public class MsgIdController {
-
+//
 	@Autowired
 	BBService bbSvc;
-	
+
 	@PostMapping("getOne_For_Display")
 	public String getOne_For_Display(
 			@NotNull(message="公告編號:請勿空白")
@@ -42,19 +42,19 @@ public class MsgIdController {
 			ModelMap model
 			) {
 		BBVO bbVO = bbSvc.getOneMsg(msgid);
-		
+
 		List<BBVO> list = bbSvc.getAll();
 		model.addAttribute("msgListData",list);
 		if(bbVO == null) {
 			model.addAttribute("errorMsg","查無資料");
 			return "back-end/bb/select_page_bb";
 		}
-		
+
 		model.addAttribute("bbVO",bbVO);
 		model.addAttribute("getOne_For_Display",true);
 		return "back-end/bb/select_page_bb";
 	}
-	
+
 	@ExceptionHandler(value = {ConstraintViolationException.class})
 	public ModelAndView handleError(HttpServletRequest req,ConstraintViolationException e, Model model) {
 		Set<ConstraintViolation<?>> violations = e.getConstraintViolations();

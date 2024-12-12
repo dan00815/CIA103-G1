@@ -69,6 +69,8 @@ public class HibernateUtil_CompositeQuery_BB_Front {
 			        System.out.println("送出資料的欄位共:"+count+"欄");
 					 System.out.println("處理的欄位: " + key + ", 值: " + value);
 				}
+				Predicate predicate = builder.equal(root.get("poststat"), 1);
+				predicateList.add(predicate);
 			}
 			System.out.println("predicateList.size()="+predicateList.size());
 			criteriaQuery.where(predicateList.toArray(new Predicate[predicateList.size()]));

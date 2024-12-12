@@ -1,15 +1,18 @@
 package com.event.cia103g1springboot.product.product.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemService;
+import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemVO;
 import com.event.cia103g1springboot.product.product.model.CartVO;
 import com.event.cia103g1springboot.product.product.model.PdtService;
 import com.event.cia103g1springboot.product.productorder.model.ProductOrderService;
@@ -236,49 +241,66 @@ public class CartController {
 	
 
 //	//========================== checkOut ==========================
-//	@GetMapping("/checkOut")
-//	public String checkOut(Model model) {
-//		ProductOrderVO productOrderVO = new ProductOrderVO();
-//		model.addAttribute("productOrderVO", productOrderVO);
-//		return "front-end/shop/checkOut"; 
-//	}
-//	
-//	@PostMapping("insert")
-//	public String insert
-//		(@Valid ProductOrderVO productOrderVO, BindingResult result, 
-//				ModelMap model, 
-//				HttpSession session
-//			) throws IOException {
-//		//@Valid 和 BindingResult 必須出現在相同的方法參數列表中，且 BindingResult 必須緊跟在 @Valid 參數後面，這樣才能正確接收和處理錯誤。
-//		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-//		if (result.hasErrors()) {
-//			return "front-end/shop/checkOut";
-//		}
-//		/*************************** 2.開始新增資料 *****************************************/
-//		Integer total = (Integer) session.getAttribute("total");
-//		productOrderVO.setOrderAmt(total);
-//		productOrderVO.setOrderStat(2);  //設定狀態:訂單成立
-//		Integer pdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);  //新增訂單並獲得pdtOrderId
-//	    System.out.println("自增的訂單 ID: " + pdtOrderId);
-//	    
-//	    /*************************** 3.新增訂單明細 *****************************************/
-////		ProductOrderItemVO ProductOrderItem = new ProductOrderItemVO();
-//		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-//		if (cart != null && !cart.isEmpty()) {
-//		    for (CartVO item : cart) {
-//		    	ProductOrderItemVO PdtOrderItem = new ProductOrderItemVO();
-//		    	PdtOrderItem.setPdtOrderId(pdtOrderId);
-//		    	PdtOrderItem.setPdtId(item.getPdtId());
-//		    	PdtOrderItem.setPdtPrice(item.getPdtPrice());
-//		    	PdtOrderItem.setPdtName(item.getPdtName());
-//		    	PdtOrderItem.setOrderQty(item.getOrderQty());
-//		    	pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
-//		    	System.out.println("訂單明細新增成功");
-//		    }
-//		    session.removeAttribute("cart");  //購物車移除
-//		    session.removeAttribute("total");
-//		}
-//		return "redirect:/shop/shoppingPage";  //新增完成重導至購物頁面
-//	}
+	@GetMapping("/checkOut")
+	public String checkOut(Model model, HttpSession session) {
+		
+		// 確認 session 中是否有會員資訊
+		MemVO memVO = (MemVO) session.getAttribute("auth");
+		if (memVO == null) {
+		    // 如果用戶未登錄，重定向到登錄頁面
+		    return "redirect:mem/login";
+		}
+		
+		ProductOrderVO productOrderVO = new ProductOrderVO();
+		//綁定會員資料
+		productOrderVO.setMemVO(memVO);
+		
+//		System.out.println("Member Name: " + productOrderVO.getMemVO().getName());
+		//設定初始值
+		productOrderVO.setRecName(memVO.getName()); 
+		productOrderVO.setRecTel(memVO.getTel());
+		productOrderVO.setRecAddr(memVO.getAddr());
+		
+		model.addAttribute("productOrderVO", productOrderVO);
+		return "front-end/shop/checkOut"; 
+	}
+	
+	@PostMapping("insert")
+	public String insert
+		(@Valid ProductOrderVO productOrderVO, BindingResult result, 
+				ModelMap model, 
+				HttpSession session
+			) throws IOException {
+		//@Valid 和 BindingResult 必須出現在相同的方法參數列表中，且 BindingResult 必須緊跟在 @Valid 參數後面，這樣才能正確接收和處理錯誤。
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		if (result.hasErrors()) {
+			return "front-end/shop/checkOut";
+		}
+		/*************************** 2.開始新增資料 *****************************************/
+		Integer total = (Integer) session.getAttribute("total");
+		productOrderVO.setOrderAmt(total);
+		productOrderVO.setOrderStat(2);  //設定狀態:訂單成立
+		Integer pdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);  //新增訂單並獲得pdtOrderId
+	    System.out.println("自增的訂單 ID: " + pdtOrderId);
+	    
+	    /*************************** 3.新增訂單明細 *****************************************/
+//		ProductOrderItemVO ProductOrderItem = new ProductOrderItemVO();
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+		if (cart != null && !cart.isEmpty()) {
+		    for (CartVO item : cart) {
+		    	ProductOrderItemVO PdtOrderItem = new ProductOrderItemVO();
+		    	PdtOrderItem.setPdtOrderId(pdtOrderId);
+		    	PdtOrderItem.setPdtId(item.getPdtId());
+		    	PdtOrderItem.setPdtPrice(item.getPdtPrice());
+		    	PdtOrderItem.setPdtName(item.getPdtName());
+		    	PdtOrderItem.setOrderQty(item.getOrderQty());
+		    	pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
+		    	System.out.println("訂單明細新增成功");
+		    }
+		    session.removeAttribute("cart");  //購物車移除
+		    session.removeAttribute("total");
+		}
+		return "redirect:/product/productlist";  //新增完成重導至購物頁面
+	}
 	
 }

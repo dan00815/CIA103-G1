@@ -1,5 +1,4 @@
 
-
 package com.event.cia103g1springboot.bb.model;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.event.cia103g1springboot.hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_BB;
 import com.event.cia103g1springboot.hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_BB_Front;
 
-import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_BB;
 
 
 @Service("bbService")
@@ -48,7 +47,7 @@ public class BBService{
 	}
 	
 
-	public List<com.bb.model.BBVO> getAll(Map<String, String[]> map){
+	public List<BBVO> getAll(Map<String, String[]> map){
 		return HibernateUtil_CompositeQuery_BB.getAllC(map,sessionFactory.openSession());
 	}
 	

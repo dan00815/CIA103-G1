@@ -22,8 +22,9 @@ public class FilterConfig {
 	public FilterRegistrationBean<LoginFilter> myFilter() {
 		FilterRegistrationBean<LoginFilter> registrationBean = new FilterRegistrationBean<LoginFilter>();
 		registrationBean.setFilter(new LoginFilter());
-		registrationBean.addUrlPatterns("/mem/profile"); // 需要過濾的路徑，路徑要對到controller的映射
-//		registrationBean.setOrder(1); // 設置加載順序，值越小優先級越高
+		registrationBean.addUrlPatterns("/mem/profile","/shop/checkOut"); // 需要過濾的路徑，路徑要對到controller的映射
+//		
+		registrationBean.setOrder(1); // 設置加載順序，值越小優先級越高
 		return registrationBean;
 	}
 

@@ -6,11 +6,12 @@
     <title>商品圖片 - listOnePdtImg.html</title>
 
     <!-- 引入外部資源 --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
-    <link rel="stylesheet" th:href="@{/css/elm.css}" />
+    <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
 </head>
 <body>
-	<div th:insert="~{/back-end/elm/nav :: nav}"></div>
+	<div th:insert="~{/front-end/nav :: nav}"></div>
 	<div id="header">商品管理</div>
     <div id="sub-header">圖片詳情</div>
     
@@ -55,5 +56,6 @@
     	</div>
 	   </div>
 	   <div th:insert="~{/back-end/footer :: footer}"></div>
+	   <script type="text/javascript" th:src="@{/js/nav.js}"></script>
 </body>
 </html>

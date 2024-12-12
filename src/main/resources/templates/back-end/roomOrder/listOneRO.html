@@ -1,0 +1,65 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>房型訂單明細詳情 - listOneRO.html</title>
+<link rel="stylesheet" th:href="@{/css/bb.css}" />
+<link rel="stylesheet" th:href="@{/css/elm.css}" />
+</head>
+<body>
+	<div id="header">房型管理</div>
+    <div id="sub-header">訂單明細詳情</div>
+
+	 <div class="detail-container" th:fragment="ListOneRO-div">
+	       <h3>查詢結果</h3>
+	       <div class="detail-row">
+	           <span>訂房明細編號: </span><span th:text="${roVO.roomOrderId}"></span>
+	       </div>
+	       
+	       <div class="detail-row">
+	           <span>行程訂單編號 : </span><span th:text="${roVO.planOrder.planOrderId}"></span>
+	       </div>
+	       
+	       <div class="detail-row">
+	           <span>房型類別: </span><span th:text="${roVO.rtVO.roomTypeId }"></span>
+	       </div>
+	       
+	       <div class="detail-row">
+	           <span>房型名稱: </span><span th:text="${roVO.rtVO.roomTypeName}"></span>
+	       </div>
+	       <div class="detail-row">
+	           <span>訂房售價: </span><span th:text="${roVO.roomPrice}"></span>
+	       </div>
+	       <div class="detail-row">
+	           <span>訂房數量: </span><span th:text="${roVO.orderQty}"></span>
+	       </div>
+	   </div>
+	
+	   <div class="button-container">
+	   	<div>
+    		<a th:href="@{/roomOrder/select_page_RO}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa fa-search"></i> 訂房明細查詢
+    		</a>
+    	</div>
+	   	<div>
+    		<a th:href="@{/roomOrder/listAllRO}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa-solid fa-clipboard-list"></i> 訂單明細列表
+    		</a>
+    	</div>
+	   </div>
+	   <div th:insert="~{/back-end/footer :: footer}"></div>
+</body>
+</html>

@@ -13,6 +13,11 @@
 		color: blue;
 		font-style: bold;
 	}
+	
+	h4, .error {
+    display: inline-block;
+    margin-right: 10px;  /* 這是可選的，用來設定兩個元素之間的間距 */
+	}
 	</style>
 </head>
 <body>
@@ -58,14 +63,15 @@
 	
         <form th:action="@{insert}" method="post" th:object="${productOrderVO}" class="cus_form">
         	<div>
-        		<input type="text" th:field="*{memId}"> 假設會員編號
+				<p><strong>會員編號:</strong> <span th:text="${productOrderVO.memVO.memId}"></span></p>
+				<input type="hidden" th:field="*{memVO.memId}">
         	</div><br>
         	
         	  <div class="row">
 		        <!-- 左側：付款方式 -->
 		        <div class="col-md-6">
 		            <div class="mb-4">
-		                <h4>付款方式</h4>
+		                <h4>付款方式</h4><span  th:if="${#fields.hasErrors('payMethod')}" th:errors="*{payMethod}" class="error" id="payMethod.errors"></span>
 		                <div class="form-check">
 		                    <input class="form-check-input" type="radio" th:field="*{payMethod}" id="bankTransfer" value="0">
 		                    <label class="form-check-label" for="bankTransfer">轉帳</label>
@@ -84,7 +90,7 @@
 		        <!-- 右側：取貨方式 -->
 		        <div class="col-md-6">
 		            <div class="mb-4">
-		                <h4>取貨方式</h4>
+		                <h4>取貨方式</h4><span  th:if="${#fields.hasErrors('delMethod')}" th:errors="*{delMethod}" class="error" id="delMethod.errors"></span>
 		                <div class="form-check">
 		                    <input class="form-check-input" type="radio" th:field="*{delMethod}" id="homeDelivery" value="0">
 		                    <label class="form-check-label" for="homeDelivery">宅配到府</label>
@@ -130,7 +136,7 @@
             </div>
             <!-- 確認訂單 -->
             <div class="text-center">
-            	<a th:href="@{/shop/shoppingPage}" class="btn">取消
+            	<a th:href="@{/shop/shoppingCart}" class="btn">回購物車
 	            	<span class="inner">
 			          <span class="blob"></span>
 			          <span class="blob"></span>
@@ -156,6 +162,37 @@
       <sup>&copy;</sup>本網站僅供tibame專題展示用，並無進行任何商業行為
     </footer>
     
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+    const ham_list = document.querySelector(".ham_list");
+    const nav = document.querySelector("nav");
+
+    //漢堡選單控制
+    document
+      .querySelector(".hamburger")
+      .addEventListener("click", function () {
+        this.classList.toggle("is-active");
+      });
+
+    ham_list.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+
+    $(".hamburger").on("click", function () {
+      $(".ham_list").toggleClass("showList");
+    });
+
+    // 監控滾輪事件，讓導覽列變透明
+    window.addEventListener("scroll", (e) => {
+      if (this.scrollY !== 0) {
+        nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
+        nav.style.boxShadow = "0px 8px 10px lightgray";
+      } else {
+        nav.style.backgroundColor = "lightblue";
+        nav.style.boxShadow = "none";
+      }
+    });
+    </script>
     
     
 </body>
