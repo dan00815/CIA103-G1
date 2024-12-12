@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .settings/
 bin/
 target/
@@ -7,6 +8,7 @@ target/
 *.iml
 .DS_Store
 .mvn/
+=======
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -50,4 +52,5 @@ target/
 *.iml
 .DS_Store
 .mvn/
-src/main/resources/application.properties
+application.properties
+>>>>>>> branch 'master' of https://github.com/dan00815/CIA103-G1.git
