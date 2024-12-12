@@ -138,8 +138,9 @@
             <div class="info-item">
                 <i class="fas fa-route"></i>
                 <span class="label">行程名稱:</span>
-                <span class="value" th:text="${plan.planType.planName}"></span>
+                <span class="value" th:text="${plan.planType.planName}" th:data-event-name="${plan.planType.planName}"></span>
             </div>
+
 
             <div class="info-item">
                 <i class="fas fa-bed"></i>
@@ -168,7 +169,8 @@
             <div class="info-item">
                 <i class="far fa-calendar-alt"></i>
                 <span class="label">開始時間:</span>
-                <span class="value" th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"></span>
+                <span class="value" th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"
+                      th:data-start-date="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"></span>
             </div>
 
             <div class="info-item">
@@ -178,9 +180,9 @@
             </div>
 
             <div class="info-item">
-                <i class="far fa-clock"></i>
-                <span class="label">訂單時間:</span>
-                <span class="value" th:text="${#temporals.format(planord.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                <i class="fas fa-file-invoice"></i>
+                <span class="label">訂單編號:</span>
+                <span class="value" th:text="${planord.planOrderId}" th:data-order-id="${planord.planOrderId}"></span>
             </div>
 
             <div class="info-item">
