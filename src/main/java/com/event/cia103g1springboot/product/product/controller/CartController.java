@@ -1,8 +1,12 @@
 package com.event.cia103g1springboot.product.product.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.event.cia103g1springboot.ecpay.payment.integration.AllInOne;
+import com.event.cia103g1springboot.ecpay.payment.integration.domain.AioCheckOutALL;
+import com.event.cia103g1springboot.example.ECPayDemo.OrderService;
 import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemService;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemVO;
@@ -43,6 +50,13 @@ public class CartController {
 	
 	@Autowired
 	PdtService productSvc;
+	
+	//綠界
+	@Autowired
+	OrderService orderService;
+	
+	@Autowired
+	private HttpSession session;
 	
 	//========================== shoppingPage ==========================
 	@GetMapping("/shoppingPage")
@@ -100,7 +114,7 @@ public class CartController {
 	//========================== shoppingCart ==========================
 
 	@GetMapping("/shoppingCart")
-	public String shoppingCart(Model model, HttpSession session) {
+	public String shoppingCart(Model model) {
 		// 檢查 total 是否存在，若不存在則初始化為 0
 		if (session.getAttribute("total") == null) {
 	        session.setAttribute("total", 0);
@@ -122,7 +136,7 @@ public class CartController {
 			@RequestParam("pdtId") Integer pdtId,
 			@RequestParam("pdtName") String pdtName, 
 			@RequestParam("pdtPrice") Integer pdtPrice, 
-			@RequestParam(value = "orderQty", required = false, defaultValue = "1") Integer orderQty, HttpSession session) {
+			@RequestParam(value = "orderQty", required = false, defaultValue = "1") Integer orderQty) {
 			
 		// 確保數量不為 null，並設置預設值
 	    if (orderQty == null || orderQty <= 0) {
@@ -169,7 +183,7 @@ public class CartController {
 			@RequestParam("pdtId") Integer pdtId,
 			@RequestParam("pdtName") String pdtName, 
 			@RequestParam("pdtPrice") Integer pdtPrice, 
-			@RequestParam("orderQty") Integer orderQty, HttpSession session) {
+			@RequestParam("orderQty") Integer orderQty) {
 		
 			// 獲取購物車
 		    List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
@@ -216,8 +230,7 @@ public class CartController {
 	@PostMapping("/deleteCart")
 	@ResponseBody
 	public ResponseEntity<String> deleteCart(
-			@RequestParam("pdtId") Integer pdtId,
-			HttpSession session) {
+			@RequestParam("pdtId") Integer pdtId) {
 		// 從 Session 中獲取購物車
 	    List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
 	    if (cart == null) {
@@ -242,7 +255,7 @@ public class CartController {
 
 //	//========================== checkOut ==========================
 	@GetMapping("/checkOut")
-	public String checkOut(Model model, HttpSession session) {
+	public String checkOut(Model model) {
 		
 		// 確認 session 中是否有會員資訊
 		MemVO memVO = (MemVO) session.getAttribute("auth");
@@ -265,11 +278,15 @@ public class CartController {
 		return "front-end/shop/checkOut"; 
 	}
 	
+	@GetMapping("/successPage")
+	public String successPage(Model model) {
+		return "front-end/shop/successPage"; 
+	}
+	
 	@PostMapping("insert")
 	public String insert
 		(@Valid ProductOrderVO productOrderVO, BindingResult result, 
-				ModelMap model, 
-				HttpSession session
+				ModelMap model
 			) throws IOException {
 		//@Valid 和 BindingResult 必須出現在相同的方法參數列表中，且 BindingResult 必須緊跟在 @Valid 參數後面，這樣才能正確接收和處理錯誤。
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
@@ -284,7 +301,6 @@ public class CartController {
 	    System.out.println("自增的訂單 ID: " + pdtOrderId);
 	    
 	    /*************************** 3.新增訂單明細 *****************************************/
-//		ProductOrderItemVO ProductOrderItem = new ProductOrderItemVO();
 		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
 		if (cart != null && !cart.isEmpty()) {
 		    for (CartVO item : cart) {
@@ -297,10 +313,54 @@ public class CartController {
 		    	pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
 		    	System.out.println("訂單明細新增成功");
 		    }
-		    session.removeAttribute("cart");  //購物車移除
-		    session.removeAttribute("total");
 		}
-		return "redirect:/product/productlist";  //新增完成重導至購物頁面
+		return "redirect:successPage";  
+		
 	}
+	
+//	@GetMapping("/ecpayCheckoutPage")
+//	public String ecpayCheckoutPage(Model model) {
+//		return "front-end/shop/ecpayCheckoutPage"; 
+//	}
+	
+//	@PostMapping("/ecpayCheckout")
+	public String ecpayCheckout(Model model) {
+		/*************************** 綁定綠界 *****************************************/
+		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+		AllInOne all = new AllInOne("");
+	
+		AioCheckOutALL obj = new AioCheckOutALL();
+		obj.setMerchantTradeNo(uuId);
+		
+		String currentTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+		obj.setMerchantTradeDate(currentTime);
+		
+		Integer total = (Integer) session.getAttribute("total");
+		obj.setTotalAmount(String.valueOf(total));
+		
+		obj.setTradeDesc("test Description");
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+		
+		// 從 cart 中提取商品名稱、數量、價格，並組合成格式
+	    String itemNames = cart.stream()
+	            .map(cartItem -> cartItem.getPdtName() + " x " + cartItem.getOrderQty() + " = " + cartItem.getPdtPrice() + "元")
+	            .collect(Collectors.joining("\n"));  // 使用換行符號分隔每一項商品
+	
+		obj.setItemName(itemNames);
+		obj.setReturnURL("<http://211.23.128.214:5000>");
+		obj.setNeedExtraPaidInfo("N");
+		String form = all.aioCheckOut(obj, null);
+		
+//		session.removeAttribute("total");
+//		session.removeAttribute("cart");  //購物車移除
+		
+		// 將表單存入模型
+        model.addAttribute("ecpayForm", form);
+
+        // 返回對應的視圖名稱
+        return form; 
+	}
+	
+
 	
 }
