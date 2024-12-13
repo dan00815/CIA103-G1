@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{back-end/emp/base}">
+<head>
+    <title>編輯員工資料</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:if="${employee == null}" class="alert alert-danger">
+        未找到員工信息
+    </div>
+
+    <form th:if="${employee != null}" id="editForm" th:action="@{/api/employee/profile}"
+          method="post" enctype="multipart/form-data" class="form">
+        <h2>編輯員工資料</h2>
+            <input type="hidden" id="empId" name="empId" th:value="${employee.empId}">
+            
+            <div class="form-group">
+                <label for="empName">姓名：</label>
+                <input type="text" id="empName" name="empName" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label for="empJobTitle">職位：</label>
+                <input type="text" id="empJobTitle" name="empJobTitle" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label>頭貼：</label>
+                <label class="upload_el" for="empImg">
+                    <i class="fa-regular fa-image"></i> 選擇圖片
+                </label>
+                <input type="file" id="empImg" name="empImg" accept="image/*" 
+                       style="display: none">
+                <div class="img_prev">
+                    <img id="preview" class="img-preview" src="#" alt="頭貼預覽"
+                         style="display:none; width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">
+                保存
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+            </button>
+        </form>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            $(function() {
+                // 加載員工訊息
+                var empId = $("#empId").val();
+                $.get('/api/employee/' + empId, function(employee) {
+                    $("#empName").val(employee.empName);
+                    $("#empJobTitle").val(employee.empJobTitle);
+                    if (employee.empImg) {
+                        $("#preview")
+                            .attr('src', 'data:image/jpeg;base64,' + employee.empImg)
+                            .show();
+                        $('.upload_el').html('<i class="fa-solid fa-circle-check"></i> 已選擇');
+                    } else {
+                        $("#preview")
+                            .attr('src', '/images/default-avatar.png')
+                            .show();
+                    }
+                });
+
+                // 圖片預覽
+                $("#empImg").change(function() {
+                    if (this.files && this.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $("#preview")
+                                .attr('src', e.target.result)
+                                .show();
+                        }
+                        reader.readAsDataURL(this.files[0]);
+                        $('.upload_el').html('<i class="fa-solid fa-circle-check"></i> 已選擇');
+                    }
+                });
+
+                // 提交表單
+                $("#editForm").on("submit", function(e) {
+                    e.preventDefault();
+                    var formData = new FormData();
+                    formData.append('empId', $("#empId").val());
+                    formData.append('empName', $("#empName").val());
+                    formData.append('empJobTitle', $("#empJobTitle").val());
+                    
+                    var fileInput = $("#empImg")[0];
+                    if (fileInput.files[0]) {
+                        formData.append('empImg', fileInput.files[0]);
+                    }
+
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: 'PUT',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function() {
+                            alert("更新成功");
+                            window.location.href = "/emp/list";
+                        },
+                        error: function() {
+                            alert("更新失敗");
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html> 

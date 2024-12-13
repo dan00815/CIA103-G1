@@ -3,12 +3,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{back-end/emp/base}">
 <head>
-    <title>員工登錄</title>
+    <title>員工註冊</title>
 </head>
 <body>
     <div layout:fragment="content">
-        <form id="loginForm" th:action="@{/api/employee/login}" method="post" class="form">
-            <h2>員工登錄</h2>
+        <form id="registerForm" th:action="@{/api/employee/register}" method="post" class="form">
+            <h2>員工註冊</h2>
+            
+            <div class="form-group">
+                <label for="empName">姓名：</label>
+                <input type="text" id="empName" name="empName" required 
+                       class="form-control basic_input">
+            </div>
             
             <div class="form-group">
                 <label for="empAcct">帳號：</label>
@@ -22,8 +28,14 @@
                        class="form-control basic_input">
             </div>
             
+            <div class="form-group">
+                <label for="empJobTitle">職位：</label>
+                <input type="text" id="empJobTitle" name="empJobTitle" required 
+                       class="form-control basic_input">
+            </div>
+            
             <button type="submit" class="btn">
-                登錄
+                註冊
                 <span class="inner">
                     <span class="blob"></span>
                     <span class="blob"></span>
@@ -33,17 +45,8 @@
             </button>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a th:href="@{/emp/register}" class="btn">
-                    註冊新帳號
-                    <span class="inner">
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                    </span>
-                </a>
-                <a th:href="@{/emp/reset-password}" class="btn">
-                    忘記密碼
+                <a th:href="@{/emp/login}" class="btn">
+                    返回登錄
                     <span class="inner">
                         <span class="blob"></span>
                         <span class="blob"></span>
@@ -58,24 +61,24 @@
     <th:block layout:fragment="scripts">
         <script>
             $(function() {
-                $("#loginForm").on("submit", function(e) {
+                $("#registerForm").on("submit", function(e) {
                     e.preventDefault();
                     $.ajax({
                         url: $(this).attr("action"),
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
+                            empName: $("#empName").val(),
                             empAcct: $("#empAcct").val(),
-                            empPwd: $("#empPwd").val()
+                            empPwd: $("#empPwd").val(),
+                            empJobTitle: $("#empJobTitle").val()
                         }),
                         success: function(response) {
-                            // 將用戶信息保存到localStorage
-                            localStorage.setItem('loginUser', JSON.stringify(response));
-                            alert("登錄成功");
-                            window.location.href = "/emp/list";
+                            alert("註冊成功");
+                            window.location.href = "/emp/login";
                         },
                         error: function() {
-                            alert("登錄失敗，請檢查帳號密碼");
+                            alert("註冊失敗，請檢查輸入信息");
                         }
                     });
                 });
@@ -83,4 +86,4 @@
         </script>
     </th:block>
 </body>
-</html>
+</html> 
