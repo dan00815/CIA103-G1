@@ -402,9 +402,9 @@ public class AioCheckOutALL {
 	 * 設定ChoosePayment 選擇預設付款方式
 	 * @param choosePayment
 	 */
-//	public void setChoosePayment(String choosePayment) {
-//		ChoosePayment = choosePayment;
-//	}
+	public void setChoosePayment(String choosePayment) {
+		ChoosePayment = choosePayment;
+	}
 	/**
 	 * 取得ClientBackURL Client端返回合作特店系統的按鈕連結
 	 * @return ClientBackURL

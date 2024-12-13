@@ -41,7 +41,7 @@ public class ProductOrderService {
 	}
 	
 	//自訂搜尋
-		public List<ProductOrderVO> getOneProductOrderByOrderStat(Integer orderStat) {
+	public List<ProductOrderVO> getOneProductOrderByOrderStat(Integer orderStat) {
 		return repository.findByOrderStat(orderStat);
 	}
 	
@@ -53,5 +53,10 @@ public class ProductOrderService {
 //	public List<ProductOrderVO> getAll(Map<String, String[]> map) {
 //		return HibernateUtil_CompositeQuery_HihiDatabase.getAllC(map,sessionFactory.openSession());
 //	}
+	
+	//得到新訂單狀態
+	public void getNewOrderStat(Integer orderStat, Integer pdtOrderId) {
+		repository.updateTheOrderStat(orderStat, pdtOrderId);
+	}
 
 }
