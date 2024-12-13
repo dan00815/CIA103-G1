@@ -48,7 +48,7 @@ public class PlanOrderService {
     	}
 
         public PlanOrder cancelord(Integer planOrderId, Integer orderStatus){
-            PlanOrder planOrder =planOrderRepository.findByPlanOrderIdAndOrderStatus(planOrderId,orderStatus);
+            PlanOrder planOrder =planOrderRepository.findByPlanOrderIdAndOrderStat(planOrderId,orderStatus);
             planOrder.setOrderStat(orderStatus);
             return  planOrderRepository.save(planOrder);
         }
@@ -58,20 +58,17 @@ public class PlanOrderService {
         Context context = new Context();
         context.setVariable("memberName", order.getMemVO().getName());
         context.setVariable("planName", order.getPlan().getPlanType().getPlanName());
-        context.setVariable("訂單時間",order.getOrderDate());
-        context.setVariable("訂單取消時間", LocalDateTime.now());
-        context.setVariable("訂單狀態",order.getOrderStat());
-        context.setVariable("訂單金額",order.getTotalPrice());
-        String mailContent = templateEngine.process("plan/planfront/planemail", context);
+        context.setVariable("orderDate", order.getOrderDate());      // 改為英文
+        context.setVariable("cancelDate", LocalDateTime.now());      // 改為英文
+        context.setVariable("orderStatus", order.getOrderStat());    // 改為英文
+        context.setVariable("totalAmount", order.getTotalPrice());   // 改為英文
+        String mailContent = templateEngine.process("plan/planfront/plancancelemail", context);
 
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
         helper.setTo("mm950490@gmail.com");
         helper.setSubject("鄰星嗨嗨:行程訂單取消通知");
         helper.setText(mailContent, true);
-
-        ClassPathResource footer = new ClassPathResource("static/email/planemail.png");
-        helper.addInline("footer", footer);
 
         mailSender.send(message);
     }

@@ -15,5 +15,5 @@ public interface PlanOrderRepository extends JpaRepository<PlanOrder, Integer> {
     @Override
     List<PlanOrder> findAll(Sort sort);
 
-  PlanOrder findByPlanOrderIdAndOrderStatus(Integer planOrderId, Integer orderStatus);
+  PlanOrder findByPlanOrderIdAndOrderStat(Integer id, Integer status);
 }

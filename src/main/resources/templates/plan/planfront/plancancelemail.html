@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>行程訂單取消通知</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif;">
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h2 style="color: #dc3545;">行程訂單取消通知</h2>
+
+  <div style="background-color: #fff3cd; border-radius: 10px; padding: 20px; margin: 20px 0;">
+    <p>親愛的 <span th:text="${memberName}"></span> 您好：</p>
+    <p>您的行程訂單已取消，以下是訂單詳情：</p>
+    <ul style="list-style: none; padding: 0;">
+      <li style="margin: 10px 0;">行程名稱：<span th:text="${planName}"></span></li>
+      <li style="margin: 10px 0;">訂單時間：<span th:text="${#temporals.format(orderDate, 'yyyy-MM-dd HH:mm')}"></span></li>
+      <li style="margin: 10px 0;">取消時間：<span th:text="${#temporals.format(cancelDate, 'yyyy-MM-dd HH:mm')}"></span></li>
+      <li style="margin: 10px 0;">訂單狀態：<span th:text="${orderStatus == 4 ? '訂單取消' : '其他狀態'}"></span>
+      <li style="margin: 10px 0;">訂單金額：NT$ <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')}"></span></li>
+    </ul>
+    <p>如有任何問題，請隨時與我們聯絡。</p>
+    <p>如需即時協助，請撥打客服專線：(02)1234-5678</p>
+  </div>
+  <p style="color: #666;">謝謝您的理解與配合。</p>
+</div>
+</body>
+</html>
