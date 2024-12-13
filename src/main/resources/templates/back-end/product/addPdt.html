@@ -38,7 +38,7 @@
         
         	<div>
                 <label for="pdtname-text">商品名稱:</label>
-                <input class="form-control" id="pdtname-text" type="text" th:field="*{pdtName}" onclick="hideContent('pdtName.errors');" placeholder="請輸入商品名稱"/><br/>
+                <input class="form-control" id="pdtname-text" type="text" th:field="*{pdtName}" onclick="hideContent('pdtName.errors');" placeholder="請輸入商品名稱"/>
                 <span th:if="${#fields.hasErrors('pdtName')}" th:errors="*{pdtName}" class="error" id="pdtName.errors"></span>
             </div>
             
@@ -50,7 +50,7 @@
             
             <div>
                 <label for="PdtPrice">商品售價:</label>
-                <input class="form-control" id="PdtPrice" type="text" th:field="*{pdtPrice}" onclick="hideContent('pdtPrice.errors');" placeholder="請輸入商品售價"/><br/>
+                <input class="form-control" id="PdtPrice" type="text" th:field="*{pdtPrice}" onclick="hideContent('pdtPrice.errors');" placeholder="請輸入商品售價"/>
                 <span th:if="${#fields.hasErrors('pdtPrice')}" th:errors="*{pdtPrice}" class="error" id="pdtPrice.errors"></span>
             </div>
 			<div class="form-group">

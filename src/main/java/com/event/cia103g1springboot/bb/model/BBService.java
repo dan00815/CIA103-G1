@@ -15,7 +15,7 @@ import com.event.cia103g1springboot.hibernate.util.CompositeQuery.HibernateUtil_
 
 
 @Service("bbService")
-public class BBService{
+public class BBService {
 
 	@Autowired
 	BBRepository repository;
@@ -59,7 +59,5 @@ public class BBService{
 	public List<BBVO> getPostMsg(){
 		return repository.getPostMsg();
 	}
-
-
 
 }

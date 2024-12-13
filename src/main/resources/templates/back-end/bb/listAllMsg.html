@@ -79,8 +79,8 @@
 
 <body>
     <!-- 頁面標題 -->
-    <div id="header">佈告欄管理</div>
-    <div id="sub-header">公告列表</div>
+    <div id="header"><i class="fa-solid fa-bullhorn"></i> 佈告欄管理</div>
+    <div id="sub-header"><i class="fa-solid fa-clipboard-list"></i> 公告列表</div>
 
     <!-- 表格內容 -->
     <div class="container">
@@ -107,7 +107,7 @@
                                 <input type="hidden" name="msgid" th:value="${bbVO.msgid}" />
                                 <button type="submit" class="btn btn-sm" 
                                         th:class="${bbVO.isPinned ? 'btn-warning' : 'btn-primary'}">
-                                    <i th:class="${bbVO.isPinned ? 'fa fa-thumbtack' : 'fa fa-plus'}"></i>
+                                    <i th:class="${bbVO.isPinned ? 'fas fa-thumbtack' : 'fas fa-thumbtack'}"></i>
                                     <span th:text="${bbVO.isPinned ? '取消' : '釘選'}"></span>
                                 </button>
                             </form>
@@ -156,7 +156,7 @@
 			        <span class="blob"></span>
 			        <span class="blob"></span>
 			      </span>
-	    		公告查詢
+	    		<i class="fas fa-search"></i> 公告查詢
     		</a>
     	</div>
         <div>
@@ -167,7 +167,7 @@
 			        <span class="blob"></span>
 			        <span class="blob"></span>
 			      </span>
-	    		新增公告
+	    		<i class="fas fa-plus-circle"></i> 新增公告
     		</a>
     	</div>
     	</div>

@@ -18,7 +18,7 @@ public interface BBRepository extends JpaRepository<BBVO, Integer>{
 
 	@Transactional
 	@Modifying
-	@Query(value = "SELECT * FROM bulletinboard WHERE postStat <2 ORDER BY isPinned, msgId", nativeQuery = true)
+	@Query(value = "SELECT * FROM bulletinboard WHERE postStat <2 ORDER BY isPinned desc, msgId", nativeQuery = true)
 	List<BBVO> getAllMsg();
 
 	@Query(value = "from BBVO where msgid=?1 and msgtype like?2 and msgtitle like?3 and msgcon like ?4 and poststat =?5 and posttime between ?6 and ?7 ORDER BY isPinned, msgId")

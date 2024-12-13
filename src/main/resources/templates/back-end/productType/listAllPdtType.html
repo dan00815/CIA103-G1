@@ -36,6 +36,13 @@
 		    text-align: center;
 		    right:50px;
 		}
+		
+		input.submit:hover {
+			background-color:rgb(248, 236, 88);
+		}
+		input.delete:hover {
+			background-color:rgb(252, 90, 95);
+		}
     </style>
 </head>
 <body>
@@ -128,8 +135,8 @@
         $('#pdtType').DataTable({
             paging: true,
             ordering: true,
-            pageLength: 3,
-            lengthMenu: [3, 5, 10, 15, 20],
+            pageLength: 5,
+            lengthMenu: [5, 10, 15, 20],
             searching: true,
             language: {
                 info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
