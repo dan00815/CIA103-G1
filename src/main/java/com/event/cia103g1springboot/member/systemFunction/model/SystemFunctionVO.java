@@ -1,6 +1,10 @@
 package com.event.cia103g1springboot.member.systemFunction.model;
 
 import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "funId")
 @EqualsAndHashCode(of ="funId" )
 @AllArgsConstructor
 @Data
@@ -40,9 +44,8 @@ public class SystemFunctionVO implements java.io.Serializable {
 
 	@NotEmpty(message = "功能描述請勿空白")
 	private String funDesc;
+	
+	   @OneToMany(mappedBy = "systemFunctionVO", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	    private Set<EmpJobVO> empJobs;
+	}
 
-	@OneToMany(mappedBy = "systemFunctionVO", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<EmpJobVO> empJobs;
-
-
-}

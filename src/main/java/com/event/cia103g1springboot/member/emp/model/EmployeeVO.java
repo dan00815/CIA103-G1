@@ -6,6 +6,9 @@ import java.util.Set;
 
 import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,7 +49,9 @@ public class EmployeeVO {
     @Lob
     @Column(name = "empImg", columnDefinition = "mediumblob")
     private byte[] empImg;
-
+    
+    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "employee")
     private Set<EmpJobVO> empJobs;
 }
