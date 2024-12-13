@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5;url=paymentPage.html">
+    <title>訂購成功</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+
+<script type="text/javascript">
+    setTimeout(function() {
+        // 構造 POST 請求的資料
+        const postData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // 設置為 JSON 格式
+            }
+        };
+
+        // 使用 fetch 發送 POST 請求
+        fetch('http://localhost:8080/shop_ecpayCheckout', postData)
+            .then(response => response.text())  // 獲取回應的 HTML 表單 form
+            .then(formHtml => {
+                // 構造一個隱藏表單並提交
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'https://payment-stage.ecPay.com.tw/Cashier/AioCheckOut/V5';  // 目標綠界付款頁面的 URL
+
+                // 將收到的表單內容插入到表單中
+                form.innerHTML = formHtml;
+
+                // 將表單添加到頁面並提交
+                document.body.appendChild(form);
+                form.submit();  // 提交表單
+
+            })
+            .catch(error => {
+                // 處理錯誤
+                console.error('錯誤:', error);
+            });
+    }, 3000);  // 延遲 3 秒後發送 POST 請求
+
+</script>
+
+
+    
+</head>
+<body>
+	<div class="container">
+	    <h1>訂購成功！</h1>
+	    <p>您的訂單已經成功提交。正在引導您至付款頁面...</p>
+	    <p>如果頁面沒有自動跳轉，請<a href="javascript:void(0);" onclick="submitPostForm();">點擊這裡</a>。</p>
+    </div>
+    
+    <script type="text/javascript">
+    function submitPostForm() {
+        // 構造 POST 請求的資料
+        const postData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // JSON 格式請求
+            },
+        };
+
+        // 發送 POST 請求至後端
+        fetch('http://localhost:8080/shop_ecpayCheckout', postData)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('後端回應失敗，狀態碼: ' + response.status);
+                }
+                return response.text(); // 獲取返回的表單 HTML
+            })
+            .then(formHtml => {
+                // 創建一個隱藏表單並填充返回的 HTML
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'https://payment-stage.ecPay.com.tw/Cashier/AioCheckOut/V5'; // 綠界付款頁面的 URL
+
+                // 插入後端返回的表單內容
+                form.innerHTML = formHtml;
+
+                // 將表單插入到頁面中並自動提交
+                document.body.appendChild(form);
+                form.submit(); // 提交表單
+            })
+            .catch(error => {
+                console.error('發生錯誤:', error);
+                alert('提交失敗，請稍後再試！');
+            });
+	    }
+	</script>
+</body>
+</html>

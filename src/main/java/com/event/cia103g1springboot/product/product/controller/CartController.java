@@ -1,12 +1,9 @@
 package com.event.cia103g1springboot.product.product.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -24,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.event.cia103g1springboot.ecpay.payment.integration.AllInOne;
-import com.event.cia103g1springboot.ecpay.payment.integration.domain.AioCheckOutALL;
 import com.event.cia103g1springboot.example.ECPayDemo.OrderService;
 import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemService;
@@ -35,42 +30,298 @@ import com.event.cia103g1springboot.product.product.model.PdtService;
 import com.event.cia103g1springboot.product.productorder.model.ProductOrderService;
 import com.event.cia103g1springboot.product.productorder.model.ProductOrderVO;
 
-
-
 @Controller
 @RequestMapping("/shop")
 public class CartController {
 
-	
 	@Autowired
 	ProductOrderService pdtOrderSvc;
-	
+
 	@Autowired
 	ProductOrderItemService pdtOrderItemSvc;
-	
+
 	@Autowired
 	PdtService productSvc;
-	
-	//綠界
+
+	// 綠界
 	@Autowired
 	OrderService orderService;
-	
-	@Autowired
-	private HttpSession session;
-	
-	//========================== shoppingPage ==========================
-	@GetMapping("/shoppingPage")
-	public String shoppingPage(Model model) {
-		return "front-end/shop/shoppingPage"; 
+
+	// ========================== shoppingCart ==========================
+
+	@GetMapping("/shoppingCart")
+	public String shoppingCart(Model model, HttpSession session) {
+		// 檢查 total 是否存在，若不存在則初始化為 0
+		if (session.getAttribute("total") == null) {
+			session.setAttribute("total", 0);
+		}
+		return "front-end/shop/shoppingCart";
 	}
 
-	@PostMapping("get_myPdtOrder")
-	public String get_MyPdtOrder(@RequestParam("memId") String memId, ModelMap model) {
-		List<ProductOrderVO>list = pdtOrderSvc.getProductOrderByMemId(Integer.valueOf(memId));
+	@ModelAttribute("cartListData")
+	protected List<CartVO> cartListData(HttpSession session) {
+		List<CartVO> cartList = (List<CartVO>) session.getAttribute("cart");
+		return cartList;
+	}
+
+	// shoppingPage.html加入購物車
+	@SuppressWarnings("unchecked")
+	@PostMapping("/addToCart")
+	@ResponseBody
+	public ResponseEntity<String> addToCart(@RequestParam("pdtId") Integer pdtId,
+			@RequestParam("pdtName") String pdtName, @RequestParam("pdtPrice") Integer pdtPrice,
+			@RequestParam(value = "orderQty", required = false, defaultValue = "1") Integer orderQty,
+			HttpSession session) {
+
+		// 確保數量不為 null，並設置預設值
+		if (orderQty == null || orderQty <= 0) {
+			orderQty = 1;
+		}
+
+		// 獲取購物車
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+		if (cart == null) {
+			cart = new ArrayList<>();
+		}
+
+		// 檢查商品是否已存在於購物車
+		CartVO existingItem = cart.stream().filter(item -> item.getPdtId().equals(pdtId)).findFirst().orElse(null);
+
+		if (existingItem != null) {
+			// 如果商品已存在，累加數量並更新小計
+			existingItem.setOrderQty(existingItem.getOrderQty() + orderQty);
+			existingItem.setSubtotal(existingItem.getPdtPrice() * existingItem.getOrderQty());
+		} else {
+			// 如果商品不存在，新增到購物車
+			CartVO newItem = new CartVO(pdtId, pdtName, pdtPrice, orderQty);
+			cart.add(newItem);
+		}
+
+		// 更新 session
+		session.setAttribute("cart", cart);
+		System.out.println(session.getAttribute("cart"));
+
+		// 計算總金額
+		Integer total = productSvc.calculateTotal(cart);
+		System.out.println("購物車總金額: " + total);
+		session.setAttribute("total", total);
+
+		return ResponseEntity.ok("商品已加入購物車");
+	}
+
+	@PostMapping("/updateCart")
+	@ResponseBody
+	public ResponseEntity<String> updateCart(@RequestParam("pdtId") Integer pdtId,
+			@RequestParam("pdtName") String pdtName, @RequestParam("pdtPrice") Integer pdtPrice,
+			@RequestParam("orderQty") Integer orderQty, HttpSession session) {
+
+		// 獲取購物車
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+
+		// 檢查購物車是否存在
+		if (cart == null) {
+			return ResponseEntity.badRequest().body("購物車為空，無法更新");
+		}
+
+		// 查找對應商品
+		CartVO targetItem = cart.stream().filter(item -> item.getPdtId().equals(pdtId)).findFirst().orElse(null);
+
+		if (targetItem != null) {
+			if (orderQty > 0) {
+				// 修改購物車內容
+				targetItem.setOrderQty(orderQty);
+				targetItem.setSubtotal(pdtPrice * orderQty); // 更新小計
+			} else {
+				// 移除商品
+				cart.remove(targetItem);
+
+			}
+		} else {
+			return ResponseEntity.badRequest().body("未找到該商品，無法更新");
+		}
+
+		// 將購物車更新回 Session
+		session.setAttribute("cart", cart);
+		System.out.println(session.getAttribute("cart"));
+
+		// 計算總金額
+		Integer total = productSvc.calculateTotal(cart);
+		System.out.println("購物車總金額: " + total);
+		session.setAttribute("total", total);
+
+		return ResponseEntity.ok("購物車更新成功");
+
+	}
+
+	@PostMapping("/deleteCart")
+	@ResponseBody
+	public ResponseEntity<String> deleteCart(@RequestParam("pdtId") Integer pdtId, HttpSession session) {
+		// 從 Session 中獲取購物車
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+		if (cart == null) {
+			ResponseEntity.badRequest().body("購物車為空，無法更新");
+		}
+		// 查找並移除指定商品
+		cart.removeIf(item -> item.getPdtId().equals(pdtId));
+
+		// 更新 Session 中的購物車
+		session.setAttribute("cart", cart);
+		System.out.println(session.getAttribute("cart"));
+
+		// 計算總金額
+		Integer total = productSvc.calculateTotal(cart);
+		System.out.println("購物車總金額: " + total);
+		session.setAttribute("total", total);
+
+		return ResponseEntity.ok("購物車已刪除");
+
+	}
+
+//	//========================== checkOut ==========================
+	@GetMapping("/checkOut")
+	public String checkOut(Model model, HttpSession session) {
+
+		// 確認 session 中是否有會員資訊
+		MemVO memVO = (MemVO) session.getAttribute("auth");
+		if (memVO == null) {
+			// 如果用戶未登錄，重定向到登錄頁面
+			return "redirect:mem/login";
+		}
+
+		ProductOrderVO productOrderVO = new ProductOrderVO();
+		// 綁定會員資料
+		productOrderVO.setMemVO(memVO);
+
+//		System.out.println("Member Name: " + productOrderVO.getMemVO().getName());
+		// 設定初始值
+		productOrderVO.setRecName(memVO.getName());
+		productOrderVO.setRecTel(memVO.getTel());
+		productOrderVO.setRecAddr(memVO.getAddr());
+
+		model.addAttribute("productOrderVO", productOrderVO);
+		return "front-end/shop/checkOut";
+	}
+
+	@GetMapping("/orderSuccessPage")
+	public String orderSuccessPage(Model model) {
+		return "front-end/shop/orderSuccessPage";
+	}
+
+	@PostMapping("insert")
+	public String insert(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model,
+			HttpSession session) throws IOException {
+		// @Valid 和 BindingResult 必須出現在相同的方法參數列表中，且 BindingResult 必須緊跟在 @Valid
+		// 參數後面，這樣才能正確接收和處理錯誤。
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		if (result.hasErrors()) {
+			return "front-end/shop/checkOut";
+		}
+		/*************************** 2.開始新增資料 *****************************************/
+		Integer total = (Integer) session.getAttribute("total");
+		productOrderVO.setOrderAmt(total);
+		productOrderVO.setOrderStat(2); // 設定狀態:2訂單成立
+
+		// 新增訂單並獲得pdtOrderId!!!
+		Integer newPdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);
+		session.setAttribute("newPdtOrderId", newPdtOrderId);
+		System.out.println("自增的訂單 ID: " + newPdtOrderId);
+
+		/*************************** 3.新增訂單明細 *****************************************/
+		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+		if (cart != null && !cart.isEmpty()) {
+			for (CartVO item : cart) {
+				ProductOrderItemVO PdtOrderItem = new ProductOrderItemVO();
+				PdtOrderItem.setPdtOrderId(newPdtOrderId);
+				PdtOrderItem.setPdtId(item.getPdtId());
+				PdtOrderItem.setPdtPrice(item.getPdtPrice());
+				PdtOrderItem.setPdtName(item.getPdtName());
+				PdtOrderItem.setOrderQty(item.getOrderQty());
+				pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
+				System.out.println("訂單明細新增成功");
+			}
+		}
+		return "redirect:orderSuccessPage";
+
+	}
+
+	// ========================== 我的訂單 ==========================
+	@GetMapping("/noThankPage")
+	public String noThankPage(Model model) {
+		return "front-end/shop/noThankPage";
+	}
+	
+	@GetMapping("/thankPage")
+	public String thankPage(Model model) {
+		return "front-end/shop/thankPage";
+	}
+
+
+	//綠界-訂單狀態修改
+	@PostMapping("/orderResult")
+	public String orderResult(@RequestParam Map<String, String> params, Model model, HttpSession session) {
+		// 1. 獲取所有回傳參數
+		System.out.println("ECPay 回傳資料：" + params);
+
+		// 2. 驗證 CheckMacValue(省略...超麻煩)
+
+		// 3. 確認交易結果
+		String rtnCode = params.get("RtnCode");
+		if ("1".equals(rtnCode)) {
+			// 交易成功，處理後續業務邏輯
+			String merchantTradeNo = params.get("MerchantTradeNo");
+			String tradeAmt = params.get("TradeAmt");
+			String paymentDate = params.get("PaymentDate");
+			System.out.printf("訂單 %s 支付成功，金額: %s, 支付時間: %s%n", merchantTradeNo, tradeAmt, paymentDate);
+
+//			Integer newPdtOrderId = (Integer) session.getAttribute("newPdtOrderId"); 這個娶不到
+			
+			//取出用Remark儲存的newPdtOrderId
+			String CustomField1 = params.get("CustomField1");
+			Integer newPdtOrderId = Integer.valueOf(CustomField1);
+			if (newPdtOrderId == null) {
+				System.out.println("newPdtOrderId還是找不到阿TT");
+				return "redirect:product/productlist";
+			}
+			// 修改訂單狀態:1已付款
+			pdtOrderSvc.getNewOrderStat(1, newPdtOrderId); 
+			
+		} else {
+			// 交易失敗，記錄錯誤訊息
+			String rtnMsg = params.get("RtnMsg");
+			System.out.printf("交易失敗：%s%n", rtnMsg);
+			
+			//取出用Remark儲存的newPdtOrderId
+			String CustomField1 = params.get("CustomField1");
+			Integer newPdtOrderId = Integer.valueOf(CustomField1);
+			if (newPdtOrderId == null) {
+				System.out.println("newPdtOrderId還是找不到阿TT");
+				return "redirect:product/productlist";
+			}
+			// 修改訂單狀態:0未付款
+			pdtOrderSvc.getNewOrderStat(0, newPdtOrderId); 
+			return "redirect:noThankPage"; // 訂購失敗頁面
+		}
+
+		return "redirect:thankPage";
+	}
+	
+
+	@GetMapping("/get_myPdtOrder")
+	public String get_myPdtOrder(ModelMap model, HttpSession session) {
+
+		// 確認 session 中是否有會員資訊
+		MemVO memVO = (MemVO) session.getAttribute("auth");
+		if (memVO == null) {
+			// 如果用戶未登錄，重定向到登錄頁面
+			return "redirect:mem/login";
+		}
+
+		Integer memId = memVO.getMemId();
+		List<ProductOrderVO> list = pdtOrderSvc.getProductOrderByMemId(memId);
 		model.addAttribute("orderListData", list);
 		return "front-end/shop/myPdtOrder";
 	}
-	
+
 //	@GetMapping("/get_myPdtOrderItem")
 //	public String get_myPdtOrderItem(
 //			@RequestParam("pdtOrderId") String pdtOrderId, 
@@ -110,257 +361,43 @@ public class CartController {
 //		// 返回訂單明細頁面
 //		return "front-end/shop/myPdtOrderItem";
 //	}
-	
-	//========================== shoppingCart ==========================
 
-	@GetMapping("/shoppingCart")
-	public String shoppingCart(Model model) {
-		// 檢查 total 是否存在，若不存在則初始化為 0
-		if (session.getAttribute("total") == null) {
-	        session.setAttribute("total", 0);
-	    }
-		return "front-end/shop/shoppingCart"; 
-	}
-	
-	@ModelAttribute("cartListData")
-	protected List<CartVO> cartListData(HttpSession session) {
-		List<CartVO> cartList = (List<CartVO>) session.getAttribute("cart");
-		return cartList;
-	}
-
-	//shoppingPage.html加入購物車
-	@SuppressWarnings("unchecked")
-	@PostMapping("/addToCart")
-	@ResponseBody
-	public ResponseEntity<String> addToCart(
-			@RequestParam("pdtId") Integer pdtId,
-			@RequestParam("pdtName") String pdtName, 
-			@RequestParam("pdtPrice") Integer pdtPrice, 
-			@RequestParam(value = "orderQty", required = false, defaultValue = "1") Integer orderQty) {
-			
-		// 確保數量不為 null，並設置預設值
-	    if (orderQty == null || orderQty <= 0) {
-	        orderQty = 1;
-	    }
-
-	    // 獲取購物車
-	    List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-	    if (cart == null) {
-	        cart = new ArrayList<>();
-	    }
-
-	    // 檢查商品是否已存在於購物車
-	    CartVO existingItem = cart.stream()
-	            .filter(item -> item.getPdtId().equals(pdtId))
-	            .findFirst()
-	            .orElse(null);
-
-	    if (existingItem != null) {
-	        // 如果商品已存在，累加數量並更新小計
-	        existingItem.setOrderQty(existingItem.getOrderQty() + orderQty);
-	        existingItem.setSubtotal(existingItem.getPdtPrice() * existingItem.getOrderQty());
-	    } else {
-	        // 如果商品不存在，新增到購物車
-	    	CartVO newItem = new CartVO(pdtId, pdtName, pdtPrice, orderQty);
-	        cart.add(newItem);
-	    }
-
-	    // 更新 session
-	    session.setAttribute("cart", cart);
-	    System.out.println(session.getAttribute("cart"));
-	    
-	    // 計算總金額
-        Integer total = productSvc.calculateTotal(cart);
-        System.out.println("購物車總金額: " + total);
-        session.setAttribute("total", total);
-	    
-		return ResponseEntity.ok("商品已加入購物車");
-	}
-	
-	@PostMapping("/updateCart")
-	@ResponseBody
-	public ResponseEntity<String> updateCart(
-			@RequestParam("pdtId") Integer pdtId,
-			@RequestParam("pdtName") String pdtName, 
-			@RequestParam("pdtPrice") Integer pdtPrice, 
-			@RequestParam("orderQty") Integer orderQty) {
-		
-			// 獲取購物車
-		    List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-	
-		    // 檢查購物車是否存在
-		    if (cart == null) {
-		        return ResponseEntity.badRequest().body("購物車為空，無法更新");
-		    }
-	
-		    // 查找對應商品
-		    CartVO targetItem = cart.stream()
-		            .filter(item -> item.getPdtId().equals(pdtId))
-		            .findFirst()
-		            .orElse(null);
-	
-		    if (targetItem != null) {
-		        if (orderQty > 0) {
-		            // 修改購物車內容
-		            targetItem.setOrderQty(orderQty);
-		            targetItem.setSubtotal(pdtPrice * orderQty); // 更新小計
-		        } else {
-		            // 移除商品
-		            cart.remove(targetItem);
-		            
-		        }
-		    } else { 
-		        return ResponseEntity.badRequest().body("未找到該商品，無法更新");
-		    }
-	
-		    // 將購物車更新回 Session
-		    session.setAttribute("cart", cart);
-		    System.out.println(session.getAttribute("cart"));
-		    
-		    // 計算總金額
-	        Integer total = productSvc.calculateTotal(cart);
-	        System.out.println("購物車總金額: " + total);
-	        session.setAttribute("total", total);
-	
-		    return ResponseEntity.ok("購物車更新成功");
-	
-	}
-	
-	
-	@PostMapping("/deleteCart")
-	@ResponseBody
-	public ResponseEntity<String> deleteCart(
-			@RequestParam("pdtId") Integer pdtId) {
-		// 從 Session 中獲取購物車
-	    List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-	    if (cart == null) {
-	    	ResponseEntity.badRequest().body("購物車為空，無法更新");
-	    }
-	    // 查找並移除指定商品
-	    cart.removeIf(item -> item.getPdtId().equals(pdtId));
-
-	    // 更新 Session 中的購物車
-	    session.setAttribute("cart", cart);
-	    System.out.println(session.getAttribute("cart"));
-
-	    // 計算總金額
-        Integer total = productSvc.calculateTotal(cart);
-        System.out.println("購物車總金額: " + total);
-        session.setAttribute("total", total);
-
-	    return ResponseEntity.ok("購物車已刪除");
-		
-	}
-	
-
-//	//========================== checkOut ==========================
-	@GetMapping("/checkOut")
-	public String checkOut(Model model) {
-		
-		// 確認 session 中是否有會員資訊
-		MemVO memVO = (MemVO) session.getAttribute("auth");
-		if (memVO == null) {
-		    // 如果用戶未登錄，重定向到登錄頁面
-		    return "redirect:mem/login";
-		}
-		
-		ProductOrderVO productOrderVO = new ProductOrderVO();
-		//綁定會員資料
-		productOrderVO.setMemVO(memVO);
-		
-//		System.out.println("Member Name: " + productOrderVO.getMemVO().getName());
-		//設定初始值
-		productOrderVO.setRecName(memVO.getName()); 
-		productOrderVO.setRecTel(memVO.getTel());
-		productOrderVO.setRecAddr(memVO.getAddr());
-		
-		model.addAttribute("productOrderVO", productOrderVO);
-		return "front-end/shop/checkOut"; 
-	}
-	
-	@GetMapping("/successPage")
-	public String successPage(Model model) {
-		return "front-end/shop/successPage"; 
-	}
-	
-	@PostMapping("insert")
-	public String insert
-		(@Valid ProductOrderVO productOrderVO, BindingResult result, 
-				ModelMap model
-			) throws IOException {
-		//@Valid 和 BindingResult 必須出現在相同的方法參數列表中，且 BindingResult 必須緊跟在 @Valid 參數後面，這樣才能正確接收和處理錯誤。
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		if (result.hasErrors()) {
-			return "front-end/shop/checkOut";
-		}
-		/*************************** 2.開始新增資料 *****************************************/
-		Integer total = (Integer) session.getAttribute("total");
-		productOrderVO.setOrderAmt(total);
-		productOrderVO.setOrderStat(2);  //設定狀態:訂單成立
-		Integer pdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);  //新增訂單並獲得pdtOrderId
-	    System.out.println("自增的訂單 ID: " + pdtOrderId);
-	    
-	    /*************************** 3.新增訂單明細 *****************************************/
-		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-		if (cart != null && !cart.isEmpty()) {
-		    for (CartVO item : cart) {
-		    	ProductOrderItemVO PdtOrderItem = new ProductOrderItemVO();
-		    	PdtOrderItem.setPdtOrderId(pdtOrderId);
-		    	PdtOrderItem.setPdtId(item.getPdtId());
-		    	PdtOrderItem.setPdtPrice(item.getPdtPrice());
-		    	PdtOrderItem.setPdtName(item.getPdtName());
-		    	PdtOrderItem.setOrderQty(item.getOrderQty());
-		    	pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
-		    	System.out.println("訂單明細新增成功");
-		    }
-		}
-		return "redirect:successPage";  
-		
-	}
-	
-//	@GetMapping("/ecpayCheckoutPage")
-//	public String ecpayCheckoutPage(Model model) {
-//		return "front-end/shop/ecpayCheckoutPage"; 
-//	}
-	
+	// 綠界備用
 //	@PostMapping("/ecpayCheckout")
-	public String ecpayCheckout(Model model) {
-		/*************************** 綁定綠界 *****************************************/
-		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
-		AllInOne all = new AllInOne("");
-	
-		AioCheckOutALL obj = new AioCheckOutALL();
-		obj.setMerchantTradeNo(uuId);
-		
-		String currentTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-		obj.setMerchantTradeDate(currentTime);
-		
-		Integer total = (Integer) session.getAttribute("total");
-		obj.setTotalAmount(String.valueOf(total));
-		
-		obj.setTradeDesc("test Description");
-		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
-		
-		// 從 cart 中提取商品名稱、數量、價格，並組合成格式
-	    String itemNames = cart.stream()
-	            .map(cartItem -> cartItem.getPdtName() + " x " + cartItem.getOrderQty() + " = " + cartItem.getPdtPrice() + "元")
-	            .collect(Collectors.joining("\n"));  // 使用換行符號分隔每一項商品
-	
-		obj.setItemName(itemNames);
-		obj.setReturnURL("<http://211.23.128.214:5000>");
-		obj.setNeedExtraPaidInfo("N");
-		String form = all.aioCheckOut(obj, null);
-		
-//		session.removeAttribute("total");
-//		session.removeAttribute("cart");  //購物車移除
-		
-		// 將表單存入模型
-        model.addAttribute("ecpayForm", form);
+//	public String ecpayCheckout(Model model, HttpSession session) {
+//		String uuId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20);
+//		AllInOne all = new AllInOne("");
+//	
+//		AioCheckOutALL obj = new AioCheckOutALL();
+//		obj.setMerchantTradeNo(uuId);
+//		
+//		String currentTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+//		obj.setMerchantTradeDate(currentTime);
+//		
+//		Integer total = (Integer) session.getAttribute("total");
+//		obj.setTotalAmount(String.valueOf(total));
+//		
+//		obj.setTradeDesc("test Description");
+//		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
+//		
+//		// 從 cart 中提取商品名稱、數量、價格，並組合成格式
+//	    String itemNames = cart.stream()
+//	            .map(cartItem -> cartItem.getPdtName() + " x " + cartItem.getOrderQty() + " = " + cartItem.getPdtPrice() + "元")
+//	            .collect(Collectors.joining("\n"));  // 使用換行符號分隔每一項商品
+//	
+//		obj.setItemName(itemNames);
+//		obj.setReturnURL("<http://211.23.128.214:5000>");
+//		obj.setNeedExtraPaidInfo("N");
+//		String form = all.aioCheckOut(obj, null);
+//		
+////		session.removeAttribute("total");
+////		session.removeAttribute("cart");  //購物車移除
+//		
+//		// 將表單存入模型
+//        model.addAttribute("ecpayForm", form);
+//
+//        // 返回對應的視圖名稱
+//        return form; 
+//	}
 
-        // 返回對應的視圖名稱
-        return form; 
-	}
-	
-
-	
 }
