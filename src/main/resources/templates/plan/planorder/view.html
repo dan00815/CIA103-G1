@@ -218,17 +218,13 @@
 
     .btn-modal-confirm:hover {
         background-color: #f4978e;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/dan00815/CIA103-G1.git
         color: white;
         border-color: #0080ff;
     }
     }
 
   </style>
-=======
-	color: white;
-	border-color: #0080ff;
-}
+
 
 </style>
 >>>>>>> 6feb3e9 roomtype bb finish
@@ -354,7 +350,7 @@
         <p class="text-muted">訂單編號：#<span th:text="${order.planOrderId}"></span></p>
       </div>
       <div class="modal-footer">
-        <form th:action="@{/planorder/cancel/{id}(id=${order.planOrderId})}" method="post" style="display: inline;">
+        <form th:action="@{/planord/cancel/{id}(id=${order.planOrderId})}" method="post" style="display: inline;">
           <button type="submit" class="btn btn-modal-confirm">確認取消</button>
         </form>
       </div>
