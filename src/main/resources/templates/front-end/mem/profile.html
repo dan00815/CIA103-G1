@@ -35,7 +35,6 @@ span.errorMsg {
 						th:src="@{/mem/DBGifReader_mem_profile} + '?memid=' + ${session.auth.memId}">
 				</div>
 				<form method="POST" th:action="@{modify_profile}" th:if="!${modify}">
-<<<<<<< Upstream, based on branch 'master' of https://github.com/dan00815/CIA103-G1.git
 					<button class="pro_btn">修改會員資料</button>
 				</form>
 			</div>
@@ -145,117 +144,7 @@ span.errorMsg {
 				<div class="btn_area" th:if="${modify}">
 					<button type="button" onclick="cancelEdit()" class="cancel pro_btn">取消修改</button>
 					<button type="submit" class="pro_btn">確認修改</button>
-=======
-					<button>修改會員資料</button>
-				</form>
-			</div>
-
-
-			<form class="mem_info" method="POST" th:action="@{update}"
-				enctype="multipart/form-data" th:object="${memVO}">
-
-				<div class="info">
-					<label for="">會員</label>
-					<p th:text="${session.auth.name}" th:if="!${modify}"></p>
-					<input type="text" th:if="${modify}" class="form-control"
-						th:field="*{name}" th:value="${session.auth.name}">
-				</div>
-				<span class="errorMsg" th:if="${#fields.hasErrors('name')}"
-					th:errors="*{name}"></span>
-
-
-
-				<div class="info">
-					<label for="">生日</label>
-					<p th:text=${session.auth.birth} th:if="!${modify}"></p>
-					<input type="date" th:if="${modify}"
-						th:value="${session.auth.birth}" th:field="*{birth}"
-						class="form-control">
-				</div>
-				<span class="errorMsg" th:if="${#fields.hasErrors('birth')}"
-					th:errors="*{birth}"></span>
-
-
-				<div class="info">
-					<label for="">性別</label>
-
-					<p th:text=${session.sex} th:if="!${modify}"></p>
-
-					<div class="form-group radio_el" th:if="${modify}">
-
-						<div class="form-check">
-							<input class="form-check-input" type="radio" id="male" name="sex"
-								value="1" th:checked="${session.auth.sex == 1}" /> <label
-								class="form-check-label" for="male"> 男 </label>
-						</div>
-
-						<div class="form-check">
-							<input class="form-check-input" type="radio" id="female"
-								name="sex" value="2" th:checked="${session.auth.sex == 2}" /> <label
-								class="form-check-label" for="female"> 女 </label>
-						</div>
-
-						<div class="form-check">
-							<input class="form-check-input" type="radio" id="other"
-								name="sex" value="3" th:checked="${session.auth.sex == 3}" /> <label
-								class="form-check-label" for="other"> 其他 </label>
-						</div>
-					</div>
-				</div>
-
-				<div class="info">
-					<label for="">Email</label>
-					<p th:text=${session.auth.email} th:if="!${modify}"></p>
-					<input type="email" th:if="${modify}"
-						th:value="${session.auth.email}" th:field="*{email}"
-						class="form-control">
-				</div>
-				<span class="errorMsg" th:if="${#fields.hasErrors('email')}"
-					th:errors="*{email}"></span>
-
-
-				<div class="info">
-					<label for="">電話</label>
-					<p th:text=${session.auth.tel} th:if="!${modify}"></p>
-					<input type="text" th:if="${modify}" th:value="${session.auth.tel}"
-						name="tel" class="form-control" th:field="*{tel}">
-				</div>
-				<span class="errorMsg" th:if="${#fields.hasErrors('tel')}"
-					th:errors="*{tel}"></span>
-
-				<div class="info">
-					<label for="">地址</label>
-					<p th:text=${session.auth.addr} th:if="!${modify}"></p>
-					<input type="text" th:if="${modify}"
-						th:value="${session.auth.addr}" th:field="*{addr}"
-						class="form-control">
-				</div>
-				<span class="errorMsg" th:if="${#fields.hasErrors('addr')}"
-					th:errors="*{addr}"></span>
-
-				<div class="info">
-					<label for="">會員類型</label>
-					<p th:text="${session.auth.memType == 1 ? '一般會員' :'公司' }"></p>
-				</div>
-
-				<div class="info pic" th:if="${modify}">
-					<label style="flex: 0.5 0 50px;">會員照片</label> <label
-						class="upload_el" for="uploadImg"> <i
-						class="fa-regular fa-image"></i> choose photo
-					</label> <input style="display: none" type="file" id="uploadImg"
-						accept="image/*" th:field="*{memImg}" aria-describedby="imgBlock" />
-				</div>
-
-
-				<div class="img_prev">
-					<ul class="prev_ul_el"></ul>
-				</div>
-
-
-				<div class="btn_area" th:if="${modify}">
-					<button type="button" onclick="cancelEdit()" class="cancel">取消修改</button>
-					<button type="submit">確認修改</button>
->>>>>>> 6feb3e9 roomtype bb finish
+					<!-- 在這 -->
 				</div>
 
 			</form>
