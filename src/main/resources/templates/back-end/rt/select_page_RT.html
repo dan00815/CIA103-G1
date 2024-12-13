@@ -3,80 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>查詢房型-select_page_RT.html</title>
+    <title>查詢房型 - 二欄式版面</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
     <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
-</head>    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        #header, #sub-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 0px;
+        }
+
+        .left-column {
+            width: 25%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-column form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-column label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .left-column input {
+            width: 100%;
+            margin: 5px 0 15px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .left-column button {
+            color: white;
+            background-color: #007bff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .left-column button:hover {
+            background-color: #0056b3;
+        }
+
+        .right-column {
+             flex: 9;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            width: 100%;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .rimg {
+            width: 120px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .btn-container a {
+            text-decoration: none;
+        }
+
+        /* DataTables 分頁按鈕樣式調整 */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 0.85rem;
+            border-radius: 5px;
+            border: 1px solid transparent;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #0d6efd;
+            color: #fff !important;
+            border: 1px solid #0d6efd;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #e9ecef;
+            border: 1px solid #ddd;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            width: auto;
+            display: inline-block;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            margin-left: 0.5em;
+        }
+        
+        .dataTables_wrapper .dataTables_filter td{
+        	color:black;
+        }
+        
+         #edit:hover{
+        	background-color:rgb(248, 236, 88);
+        }
+        
+        #delete:hover{
+        	background-color:rgb(252, 90, 95);
+        }
+    </style>
+</head>
 <body>
-    <!-- 導航欄 -->
-    
     <!-- 頁面標題 -->
     <div id="header"><i class="fa-solid fa-hotel"></i> 房型管理</div>
     <div id="sub-header"><i class="fa fa-search"></i> 房型查詢</div>
-    
-    <!-- 錯誤區塊 -->
-    <div class="errorblock" th:utext="${errorMsg}">${errorMsg}</div><br>
-    <div th:if="${validationErrors}" class="error-block">
-        <ul>
-            <li th:each="error : ${validationErrors}" th:text="${error.defaultMessage}"></li>
-        </ul>
-    </div>
 
-    <!-- 查詢表單 -->
-    <div>
-        <form class="cus_form" method="post" th:action="@{listRT_ByCompositeQuery}">
-            <!-- 房型編號 -->
-            <div>
-                <label for="rtid-text">房型編號:</label>
-                <input class="form-control" id="rtid-text" type="text" name="roomTypeId" placeholder="輸入房型編號(如:1)"><br>
+    <!-- 主內容區域 -->
+    <div class="container">
+        <!-- 左側表單 -->
+        <div class="left-column">
+            <!-- 錯誤區塊 -->
+            <div class="errorblock" th:utext="${errorMsg}">${errorMsg}</div>
+            <div th:if="${validationErrors}" class="error-block">
+                <ul>
+                    <li th:each="error : ${validationErrors}" th:text="${error.defaultMessage}"></li>
+                </ul>
             </div>
 
-            <!-- 房型名稱 -->
-            <div>
-                <label for="rtname-text">房型名稱:</label>
-                <input class="form-control" id="rtname-text" type="text" name="roomTypeName" placeholder="輸入關鍵字"><br>
-            </div>
+            <!-- 查詢表單 -->
+            <form class="cus_form" method="post" th:action="@{listRT_ByCompositeQuery}">
+                <div class="form-group">
+                    <label for="rtid-text">房型編號:</label>
+                    <input class="form-control search" id="rtid-text" type="text" name="roomTypeId" placeholder="輸入房型編號(如:1)">
+                </div>
 
-            <!-- 房型描述 -->
-            <div>
-                <label for="rtdesc-text">房型描述:</label>
-                <input class="form-control" id="rtdesc-text" type="text" name="roomTypeDesc" placeholder="輸入關鍵字"><br>
-            </div>
+                <div class="form-group">
+                    <label for="rtname-text">房型名稱:</label>
+                    <input class="form-control search" id="rtname-text" type="text" name="roomTypeName" placeholder="輸入關鍵字">
+                </div>
 
-            <!-- 房型售價 -->
-            <div>
-                <label for="rtprice-text">房型售價:</label>
-                <input class="form-control" id="startRoomPrice" type="text" name="startRoomPrice" placeholder="輸入售價">
-                <span>~</span>
-                <input class="form-control" id="endRoomPrice" type="text" name="endRoomPrice" placeholder="輸入售價"><br>
-            </div>
+                <div class="form-group">
+                    <label for="rtdesc-text">房型描述:</label>
+                    <input class="form-control search" id="rtdesc-text" type="text" name="roomTypeDesc" placeholder="輸入關鍵字">
+                </div>
 
-            <!-- 容納人數 -->
-            <div>
-                <label for="rtocp-text">容納人數:</label>
-                <input class="form-control" id="startOccupancy" type="text" name="startOccupancy" placeholder="輸入容納人數">
-                <span>~</span>
-                <input class="form-control" id="endOccupancy" type="text" name="endOccupancy" placeholder="輸入容納人數"><br>
-            </div>
+                <div class="form-group">
+                    <label for="rtprice-text">房型售價:</label>
+                    <input class="form-control search" id="startRoomPrice" type="text" name="startRoomPrice" placeholder="輸入最低價">
+                    <span>~</span>
+                    <input class="form-control search" id="endRoomPrice" type="text" name="endRoomPrice" placeholder="輸入最高價">
+                </div>
 
-            <!-- 提交按鈕 -->
-            <div>
-                <button type="submit" class="btn">
-                    <i class="fa fa-search"></i> 房型查詢
-                    <span class="inner">
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                        <span class="blob"></span>
-                    </span>
-                </button>
-            </div>
-        </form>
-    </div>
+                <div class="form-group">
+                    <label for="rtocp-text">容納人數:</label>
+                    <input class="form-control search" id="startOccupancy" type="text" name="startOccupancy" placeholder="輸入容納人數">
+                    <span>~</span>
+                    <input class="form-control search" id="endOccupancy" type="text" name="endOccupancy" placeholder="輸入容納人數">
+                </div>
 
-    <!-- 查詢結果 -->
-    <div class="result" th:if="${getRT_For_Display}">
-        <div th:insert="~{/back-end/rt/listOneRT :: listOneRT-div}"></div>
+                <div class="form-group">
+                    <button type="submit">
+                        <i class="fa fa-search"></i> 房型查詢
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 右側結果表格 -->
+        <div class="right-column">
+            <div th:insert="~{/back-end/rt/listAllRT :: rtTable-div}"></div>
+        </div>
     </div>
 
     <!-- 底部按鈕 -->

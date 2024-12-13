@@ -1,5 +1,6 @@
 package com.event.cia103g1springboot.room.roomorder.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
@@ -46,12 +48,10 @@ public class ROIdController {
 	public String getRO_For_Display(
 			@NotEmpty(message="房型訂單編號:請勿空白")
 			@Digits(integer = 4, fraction = 0, message = "房型訂單編號: 請填數字-請勿超過{integer}位數")
-			@Min(value = 2001, message = "商品編號: 不能小於{value}")
-			@Max(value = 9999, message = "商品編號: 不能超過{value}") String roomOrderId,ModelMap model) {
+			@Min(value = 2001, message = "房型訂單編號: 不能小於{value}")
+			@RequestParam("roomOrderId")String roomOrderId,ModelMap model) {
 		
 		ROVO roVO = roSvc.getOneRO(Integer.valueOf(roomOrderId));
-		
-		
 		List<ROVO> list = roSvc.getAllRO();
 		model.addAttribute("roListData",list);
 		model.addAttribute("rtVO",new RTVO());
@@ -66,8 +66,10 @@ public class ROIdController {
 			return "back-end/roomOrder/select_page_RO";
 		}
 		model.addAttribute("roVO",roVO);
-		model.addAttribute("getRO_For_Display","true");
-		return "back-end/roomOrder/select_page_RO";
+		List<ROVO> list4 = new ArrayList<>();
+		list4.add(roVO);
+		model.addAttribute("roListData",list4);
+		return "back-end/roomOrder/listAllRO";
 	}
 	
 
@@ -76,7 +78,7 @@ public class ROIdController {
 	    Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
 	    StringBuilder strBuilder = new StringBuilder();
 	    for (ConstraintViolation<?> violation : violations ) {
-	          strBuilder.append(violation.getMessage() + "<br>");
+	          strBuilder.append(violation.getMessage() + "、");
 	    }
 		List<ROVO> list = roSvc.getAllRO();
 		model.addAttribute("roListData", list); 
@@ -87,6 +89,6 @@ public class ROIdController {
 		List<PlanOrder> list3 = poSvc.findAllPlanOrders();
 		model.addAttribute("poListData",list3);
 		String message = strBuilder.toString();
-	    return new ModelAndView("back-end/roomOrder/select_page_RO", "errorMessage", "請修正以下錯誤:<br>"+message);
+	    return new ModelAndView("back-end/roomOrder/select_page_RO", "errorMessage", "請修正以下錯誤: "+message);
 	}
 }
