@@ -346,7 +346,7 @@ public class planOrderController {
         }
     }
 
-    //    後端------------------------------------------------------
+    //    後台------------------------------------------------------
     @GetMapping("/listall")
     public String listAll(Model model) {
         List<PlanOrder> orders = planOrderService.findAllPlanOrders();
@@ -363,6 +363,14 @@ public class planOrderController {
         }
         model.addAttribute("order", order);
         return "plan/planorder/view";
+    }
+
+
+    @GetMapping("/cancel")
+    public String cancel(@PathVariable Integer id ,Model model ) {
+        PlanOrder order = planOrderService.findPlanOrderById(id);
+        order.setOrderStat(4);
+        return "plan/planorder/planordlist";
     }
 
 
