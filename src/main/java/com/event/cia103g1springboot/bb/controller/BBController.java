@@ -25,6 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.event.cia103g1springboot.bb.model.BBService;
 import com.event.cia103g1springboot.bb.model.BBVO;
+import com.event.cia103g1springboot.member.mem.model.MemRepository;
+import com.event.cia103g1springboot.member.mem.model.MemService;
+import com.event.cia103g1springboot.member.mem.model.MemVO;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 
 @Controller
 @RequestMapping("/bb")
@@ -32,6 +37,15 @@ public class BBController {
 	
 	@Autowired
 	BBService bbSvc;
+	
+	@Autowired
+	MemRepository memRepository;
+	
+	@Autowired
+	MemberNotifyService mns;
+	
+	@Autowired
+	MemService memSvc;
 
 	@GetMapping("/select_page_bb")
 	public String select_page_bb(Model model) {
@@ -66,23 +80,50 @@ public class BBController {
 			   // 轉換日期時間
 			   LocalDateTime dateTime = LocalDateTime.parse(posttimeStr);
 			   bbVO.setPosttime(Timestamp.valueOf(dateTime));
-
-			   System.out.println("接收到的數據：");
-			   System.out.println("msgtype: " + bbVO.getMsgtype());
-			   System.out.println("msgtitle: " + bbVO.getMsgtitle());
-			   System.out.println("msgcon: " + bbVO.getMsgcon());
-			   System.out.println("poststat: " + bbVO.getPoststat());
-			   System.out.println("posttime: " + bbVO.getPosttime());
-
-
 			   bbSvc.addMsg(bbVO);
-			   return "redirect:/bb/listAllMsg";
+			   model.addAttribute("success","-(新增成功)");
+			   bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
+				model.addAttribute("bbVO",bbVO);
+				if(bbVO.getPoststat() == 1) {
+					List<MemVO> allMem = memRepository.findAll();
+					for(MemVO acc : allMem) {
+						try {
+							if(acc.getMemType() == 1) {
+								MemberNotifyVO notify = new MemberNotifyVO();
+								notify.setMember(acc);
+								notify.setNotifyType(null);
+								
+								Integer msgType = Integer.valueOf(bbVO.getMsgtype());
+								switch(msgType) {
+									case(1):{
+										notify.setNotifyCon("佈告欄發佈了新的行程通知!快去看看吧~");
+										break;
+									}
+									case(2):{
+										notify.setNotifyCon("佈告欄發佈了新的活動通知!快去看看吧~");
+										break;
+									}
+									case(3):{
+										notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
+										break;
+									}
+									case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+								}
+								mns.createNotification(notify);
+							}
+						}catch(Exception e) {
+							e.printStackTrace();
+							model.addAttribute("errorMessage","通知發佈失敗");
+						}
+					}
+				}
 			  } catch (Exception e) {
 			   System.out.println("處理失敗：" + e.getMessage());
 			   e.printStackTrace();
 			   model.addAttribute("errorMessage", "新增失敗:欄位不可空白!");
 			   return "back-end/bb/addMsg";
 			  }
+			return "redirect:/bb/listAllMsg";
 	  }
 	 
 	 
@@ -96,29 +137,51 @@ public class BBController {
 	
 	@PostMapping("update")
 	public String update(@ModelAttribute("bbVO")@Valid BBVO bbVO, BindingResult result, @RequestParam("posttime") String posttimeStr,Model model)throws IOException {
-		
-		 System.out.println("==========進入 update 方法==========");
-
-		  try {
+	  try {
 		   // 轉換日期時間
 		   LocalDateTime dateTime = LocalDateTime.parse(posttimeStr);
-		   bbVO.setPosttime(Timestamp.valueOf(dateTime));
-		   System.out.println("接收到的數據：");
-		   System.out.println("msgid: " + bbVO.getMsgid());
-		   System.out.println("msgtype: " + bbVO.getMsgtype());
-		   System.out.println("msgtitle: " + bbVO.getMsgtitle());
-		   System.out.println("msgcon: " + bbVO.getMsgcon());
-		   System.out.println("poststat: " + bbVO.getPoststat());
-		   System.out.println("posttime: " + bbVO.getPosttime());
-		
-		if(!result.hasErrors()) {
-			return "back-end/bb/update_bb_input";
-		}
-		bbSvc.updateMsg(bbVO);
-		model.addAttribute("success","-(修改成功)");
-		bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
-		model.addAttribute("bbVO",bbVO);
-		return "back-end/bb/listOneMsg";
+		   bbVO.setPosttime(Timestamp.valueOf(dateTime));		
+			if(!result.hasErrors()) {
+				return "back-end/bb/update_bb_input";
+			}
+			bbSvc.updateMsg(bbVO);
+			model.addAttribute("success","-(修改成功)");
+			bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
+			model.addAttribute("bbVO",bbVO);
+			if(bbVO.getPoststat() == 1) {
+				List<MemVO> allMem = memRepository.findAll();
+				for(MemVO acc : allMem) {
+					try {
+						if(acc.getMemType() == 1) {
+							MemberNotifyVO notify = new MemberNotifyVO();
+							notify.setMember(acc);
+							notify.setNotifyType(null);
+							
+							Integer msgType = Integer.valueOf(bbVO.getMsgtype());
+							switch(msgType) {
+								case(1):{
+									notify.setNotifyCon("佈告欄發佈了新的行程通知!快去看看吧~");
+									break;
+								}
+								case(2):{
+									notify.setNotifyCon("佈告欄發佈了新的活動通知!快去看看吧~");
+									break;
+								}
+								case(3):{
+									notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
+									break;
+								}
+								case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+							}
+							mns.createNotification(notify);
+						}
+					}catch(Exception e) {
+						e.printStackTrace();
+						model.addAttribute("errorMessage","通知發佈失敗");
+					}
+				}
+			}
+			return "back-end/bb/listOneMsg";
 		  } catch (Exception e) {
 			   e.printStackTrace();
 			   model.addAttribute("errorMessage", "失敗:欄位不可空白!");
