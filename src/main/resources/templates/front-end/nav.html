@@ -11,19 +11,11 @@
 
 	<ul>
 		<li><a href="">行程預定</a></li>
-<<<<<<< Upstream, based on branch 'master' of https://github.com/dan00815/CIA103-G1.git
-		<li><a href="">房型價格</a></li>
 		<li><a href="">活動預約</a></li>
-		<li><a href="">商城</a></li>
-		<li><a href="">討論區</a></li>
-		<li><a href="">公告</a></li>
-=======
-		<li><a href=""th:href="@{/roomtype/roomTypeList}">房型價格</a></li>
+		<li><a href="" th:href="@{/roomtype/roomTypeList}">房型價格</a></li>
 		<li><a href="">活動預約</a></li>
-		<li><a href=""th:href="@{/product/productlist}">商城</a></li>
-		<li><a href="">討論區</a></li>
-		<li><a href=""th:href="@{/bullrtinBoard/bbList}">佈告欄</a></li>
->>>>>>> 6feb3e9 roomtype bb finish
+		<li><a href="" th:href="@{/product/productlist}">商城</a></li>
+		<li><a href="" th:href="@{/bulletinBoard/bbList}">佈告欄</a></li>
 		<li style="color: chocolate; font-size: 1.75rem; font-weight: bold;"
 			th:if="${session.auth}" th:text="${session.auth.name+', 你好'}"></li>
 	</ul>
@@ -33,10 +25,10 @@
 		</span>
 
 		<div class="ham_list showList">
-			<a th:href="@{/mem/register}" th:if="${session.auth == null}">註冊會員</a> 
-			<a th:href="@{/mem/login}" th:if="${session.auth == null}">會員登入</a> 
-			<a th:href="@{/mem/logout}" th:if="${session.auth}">登出</a> 
-			<a th:href="@{/mem/profile}">會員中心</a>
+			<a th:href="@{/mem/register}" th:if="${session.auth == null}">註冊會員</a>
+			<a th:href="@{/mem/login}" th:if="${session.auth == null}">會員登入</a> <a
+				th:href="@{/mem/logout}" th:if="${session.auth}">登出</a> <a
+				th:href="@{/mem/profile}">會員中心</a>
 		</div>
 	</button>
 </nav>
