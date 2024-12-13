@@ -30,7 +30,9 @@ public class PlanService {
     }
 
 
-
+    public void updatePlan(Plan plan) {
+        planRepository.save(plan); // 使用 JPA 的 save 方法更新資料
+    }
 }
 //
 //    @Autowired

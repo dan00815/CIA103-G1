@@ -25,6 +25,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 
 @Controller
@@ -53,23 +54,6 @@ public class EvtOrderController {
     @Autowired
     private PlanOrderService planOrderService;
 
-
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder) {
-//        binder.registerCustomEditor(Timestamp.class, new PropertyEditorSupport() {
-//            @Override
-//            public void setAsText(String text) {
-//                try {
-//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//                    LocalDateTime dateTime = LocalDateTime.parse(text, formatter);
-//                    setValue(Timestamp.valueOf(dateTime));
-//                } catch (DateTimeParseException e) {
-//                    setValue(null);
-//                }
-//            }
-//        });
-//    }
-
     @GetMapping("/attend/{id}")
     public String attend(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         EvtVO event = evtService.getOneEvt(id);
@@ -93,9 +77,13 @@ public class EvtOrderController {
 
     //拿所有活動訂單明細並分頁
     @GetMapping("/ordlistall")
-    public String orderlistall(@RequestParam(defaultValue = "0") Integer page, Model model) {
+    public String orderlistall(@RequestParam(defaultValue = "0") Integer page, Model model,Integer status) {
+        if(status!=null){
+            Page<EvtOrderVO>evtOrderVOStatus = evtOrderService.findAllByEvtOrderStat(status,page);
+            model.addAttribute("ord", evtOrderVOStatus);
+        }else {
         Page<EvtOrderVO> evtOrderPage = evtOrderService.getAllEvtorders(page);
-        model.addAttribute("ord", evtOrderPage);
+        model.addAttribute("ord", evtOrderPage);}
         return "/back-end/evtord/orderlist";
     }
 
@@ -182,6 +170,7 @@ public class EvtOrderController {
             return "redirect:/ordlistall";
 
         }
+//        -------------------------------------------------------------------------
     }
 
 

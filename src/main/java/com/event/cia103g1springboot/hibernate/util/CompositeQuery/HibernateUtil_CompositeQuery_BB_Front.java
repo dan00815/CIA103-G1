@@ -23,11 +23,11 @@ public class HibernateUtil_CompositeQuery_BB_Front {
 
 	public static Predicate get_aPredicate_For_AnyDB(CriteriaBuilder builder,Root<BBVO> root, String columnName, String value) {
 		Predicate predicate = null;
-		
+
 		if("msgid".equals(columnName))
 			predicate = builder.equal(root.get(columnName),Integer.valueOf(value));
-		else if( "msgtitle".equals(columnName) || "msgcon".equals(columnName)) 
-			predicate = builder.like(root.get(columnName), "%"+ value +"%"); 
+		else if( "msgtitle".equals(columnName) || "msgcon".equals(columnName))
+			predicate = builder.like(root.get(columnName), "%"+ value +"%");
 		else if("poststat".equals(columnName) || "msgtype".equals(columnName))
 			predicate = builder.equal(root.get(columnName), Byte.valueOf(value));
 		else if ("startPosttime".equals(columnName) || "endPosttime".equals(columnName)) {
@@ -45,7 +45,7 @@ public class HibernateUtil_CompositeQuery_BB_Front {
 		    // 假設 value 是一個特定日期範圍，可能是"startpostTime" 和 "endpostTime" 的兩個日期範圍查詢
 		return predicate;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<BBVO> getAllC(Map<String,String[]> map, Session session){
 		Transaction tx = session.beginTransaction();
@@ -77,7 +77,7 @@ public class HibernateUtil_CompositeQuery_BB_Front {
 			criteriaQuery.orderBy(builder.asc(root.get("msgid")));
 			Query query = session.createQuery(criteriaQuery);
 			list = query.getResultList();
-			
+
 			tx.commit();
 		}catch (RuntimeException ex) {
 	        if (tx != null) {
@@ -101,7 +101,7 @@ public class HibernateUtil_CompositeQuery_BB_Front {
 	    }
 		return list;
 	}
-	
+
 }
 
 

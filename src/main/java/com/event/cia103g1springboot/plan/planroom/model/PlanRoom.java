@@ -46,6 +46,16 @@ public class PlanRoom {
     @JoinColumn(name = "planid",referencedColumnName = "planid", insertable = false, updatable = false)
     private Plan plan;
 
+    public PlanRoom(Integer planId, Integer roomTypeId, String roomTypeName, Integer roomQty, Integer roomPrice, Integer reservedRoom) {
+        this.planId = planId;
+        this.roomTypeId = roomTypeId;
+        this.roomTypeName = roomTypeName;
+        this.roomQty = roomQty;
+        this.roomPrice = roomPrice;
+        this.reservedRoom = reservedRoom;
+    }
+
+
     @Override
     public String toString() {
         return "PlanRoom{" +

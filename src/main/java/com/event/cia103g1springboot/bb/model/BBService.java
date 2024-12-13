@@ -19,47 +19,47 @@ public class BBService{
 
 	@Autowired
 	BBRepository repository;
-	
+
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public void addMsg(BBVO bbVO) {
 		repository.save(bbVO);
 	}
-	
+
 	public void updateMsg(BBVO bbVO) {
 		repository.save(bbVO);
 	}
-	
+
 	public void deleteMsg(Integer msgid) {
 		if(repository.existsById(msgid)){
 			repository.deleteByMsgId(msgid);
 		}
 	}
-	
+
 	public BBVO getOneMsg(Integer msgid) {
 		Optional<BBVO> optional = repository.findById(msgid);
 		return optional.orElse(null);
 	}
-	
+
 	public List<BBVO> getAll(){
 		return repository.getAllMsg();
 	}
-	
+
 
 	public List<BBVO> getAll(Map<String, String[]> map){
 		return HibernateUtil_CompositeQuery_BB.getAllC(map,sessionFactory.openSession());
 	}
-	
+
 	public List<BBVO> getAllFront(Map<String, String[]> map){
 		return HibernateUtil_CompositeQuery_BB_Front.getAllC(map,sessionFactory.openSession());
 	}
 
-	
+
 	public List<BBVO> getPostMsg(){
 		return repository.getPostMsg();
 	}
-	
-	
-	
+
+
+
 }
