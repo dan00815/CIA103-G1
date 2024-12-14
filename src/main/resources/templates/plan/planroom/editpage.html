@@ -99,7 +99,7 @@
                 <i class="fas fa-door-open"></i> 分配房間數量：
             </label>
             <input type="number" id="roomQty" name="roomQty"
-                   class="form-control basic_input"
+                   class="form-control basic_input" min="1"
                    th:value="${planroom.roomQty}"
                    required>
             <div class="error-message"
@@ -123,6 +123,7 @@
 <!--        </div>-->
     </div>
     <input type="hidden" name="roomTypeId" th:value="${planroom.roomTypeId}">
+    <input type="hidden" id="originalRoomQty" name="originalRoomQty" th:value="${planroom.roomQty}">
     <button type="submit" class="btn">
         <div class="inner">
             <div class="blob"></div>
@@ -135,51 +136,6 @@
 </form>
 
 <div th:replace="~{back-end/footer :: f}"></div>
-<script>
-
-
-
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const roomQtyInput = document.getElementById('roomQty');
-    //     const reservedRoomInput = document.getElementById('reservedRoom');
-    //     const totalRoomQtyInput = document.getElementById('totalRoomQty');
-    //     const form = document.querySelector('form');
-    //
-    //     function validateRoomQty() {
-    //         const roomQty = parseInt(roomQtyInput.value);
-    //         const reservedRoom = parseInt(reservedRoomInput.value);
-    //         const totalRoomQty = parseInt(totalRoomQtyInput.value);
-    //
-    //         let isValid = true;
-    //         let errorMessage = '';
-    //
-    //         if (roomQty > totalRoomQty) {
-    //             isValid = false;
-    //             errorMessage = '分配房間數量不能大於房型總數！';
-    //             roomQtyInput.classList.add('error');
-    //         } else if (roomQty < reservedRoom) {
-    //             isValid = false;
-    //             errorMessage = '已預訂數量不能大於分配房間數量！';
-    //             roomQtyInput.classList.add('error');
-    //         } else {
-    //             roomQtyInput.classList.remove('error');
-    //         }
-    //
-    //         return { isValid, errorMessage };
-    //     }
-    //
-    //     form.addEventListener('submit', function(e) {
-    //         const validation = validateRoomQty();
-    //         if (!validation.isValid) {
-    //             e.preventDefault();
-    //             alert(validation.errorMessage);
-    //         }
-    //     });
-    //
-    //     roomQtyInput.addEventListener('input', function() {
-    //         validateRoomQty();
-    //     });
-    // });
-</script>
+<script src="/js/editplanroom.js"></script>
 </body>
 </html>
