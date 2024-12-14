@@ -13,6 +13,7 @@
     <script async defer src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
+<div th:replace="~{front-end/nav}"></div>
 <style>
     .container {
         padding: 2rem;
@@ -144,33 +145,6 @@
 
     }
 </style>
-<nav>
-    <a id="logo_area" href="">
-        <div class="img_con">
-            <img src="https://picsum.photos/100" alt=""/>
-        </div>
-        <div class="vertical-line"></div>
-        <h3>鄰星嗨嗨</h3>
-    </a>
-    <ul>
-        <li><a href="">行程預定</a></li>
-        <li><a href="">房型價格</a></li>
-        <li><a href="" th:href="@{/front/list}">活動預約</a></li>
-        <li><a href="">商城</a></li>
-        <li><a href="">討論區</a></li>
-        <li><a href="">公告</a></li>
-    </ul>
-    <button class="hamburger hamburger--collapse" type="button">
-            <span class="hamburger-box">
-                <span class="hamburger-inner"></span>
-            </span>
-        <div class="ham_list showList">
-            <a href="#" target="_blank">註冊會員</a>
-            <a href="#" target="_blank">會員登入</a>
-            <a href="#" target="_blank">會員中心</a>
-        </div>
-    </button>
-</nav>
 
 <div class="container">
     <div class="order-container">
@@ -251,10 +225,9 @@
 </div>
 
 <div th:replace="~{back-end/footer :: f}"></div>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script th:src="@{/js/google.js}"></script>
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
 
 </body>
 </html>

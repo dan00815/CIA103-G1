@@ -9,7 +9,7 @@
     <h2 style="color: #dc3545;">活動訂單不成立通知</h2>
 
     <div style="background-color: #fff3cd; border-radius: 10px; padding: 20px; margin: 20px 0;">
-        <p>親愛的 <span th:text="大英雄"></span> 您好：</p>
+        <p>親愛的 <span th:text="@{memberName}"></span> 您好：</p>
         <p>您的活動訂單不成立，以下是訂單詳情：</p>
         <ul style="list-style: none; padding: 0;">
             <li style="margin: 10px 0;">訂單編號：<span th:text="${orderId}"></span></li>

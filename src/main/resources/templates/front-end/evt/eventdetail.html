@@ -11,6 +11,7 @@
 
 </head>
 <body>
+<div th:replace="~{front-end/nav}"></div>
 <style>
     .event-details {
         width: 80%;
@@ -191,35 +192,6 @@
         100% { opacity: 1; }
     }
 </style>
-<nav>
-    <a id="logo_area" href="">
-        <div class="img_con">
-            <img src="https://picsum.photos/100" alt="" />
-        </div>
-        <div class="vertical-line"></div>
-        <h3>鄰星嗨嗨</h3>
-    </a>
-
-    <ul>
-        <li><a href="">行程預定</a></li>
-        <li><a href="">房型價格</a></li>
-        <li><a href="" th:href="@{/front/list}">活動預約</a></li>
-        <li><a href="">商城</a></li>
-        <li><a href="">討論區</a></li>
-        <li><a href="">公告</a></li>
-    </ul>
-
-    <button class="hamburger hamburger--collapse" type="button">
-           <span class="hamburger-box">
-               <span class="hamburger-inner"></span>
-           </span>
-        <div class="ham_list showList">
-            <a href="#" target="_blank">註冊會員</a>
-            <a href="#" target="_blank">會員登入</a>
-            <a href="#" target="_blank">會員中心</a>
-        </div>
-    </button>
-</nav>
 
 <div class="event-details">
     <div class="event-header">
@@ -301,31 +273,8 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
 <script>
-    const ham_list = document.querySelector(".ham_list");
-    const nav = document.querySelector("nav");
-
-    document.querySelector(".hamburger").addEventListener("click", function() {
-        this.classList.toggle("is-active");
-    });
-
-    ham_list.addEventListener("click", function(e) {
-        e.stopPropagation();
-    });
-
-    $(".hamburger").on("click", function() {
-        $(".ham_list").toggleClass("showList");
-    });
-
-    window.addEventListener("scroll", (e) => {
-        if (window.scrollY !== 0) {
-            nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
-            nav.style.boxShadow = "0px 8px 10px lightgray";
-        } else {
-            nav.style.backgroundColor = "lightblue";
-            nav.style.boxShadow = "none";
-        }
-    });
 
     const swiper = new Swiper('.swiper', {
         effect: 'coverflow',
