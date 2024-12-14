@@ -132,18 +132,33 @@ public String addPlanRooms(
         return "plan/planroom/editpage";
     }
 
+//        @Transactional
+//        @PostMapping("/edit")
+//        public String edit(PlanRoom planRoom, Model model) {
+//            planRoomService.save(planRoom);
+//
+//            return "redirect:/planroom/listall";
+//        }
+
+////  修改區
+
     @Transactional
     @PostMapping("/edit")
-    public String edit(PlanRoom planRoom, Model model,
-    @RequestParam("roomTypeName") String roomTypeNames) {
+    public String edit(PlanRoom planRoom,
+                       @RequestParam("roomQty") Integer roomQty,
+                       @RequestParam("originalRoomQty") Integer originalRoomQty,
+                       @RequestParam("roomTypeName") String roomTypeName,
+                       Model model) {
         planRoomService.save(planRoom);
-//        Plan plan = planService.findPlanById(planRoom.getPlanId());
-//        System.out.println("裡面的資訊:"+plan);
-//        String roomTypeName = roomTypeNames.
-//        int roomCapacity = planRoomService.extractCapacityFromRoomTypeName(roomTypeName);
+        int roomCapacity = planRoomService.extractCapacityFromRoomTypeName(roomTypeName);
+        int roomTotalCapacity = (roomQty - originalRoomQty) * roomCapacity;
+
+        Plan plan = planService.findPlanById(planRoom.getPlanId());
+        plan.setAttMax(roomTotalCapacity+ plan.getAttMax());
+
+
+
         return "redirect:/planroom/listall";
     }
-
-
 
 }
