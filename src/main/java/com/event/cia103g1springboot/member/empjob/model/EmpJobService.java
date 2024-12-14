@@ -19,8 +19,12 @@ public class EmpJobService {
 		return repository.findByEmpId(empId);
 	}
 
-	public void deleteOldAuth(Integer empId) {
-		repository.deleteAuthByEmpId(empId);
+	public void deleteOldAuth(Integer empId, Integer funId) {
+		repository.deleteSelectedAuth(empId, funId);
+	}
+
+	public void deleteAllOldAuth(Integer empId) {
+		repository.deleteAllOldAuth(empId);
 	}
 
 	public void addAuth(EmpJobVO empJob) {

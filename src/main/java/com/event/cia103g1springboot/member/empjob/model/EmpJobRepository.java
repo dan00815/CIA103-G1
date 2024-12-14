@@ -15,7 +15,11 @@ public interface EmpJobRepository extends JpaRepository<EmpJobVO, EmpJobId> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "delete from EmpJobVO ej where ej.empId.empId=?1")
-	void deleteAuthByEmpId(Integer empId);
+	@Query(value = "delete from EmpJobVO ej where ej.empId.empId=?1 and ej.funId.funId = ?2")
+	void deleteSelectedAuth(Integer empId, Integer funId);
 
+	@Modifying
+	@Transactional
+	@Query(value = "delete from EmpJobVO ej where ej.empId.empId=?1")
+	void deleteAllOldAuth(Integer empId);
 }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title</title>
+<link rel="stylesheet" href="../static/css/backend_sideBar.css" />
+</head>
+<body>
+	<ul class="side_bar">
+		<li class="li_item logo_li_item">
+			<div class="logo_item">
+				<img src="" alt="" />
+			</div>
+		</li>
+
+		<!-- href="" style="color:white" -->
+		<th:block th:each="sysVO: ${session.auths}">
+			<li class="li_item"><a th:text=${sysVO.systemFunctionVO.funName}
+				href="/auth"></a></li>
+		</th:block>
+
+	</ul>
+</body>
+</html>

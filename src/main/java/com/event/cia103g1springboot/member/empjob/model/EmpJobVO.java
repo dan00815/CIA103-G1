@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "empId")
-@EqualsAndHashCode(of = {"empId", "funId"})
+@EqualsAndHashCode(of = { "empId", "funId" })
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -29,19 +29,17 @@ import lombok.NoArgsConstructor;
 public class EmpJobVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	private Integer empId;
 
-	 @Id
-	    private Integer empId;
+	@Id
+	private Integer funId;
 
-	    @Id
-	    private Integer funId;
+	@ManyToOne
+	@JoinColumn(name = "empId", nullable = false, insertable = false, updatable = false)
+	private EmployeeVO employee;
 
-	    @ManyToOne
-	    @JoinColumn(name = "empId", nullable = false, insertable = false, updatable = false)
-	    private EmployeeVO employee;
-
-	    @ManyToOne
-	    @JoinColumn(name = "funId", insertable = false, updatable = false, nullable = false)
-	    private SystemFunctionVO systemFunctionVO;
-	}
-
+	@ManyToOne
+	@JoinColumn(name = "funId", insertable = false, updatable = false, nullable = false)
+	private SystemFunctionVO systemFunctionVO;
+}

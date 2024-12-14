@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
+
+	<h1>後台</h1>
+	<p>
+		<a href="sysFun/listAll">查看所有權限</a>
+	</p>
+
+	<p>
+		<a href="sysFun/addSysFun">新增系統功能</a>
+	</p>
+
+	<p>
+		<a th:href="@{/auth/listAllAuth}">查看員工現有權限</a>
+	</p>
+
+</body>
+</html>
