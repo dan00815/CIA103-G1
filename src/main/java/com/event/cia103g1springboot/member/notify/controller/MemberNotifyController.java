@@ -40,7 +40,7 @@ public class MemberNotifyController {
         
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadCount", unreadCount);
-        return "member/notifications";
+        return "front-end/mem/notifications";
     }
 
     // 獲取特定類型的通知
