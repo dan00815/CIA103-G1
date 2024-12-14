@@ -53,7 +53,7 @@
     <!-- 結束日期 -->
     <div class="mb-3">
       <label for="endDate" class="form-label">結束日期</label>
-      <input type="date" class="form-control" id="endDate" name="endDate" th:value="${plan.endDate}" required>
+      <input type="date" class="form-control" id="endDate" name="endDate" th:value="${plan.endDate}" readonly>
     </div>
 
     <!-- 價格 -->
@@ -65,14 +65,14 @@
     <!-- 最大參加人數 -->
     <div class="mb-3">
       <label for="attMax" class="form-label">最大參加人數</label>
-      <input type="number" class="form-control" id="attMax" name="attMax" th:value="${plan.attMax}" required>
+      <input type="number" class="form-control" id="attMax" name="attMax" th:value="${plan.attMax}" readonly>
     </div>
 
     <!-- 目前參加人數 -->
-    <div class="mb-3">
-      <label for="attEnd" class="form-label">目前參加人數</label>
-      <input type="number" class="form-control" id="attEnd" name="attEnd" th:value="${plan.attEnd}" required>
-    </div>
+<!--    <div class="mb-3">-->
+<!--      <label for="attEnd" class="form-label">目前參加人數</label>-->
+<!--      <input type="number" class="form-control" id="attEnd" name="attEnd" th:value="${plan.attEnd}" required>-->
+<!--    </div>-->
 
     <!-- 提交按鈕 -->
     <button type="submit" class="btn btn-primary w-100">保存修改</button>

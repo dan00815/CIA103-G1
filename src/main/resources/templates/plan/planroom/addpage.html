@@ -94,7 +94,8 @@
             <label for="planId">
                 <i class="fas fa-route"></i> 選擇行程：
             </label>
-            <select id="planId" name="planId" class="form-select basic_input" required>
+
+            <select id="planId" name="planId" class="form-select" required>
                 <option value="" selected disabled>請選擇行程</option>
                 <option th:each="plan : ${plans}"
                         th:value="${plan.planId}"
@@ -106,16 +107,16 @@
         <!-- 房型選擇下拉 -->
         <div class="form-group">
             <label for="roomTypeSelect">
-                <i class="fas fa-bed"></i> 選擇房型：
+                <i class="fas fa-bed"></i> 設定房型：
             </label>
             <select id="roomTypeSelect" class="form-select">
-                <option value="" selected disabled>請選擇房型...</option>
+                <option value="" selected disabled>請設定房型...</option>
                 <option th:each="room : ${rooms}"
                         th:value="${room.roomTypeId}"
                         th:data-name="${room.roomTypeName}"
                         th:data-price="${room.roomPrice}"
                         th:data-qty="${room.roomQty}"
-                        th:text="|${room.roomTypeName} - ${room.roomPrice}元/趟 (剩餘${room.roomQty}間)|">
+                        th:text="|${room.roomTypeName} - ${room.roomPrice}元|">
                 </option>
             </select>
 
@@ -131,82 +132,12 @@
     </form>
 </div>
 
-<script>
-
-    const roomTypeSelect = document.getElementById("roomTypeSelect");
-    const addRoomButton = document.getElementById("addRoomButton");
-    const selectedRoomsContainer = document.getElementById("selectedRooms");
-
-    const selectedRooms = new Map();
-
-
-    addRoomButton.addEventListener("click", () => {
-        const selectedOption = roomTypeSelect.options[roomTypeSelect.selectedIndex];
-        if (!selectedOption || !selectedOption.value) {
-            alert("請選擇房型！");
-            return;
-        }
-
-        const roomTypeId = selectedOption.value;
-        const roomTypeName = selectedOption.dataset.name;
-        const roomPrice = selectedOption.dataset.price;
-        const roomQty = parseInt(selectedOption.dataset.qty);
-
-        if (selectedRooms.has(roomTypeId)) {
-            alert("該房型已選擇，請修改數量！");
-            return;
-        }
-
-        const roomDiv = document.createElement("div");
-        roomDiv.classList.add("room-item");
-        roomDiv.setAttribute("data-room-id", roomTypeId);
-
-        roomDiv.innerHTML = `
-        <div>
-            <h5>${roomTypeName}</h5>
-            <span>${roomPrice}元/趟</span>
-            <input type="hidden" name="roomTypeId" value="${roomTypeId}">
-            <input type="hidden" name="roomTypeName" value="${roomTypeName}">
-            <input type="hidden" name="roomPrice" value="${roomPrice}">
-        </div>
-        <div class="quantity-controls">
-            <button type="button" class="quantity-btn" onclick="decreaseQty(this)">-</button>
-            <input type="number" name="roomQty" value="1" min="1" max="${roomQty}" class="quantity-input">
-            <button type="button" class="quantity-btn" onclick="increaseQty(this)">+</button>
-        </div>
-        <button type="button" class="delete-btn" onclick="deleteRoom(this)"><i class="fas fa-trash-alt"></i></button>
-    `;
-
-        selectedRooms.set(roomTypeId, 1);
-        selectedRoomsContainer.appendChild(roomDiv);
-    });
-
-
-    function increaseQty(button) {
-        const input = button.previousElementSibling;
-        if (parseInt(input.value) < parseInt(input.max)) {
-            input.value = parseInt(input.value) + 1;
-        } else {
-            alert("數量已達上限！");
-        }
-    }
-
-    function decreaseQty(button) {
-        const input = button.nextElementSibling;
-        if (parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
-    }
-
-    function deleteRoom(button) {
-        const roomDiv = button.parentElement;
-        const roomTypeId = roomDiv.getAttribute("data-room-id");
-        selectedRooms.delete(roomTypeId);
-        roomDiv.remove();
-    }
-</script>
+<script src="/js/planroom.js"></script>
 </body>
 </html>
+
+
+
 
 
 

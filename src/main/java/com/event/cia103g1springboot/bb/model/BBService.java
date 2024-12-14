@@ -60,4 +60,5 @@ public class BBService {
 		return repository.getPostMsg();
 	}
 
+
 }
