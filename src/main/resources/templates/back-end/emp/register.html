@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{back-end/emp/base}">
+<head>
+    <title>員工註冊</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <form id="registerForm" th:action="@{/api/employee/register}" method="post" class="form">
+            <h2>員工註冊</h2>
+            
+            <div class="form-group">
+                <label for="empName">姓名：</label>
+                <input type="text" id="empName" name="empName" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label for="empAcct">帳號：</label>
+                <input type="text" id="empAcct" name="empAcct" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label for="empPwd">密碼：</label>
+                <input type="password" id="empPwd" name="empPwd" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <div class="form-group">
+                <label for="empJobTitle">職位：</label>
+                <input type="text" id="empJobTitle" name="empJobTitle" required 
+                       class="form-control basic_input">
+            </div>
+            
+            <button type="submit" class="btn">
+                註冊
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+            </button>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a th:href="@{/emp/login}" class="btn">
+                    返回登錄
+                    <span class="inner">
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                        <span class="blob"></span>
+                    </span>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            $(function() {
+                $("#registerForm").on("submit", function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            empName: $("#empName").val(),
+                            empAcct: $("#empAcct").val(),
+                            empPwd: $("#empPwd").val(),
+                            empJobTitle: $("#empJobTitle").val()
+                        }),
+                        success: function(response) {
+                            alert("註冊成功");
+                            window.location.href = "/emp/login";
+                        },
+                        error: function() {
+                            alert("註冊失敗，請檢查輸入信息");
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html> 

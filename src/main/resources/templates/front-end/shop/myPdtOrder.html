@@ -75,7 +75,7 @@
 	        <!-- Thymeleaf 會員編號搜尋多筆 -->
 	        <tr th:each="order : ${orderListData}">
 	            <td th:text="${order.pdtOrderId}"></td>
-	            <td th:text="${order.memId}"></td>
+	            <td th:text="${order.memVO.memId}"></td>
 	            <td style="width: 120px;" th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
 	            <td th:text="${order.orderAmt}"></td>
 	            <td>
@@ -94,9 +94,9 @@
 	            <td style="width: 150px;" th:text="${order.recAddr}"></td>
 	            <td th:text="${order.recTel}"></td>
 				<td>
-	                <a th:href="@{/shop/get_myPdtOrderItem(pdtOrderId=${order.pdtOrderId}, orderStat=${order.orderStat}, orderDate=${order.orderDate})}" class="btn-sm" title="檢視訂單明細">
-	                   <i class="fas fa-search"></i>
-	                </a>
+<!-- 	                <a th:href="@{/shop/get_myPdtOrderItem(pdtOrderId=${order.pdtOrderId}, orderStat=${order.orderStat}, orderDate=${order.orderDate})}" class="btn-sm" title="檢視訂單明細"> -->
+<!-- 	                   <i class="fas fa-search"></i> -->
+<!-- 	                </a> -->
 	            </td>
 	        </tr>
 	        
@@ -157,9 +157,5 @@
       });
 
     </script>
-</body>
-</html>
-<body>
-
 </body>
 </html>

@@ -69,7 +69,7 @@
                             empPwd: $("#empPwd").val()
                         }),
                         success: function(response) {
-                            // 將用戶訊息保存到localStorage
+                            // 將用戶信息保存到localStorage
                             localStorage.setItem('loginUser', JSON.stringify(response));
                             alert("登錄成功");
                             window.location.href = "/emp/list";
