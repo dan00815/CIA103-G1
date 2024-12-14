@@ -23,7 +23,10 @@ public class SystemFunctionService {
 	public SystemFunctionVO getOneSysFun(Integer id) {
 		Optional<SystemFunctionVO> optional = repository.findById(id);
 		return optional.orElse(new SystemFunctionVO());
-
+	}
+	
+	public void deleteFun(Integer funId) {
+		repository.deleteById(funId);
 	}
 
 }

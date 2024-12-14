@@ -1,8 +1,18 @@
 package com.event.cia103g1springboot.member.emp.model;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "employee")
-public class EmployeeVO {
+public class EmployeeVO implements java.io.Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "empId")

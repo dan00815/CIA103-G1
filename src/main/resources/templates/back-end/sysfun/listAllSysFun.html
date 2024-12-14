@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+</head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+<!-- <link rel="stylesheet" th:href="@{/css/style.css}" /> -->
+
+<style type="text/css">
+h2 {
+	text-align: center;
+}
+</style>
+
+<body>
+	<h2 class="aa">這裡要秀所有系統功能</h2>
+	<table class="myTable">
+		<thead>
+			<tr style="background-color: #CCCCFF">
+				<th>功能編號</th>
+				<th>功能名稱</th>
+				<th>描述</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<th:block th:each="systemFunctionVO: ${sysFunListData}">
+				<tr>
+					<td th:text="${systemFunctionVO.funId}"></td>
+					<td th:text="${systemFunctionVO.funName}"></td>
+					<td th:text="${systemFunctionVO.funDesc}" class="bb" th:data-aaa="${systemFunctionVO.funId}"></td>
+					<td>
+						<form  method="POST" th:action="@{/sysFun/delFun}">
+							<input type="hidden" name="funId"
+								th:value="${systemFunctionVO.funId}">
+							<button class="del_btn" >刪除權限</button>
+						</form>
+					</td>
+
+				</tr>
+			</th:block>
+		</tbody>
+
+		<tfoot></tfoot>
+	</table>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>List All Auths</title>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+<link rel="stylesheet" href="../static/css/elm.css" />
+<style type="text/css">
+.btn {
+	z-index: 5;
+}
+
+form {
+	border-radius: 15px;
+	width: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+	background: transparent;
+}
+
+form .check_item {
+	width: 45%;
+	border: 1px solid red;
+	margin: 16px;
+	padding: 5px;
+}
+
+form .check_item label {
+	margin-left: 8px;
+}
+
+.checkbox_container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.modal-body {
+	margin-top: 15px;
+}
+
+.modal-dialog {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	width: 150%;
+}
+
+.modal-footer {
+	margin: 0;
+}
+</style>
+</head>
+<body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
+
+	<h3>列出員工所有權限</h3>
+
+	<table class="myTable">
+		<thead style="background-color: #CCCCFF">
+			<tr>
+				<th>員工編號</th>
+				<th>員工姓名</th>
+				<th>員工權限</th>
+				<th>修改</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<th:block th:each="emp: ${empListData}">
+				<tr>
+					<td th:text="${emp.empId}"></td>
+					<td th:text="${emp.empName}"></td>
+
+					<td><span th:each="empJob,stat: ${emp.empJobs}"> <span
+							th:text="${empJob.systemFunctionVO.funName} + (${!stat.last} ? ' , ' : '')"></span>
+					</span></td>
+
+					<td>
+						<button type="button" class="btn modal_btn"
+							th:attr="data-emp-id=${emp.empId}" data-bs-toggle="modal"
+							data-bs-target="#staticBackdrop">
+							修改權限<span class="inner"> <span class="blob"></span> <span
+								class="blob"></span> <span class="blob"></span> <span
+								class="blob"></span>
+							</span>
+						</button>
+					</td>
+
+				</tr>
+			</th:block>
+		</tbody>
+		<tfoot></tfoot>
+	</table>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- 標頭 -->
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">
+						在這修改特定管理者權限</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<!-- body -->
+				<div class="modal-body">
+					<form action="update" method="POST">
+						<div class="checkbox_container">
+							<!-- 動態渲染權限 -->
+						</div>
+						<br />
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+
+							<button type="submit" class="btn btn-primary">
+								更新權限 <span class="inner"> <span class="blob"></span> <span
+									class="blob"></span> <span class="blob"></span> <span
+									class="blob"></span>
+								</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<!-- footer -->
+				<!-- 				<div class="modal-footer"> -->
+				<!-- 					<button type="button" class="btn btn-secondary" -->
+				<!-- 						data-bs-dismiss="modal">Close</button> -->
+
+				<!-- 					<button type="submit" class="btn btn-primary"> -->
+				<!-- 						更新權限 <span class="inner"> <span class="blob"></span> <span -->
+				<!-- 							class="blob"></span> <span class="blob"></span> <span -->
+				<!-- 							class="blob"></span> -->
+				<!-- 						</span> -->
+				<!-- 					</button> -->
+				<!-- 				</div> -->
+			</div>
+		</div>
+	</div>
+
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
+	<script type="text/javascript">
+		$(".myTable").DataTable({
+			paging: true, // Enable pagination
+			ordering: true, // Enable column sorting
+			pageLength: 10, // 初始資料筆數
+			lengthMenu: [3, 5, 10, 15, 20], //分頁數量可調整
+			searching: true,
+			language: {
+				info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+				infoEmpty: "無資料可顯示",
+				infoFiltered: "",
+				zeroRecords: "請確認查詢條件",
+				lengthMenu: "每頁顯示 _MENU_ 筆資料",
+			},
+		});
+			
+
+		const modalBtns = document.querySelectorAll(".modal_btn");
+		
+		modalBtns.forEach(btn => {
+			btn.addEventListener("click", async function(e){
+				const empId = e.target.getAttribute("data-emp-id");
+				console.log("抓到id是 "+ empId);
+				const authContainer = document.querySelector(".checkbox_container");
+				
+				try{
+					const res = await fetch(`/auth/update?empId=${empId}`);
+					const data =await res.json();
+					
+					console.log(data);
+					
+					authContainer.innerHTML = "";
+					
+					
+					data.allAuthName.forEach(auth => {
+						const checkBox = document.createElement('input');
+						checkBox.type="checkBox";
+						checkBox.name = 'authTypes';
+						checkBox.value = auth.authId;
+						checkBox.id = auth.authId;
+						const checkLabel = document.createElement('label');
+						checkLabel.setAttribute('for', auth.authId)
+						checkLabel.innerText = auth.authName;
+						
+						//這裡判斷使用者本來有無該權限
+						if(data.auth.includes(auth.authId)){
+							checkBox.checked = true;
+						}
+						
+						const div = document.createElement('div');
+						div.classList.add("check_item")
+						div.appendChild(checkBox);
+						div.appendChild(checkLabel);
+						
+						authContainer.appendChild(div);
+					})
+					
+					const hiddenInput =  document.createElement('input');
+					hiddenInput.type = "hidden";
+					hiddenInput.value = data.empId;
+					hiddenInput.name = "empId";
+					
+					authContainer.append(hiddenInput);
+// 					<div class="check_item">
+// 						<input type="checkbox" name="auths" value="101" id="101"
+// 						checked="checked" /> 
+// 						<label for="101">員工權限調整</label>
+// 					</div>
+				} catch (e) {
+					alert("錯誤，請稍後再試");
+				}
+				
+			
+				
+			})
+		})
+		
+		
+	</script>
+
+</body>
+</html>
