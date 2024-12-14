@@ -83,7 +83,10 @@ public class BBController {
 			   bbSvc.addMsg(bbVO);
 			   model.addAttribute("success","-(新增成功)");
 			   bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
-				model.addAttribute("bbVO",bbVO);
+			   model.addAttribute("bbVO",bbVO);
+			  
+			   
+//			   發佈新公告通知
 				if(bbVO.getPoststat() == 1) {
 					List<MemVO> allMem = memRepository.findAll();
 					for(MemVO acc : allMem) {
@@ -91,7 +94,8 @@ public class BBController {
 							if(acc.getMemType() == 1) {
 								MemberNotifyVO notify = new MemberNotifyVO();
 								notify.setMember(acc);
-								notify.setNotifyType(null);
+								notify.setNotifyType(5);
+								notify.setIsRead(false);
 								
 								Integer msgType = Integer.valueOf(bbVO.getMsgtype());
 								switch(msgType) {
@@ -107,8 +111,14 @@ public class BBController {
 										notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
 										break;
 									}
-									case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+									case(4):{
+										notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+									}
+									default: {
+								        notify.setNotifyCon("佈告欄發佈了新的公告!快去看看吧~");
+								    }
 								}
+								notify.setBusinessKey("BB_"+ bbVO .getMsgid());
 								mns.createNotification(notify);
 							}
 						}catch(Exception e) {
@@ -117,6 +127,7 @@ public class BBController {
 						}
 					}
 				}
+			  
 			  } catch (Exception e) {
 			   System.out.println("處理失敗：" + e.getMessage());
 			   e.printStackTrace();
@@ -155,7 +166,8 @@ public class BBController {
 						if(acc.getMemType() == 1) {
 							MemberNotifyVO notify = new MemberNotifyVO();
 							notify.setMember(acc);
-							notify.setNotifyType(null);
+							notify.setNotifyType(5);
+							notify.setIsRead(false);
 							
 							Integer msgType = Integer.valueOf(bbVO.getMsgtype());
 							switch(msgType) {
@@ -171,8 +183,14 @@ public class BBController {
 									notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
 									break;
 								}
-								case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+								case(4):{
+									notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
+								}
+								default: {
+							        notify.setNotifyCon("佈告欄發佈了新的公告!快去看看吧~");
+							    }
 							}
+							notify.setBusinessKey("BB_"+ bbVO .getMsgid());
 							mns.createNotification(notify);
 						}
 					}catch(Exception e) {
