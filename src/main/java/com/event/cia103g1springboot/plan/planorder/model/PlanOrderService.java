@@ -58,10 +58,10 @@ public class PlanOrderService {
         Context context = new Context();
         context.setVariable("memberName", order.getMemVO().getName());
         context.setVariable("planName", order.getPlan().getPlanType().getPlanName());
-        context.setVariable("orderDate", order.getOrderDate());      // 改為英文
-        context.setVariable("cancelDate", LocalDateTime.now());      // 改為英文
-        context.setVariable("orderStatus", order.getOrderStat());    // 改為英文
-        context.setVariable("totalAmount", order.getTotalPrice());   // 改為英文
+        context.setVariable("orderDate", order.getOrderDate());
+        context.setVariable("cancelDate", LocalDateTime.now());
+        context.setVariable("orderStatus", order.getOrderStat());
+        context.setVariable("totalAmount", order.getTotalPrice());
         String mailContent = templateEngine.process("plan/planfront/plancancelemail", context);
 
         MimeMessage message = mailSender.createMimeMessage();

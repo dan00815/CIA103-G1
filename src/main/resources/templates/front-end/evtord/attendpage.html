@@ -378,7 +378,7 @@
         fetch('/captcha/verify', {
             method: 'POST',
             headers: {
-                //數據會以 URL 編碼的形式發送
+
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: `key=${encodeURIComponent(captchaKey)}&captcha=${encodeURIComponent(captchaValue)}`

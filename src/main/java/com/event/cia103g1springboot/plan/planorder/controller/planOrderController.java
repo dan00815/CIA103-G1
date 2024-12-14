@@ -1,4 +1,6 @@
 package com.event.cia103g1springboot.plan.planorder.controller;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
 import com.event.cia103g1springboot.plan.planroom.model.PlanRoom;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,10 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +53,9 @@ public class planOrderController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    MemberNotifyService memberNotifyService;
 
 
     @GetMapping("/detail/{id}")
@@ -124,7 +131,7 @@ public class planOrderController {
         String cartKey = "plan:cart:" + planId;
 
         try {
-            // 從 Redis 獲取購物車資料
+            // 從 Redis 拿
             Map<Object, Object> cartData = redisTemplate.opsForHash().entries(cartKey);
 
             if (cartData.isEmpty()) {
@@ -133,12 +140,12 @@ public class planOrderController {
 
             ObjectMapper mapper = new ObjectMapper();
 
-            // 解析房間資料
+            //用JAKSON 從JSON轉回來
             String roomsJson = (String) cartData.get("rooms");
             List<RoomSelection> rooms = mapper.readValue(roomsJson,
                     new TypeReference<List<RoomSelection>>() {});
 
-            // 解析人數資料（如果沒有則預設為1）
+            // 報名人數 預設1
             int attendeeCount = 1;
             if (cartData.containsKey("attendeeCount")) {
                 attendeeCount = Integer.parseInt(cartData.get("attendeeCount").toString());
@@ -150,13 +157,13 @@ public class planOrderController {
             // 重設過期時間
             redisTemplate.expire(cartKey, 15, TimeUnit.MINUTES);
 
-            // 返回所有資料
+            // 打回前端
             return ResponseEntity.ok(Map.of(
                     "rooms", rooms,
                     "attendeeCount", attendeeCount,
                     "totalPrice", totalPrice
             ));
-
+            //錯誤打狀態回去跟訊息
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -164,6 +171,7 @@ public class planOrderController {
         }
     }
 
+    //清車 好像沒用到= = ???
     @DeleteMapping("/cart/{planId}")
     public ResponseEntity<?> clearCart(@PathVariable Integer planId) {
         String cartKey = "plan:cart:" + planId;
@@ -181,9 +189,9 @@ public class planOrderController {
 
 
     @GetMapping("/attend/{id}")
-    public String attend(@PathVariable Integer id, Model model) {
+    public String attend(@PathVariable Integer id, Model model, HttpSession session) {
         Plan plan = planService.findPlanById(id);
-        MemVO mem = memService.findOneMem("benson000");
+        MemVO mem = (MemVO) session.getAttribute("auth");
         String cartKey = "plan:cart:" + id;
         model.addAttribute("mem", mem);
         model.addAttribute("plan", plan);
@@ -196,9 +204,9 @@ public class planOrderController {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-//            mapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
 
-            // 解析房間數據
+
+            //用JAKSON 從JSON轉回來
             List<RoomSelection> rooms = mapper.readValue(
                     (String) cartData.get("rooms"),
                     new TypeReference<List<RoomSelection>>() {}
@@ -213,20 +221,20 @@ public class planOrderController {
             // 計算行程費用（人數 × 單價）
             int tripTotal =  plan.getPlanPrice() * attendeeCount;
 
-            // 計算房間總價
+            // 計算房間總價 過濾 但好像不用??
             int roomTotal = rooms.stream()
                     .mapToInt(room ->
                             (room.getRoomPrice() != null ? room.getRoomPrice() : 0) *
                                     (room.getQuantity() != null ? room.getQuantity() : 0))
                     .sum();
 
-            // 計算總價（行程費用 + 房間費用）
+            // 計算總價
           int totalPrice = tripTotal + roomTotal;
 
-            // 更新 Redis 過期時間
+            // 過期時間
             redisTemplate.expire(cartKey, 15, TimeUnit.MINUTES);
 
-            // 添加所有需要的數據到模型
+
             model.addAttribute("selectedRooms", rooms);
             model.addAttribute("attendeeCount", attendeeCount);
             model.addAttribute("tripTotal", tripTotal);
@@ -243,37 +251,31 @@ public class planOrderController {
 
 
 
-
+    @Transactional
     @PostMapping("/confirm/{id}")
     public String confirm(@PathVariable Integer id, @Valid PlanOrder planOrder,
-                          @RequestParam("rooms") String roomsJson, Model model) {
+                          @RequestParam("rooms") String roomsJson, Model model,HttpSession session) {
         try {
-            System.out.println("接收到的 roomsJson: " + roomsJson);
 
             ObjectMapper mapper = new ObjectMapper();
             List<RoomSelection> selectedRooms = mapper.readValue(roomsJson,
                     new TypeReference<List<RoomSelection>>() {});
 
-
-            // 拿會員跟行程先寫死
-            MemVO memVO = memService.findOneMem("benson000");
+            MemVO memVO = (MemVO) session.getAttribute("auth");
             Plan plan = planService.findPlanById(id);
 
-            // 從 Redis 獲取報名人數
+            // 拿報名人數
             String cartKey = "plan:cart:" + id;
             Map<Object, Object> cartData = redisTemplate.opsForHash().entries(cartKey);
 
-            // 取得報名人數，預設為1
+            // 報名人數，預設1
             int attendeeCount = 1;
             if (cartData.containsKey("attendeeCount") && cartData.get("attendeeCount") != null) {
                 attendeeCount = Integer.parseInt(cartData.get("attendeeCount").toString());
             }
             // 更新行程報名人數
             plan.setAttEnd(plan.getAttEnd() + attendeeCount);
-            //改錢
-//            plan.setPlanPrice(plan.getPlanPrice() * attendeeCount);
 
-//            System.out.println("價格:"+plan.getPlanPrice() * attendeeCount);
             // 處理付款
             if (planOrder.getPayMethod() == 0) {
                 planOrder.setRemAcct(null);
@@ -287,7 +289,7 @@ public class planOrderController {
                     .sum();
 
             planOrder.setRoomPrice(totalRoomPrice);
-//            planOrder.setTotalPrice(plan.getPlanPrice() * attendeeCount+totalRoomPrice);
+
             // 計算行程總價（人數 × 單價）
             int tripTotal = plan.getPlanPrice() * attendeeCount;
 
@@ -315,6 +317,15 @@ public class planOrderController {
             // 保存訂單
             PlanOrder savedOrder = planOrderService.addPlanOrder(planOrder);
 
+            //通知=============================================
+            MemberNotifyVO notification = new MemberNotifyVO();
+            notification.setMember(memVO);
+            notification.setNotifyType(6);  // 行程
+            notification.setNotifyCon("您已報名行程：" + plan.getPlanType().getPlanName() +
+                    "，行程訂單編號：" + planOrder.getPlanOrderId()+"，行程報名成功!");
+            notification.setBusinessKey("Plan_ORDER_" + planOrder.getPlanOrderId());
+            memberNotifyService.createNotification(notification);
+            //====================================================
             // 發mail
             try {
                 planOrderService.sendPlanOrdMail(savedOrder, selectedRooms);
@@ -323,10 +334,8 @@ public class planOrderController {
                 model.addAttribute("error", "郵件發送失敗");
             }
 
-            // 清除 Redis 購物車數據
+            // 清車
             redisTemplate.delete(cartKey);
-
-            // 添加所有需要的資料到 model
 
             model.addAttribute("totalprice", totalPrice);
             model.addAttribute("tripTotal", tripTotal);
@@ -365,7 +374,7 @@ public class planOrderController {
         return "plan/planorder/view";
     }
 
-
+    @Transactional
     @PostMapping("/cancel/{id}")
     public String cancel(@PathVariable Integer id, Model model) throws MessagingException {
         PlanOrder order = planOrderService.findPlanOrderById(id);
@@ -379,7 +388,7 @@ public class planOrderController {
     }
 
 
-
+    //    DTO 之後再丟出去------------------------------------------------------
     @AllArgsConstructor
     @NoArgsConstructor
     @Data

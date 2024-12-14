@@ -5,6 +5,8 @@ import com.event.cia103g1springboot.event.evtordermodel.EvtOrderService;
 import com.event.cia103g1springboot.event.evtordermodel.EvtOrderVO;
 import com.event.cia103g1springboot.member.mem.model.MemService;
 import com.event.cia103g1springboot.member.mem.model.MemVO;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrderRepository;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
@@ -25,6 +27,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -44,6 +47,9 @@ public class EvtOrderController {
 
     @Autowired
     private MemService memService;
+
+    @Autowired
+    private MemberNotifyService memberNotifyService;
     
 
 
@@ -55,16 +61,15 @@ public class EvtOrderController {
     private PlanOrderService planOrderService;
 
     @GetMapping("/attend/{id}")
-    public String attend(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+    public String attend(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         EvtVO event = evtService.getOneEvt(id);
-        MemVO memVO = memService.findOneMem("benson000");
+        MemVO memVO = (MemVO) session.getAttribute("auth");
 
         //額滿直接把人送回家 addFlashAttribute好用= =
         if (event.getEvtAttend() >= event.getEvtMax()) {
             redirectAttributes.addFlashAttribute("errorMessage", "該活動報名人數已額滿");
             return "redirect:/front/list";
         }
-//        EvtOrderVO evtOrderVO = evtOrderService.getOrderByEvtId(id);
         //只生成key
 
         String captchaKey = "captcha:" + event.getEvtId();
@@ -89,17 +94,30 @@ public class EvtOrderController {
 
     @Transactional
     @PostMapping("/confirm/{id}")
-    public String confirm(@PathVariable Integer id, EvtOrderVO evtOrderVO, Model model) {
+    public String confirm(@PathVariable Integer id, EvtOrderVO evtOrderVO, Model model, HttpSession session) {
 
-        //先用這兩行測@@
         PlanOrder planOrder = planOrderService.findPlanOrderById(1);
         evtOrderVO.setPlanOrder(planOrder);
 
-        MemVO memVO = memService.findOneMem("benson000");
+        MemVO memVO = (MemVO) session.getAttribute("auth");
         evtOrderVO.setMemVO(memVO);
 
+        // 處理報名
         evtService.attend(id, evtOrderVO);
         EvtVO event = evtService.getOneEvt(id);
+
+        // 創通知
+        MemberNotifyVO notification = new MemberNotifyVO();
+        notification.setMember(memVO);
+        notification.setNotifyType(2);  // 2活動
+        notification.setNotifyCon("您已報名活動：" + event.getEvtName() +
+                "，訂單編號：" + evtOrderVO.getEvtOrderId()+"，請等待系統審核訂單");
+        notification.setBusinessKey("EVENT_ORDER_" + evtOrderVO.getEvtOrderId());
+
+        // 存
+        memberNotifyService.createNotification(notification);
+
+
         model.addAttribute("memVO", memVO);
         model.addAttribute("event", event);
         model.addAttribute("order", evtOrderVO);
@@ -125,11 +143,26 @@ public class EvtOrderController {
             evtOrderService.updateEvtStatus(id, status);
             EvtOrderVO order = evtOrderService.getOneEvt(id);
             EvtVO evt = order.getEvtVO();
+            MemVO memVO = order.getMemVO();
+            MemberNotifyVO notification = new MemberNotifyVO();
 
             if (status == 2) { // 取消訂單
             int updatedAttendance = order.getEvtVO().getEvtAttend() - order.getEvtAttend();
             evt.setEvtAttend(updatedAttendance);
-            evtService.addEvt(evt); // 假設有這個更新方法
+            evtService.addEvt(evt);
+                notification.setMember(memVO);
+                notification.setNotifyType(6);  // 行程
+                notification.setNotifyCon("親愛的"+" "+memVO.getName()+" "+"會員您好:"+"\n"+"很抱歉，您的活動報名失敗："+"活動名稱:" + order.getEvtName() +" "+
+                        "，活動訂單編號：" + order.getEvtOrderId()+"，有任何問題歡迎致電或來信詢問");
+                notification.setBusinessKey("Evt_ORDER_" + order.getEvtOrderId());
+                memberNotifyService.createNotification(notification);
+            }else {
+                notification.setMember(memVO);
+                notification.setNotifyType(6);  // 行程
+                notification.setNotifyCon("親愛的"+" "+memVO.getName()+" "+"會員您好:"+"\n"+"您的活動報名成功，" +"活動名稱:" +order.getEvtName() +" "+
+                        "，活動訂單編號：" + order.getEvtOrderId()+"，活動訂單成立通知");
+                notification.setBusinessKey("Evt_ORDER_" + order.getEvtOrderId());
+                memberNotifyService.createNotification(notification);
             }
 
 
@@ -165,6 +198,9 @@ public class EvtOrderController {
                 ClassPathResource footer = new ClassPathResource("static/email/emailsucess.png");
                 helper.addInline("footer", footer);
             }
+
+
+
             mailSender.send(message);
 
             return "redirect:/ordlistall";

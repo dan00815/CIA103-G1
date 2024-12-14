@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.event.cia103g1springboot.member.mem.model.MemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,14 +31,12 @@ public class MemberNotifyController {
     @GetMapping("")
     public String showNotifications(Model model, HttpSession session) {
         // 測試用
-        if (session.getAttribute("memId") == null) {
-            session.setAttribute("memId", 1);
-        }
-        
-        Integer memId = (Integer) session.getAttribute("memId");
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        Integer memId = memVO.getMemId();
+
         List<MemberNotifyVO> notifications = notifyService.getAllMainNotifications(memId);
         Long unreadCount = notifyService.getUnreadCount(memId);
-        
+
         model.addAttribute("notifications", notifications);
         model.addAttribute("unreadCount", unreadCount);
         return "front-end/mem/notifications";
@@ -49,8 +48,8 @@ public class MemberNotifyController {
     public List<MemberNotifyVO> getNotificationsByType(
             @PathVariable Integer notifyType,
             HttpSession session) {
-        Integer memId = (Integer) session.getAttribute("memId");
-        return notifyService.getMainNotificationsByType(memId, notifyType);
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        return notifyService.getMainNotificationsByType(memVO.getMemId(), notifyType);
     }
 
     // 獲取通知歷史記錄
@@ -72,7 +71,8 @@ public class MemberNotifyController {
     @PostMapping("/read-all")
     @ResponseBody
     public ResponseEntity<?> markAllAsRead(HttpSession session) {
-        Integer memId = (Integer) session.getAttribute("memId");
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        Integer memId = memVO.getMemId();
         notifyService.markAllAsRead(memId);
         return ResponseEntity.ok().build();
     }
@@ -91,16 +91,16 @@ public class MemberNotifyController {
     public List<MemberNotifyVO> searchNotifications(
             @RequestParam String keyword,
             HttpSession session) {
-        Integer memId = (Integer) session.getAttribute("memId");
-        return notifyService.searchNotifications(memId, keyword);
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        return notifyService.searchNotifications(memVO.getMemId(), keyword);
     }
 
     // 獲取未讀通知數量
     @GetMapping("/unread-count")
     @ResponseBody
     public Long getUnreadCount(HttpSession session) {
-        Integer memId = (Integer) session.getAttribute("memId");
-        return notifyService.getUnreadCount(memId);
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        return notifyService.getUnreadCount(memVO.getMemId());
     }
 
 }

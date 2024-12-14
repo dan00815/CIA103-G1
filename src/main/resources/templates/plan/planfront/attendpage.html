@@ -198,26 +198,12 @@
               <label>付款方式：</label>
               <div class="payment-methods">
                 <div class="payment-method">
-                  <input type="radio"
-                         name="payMethod"
-                         value="0"
-                         id="creditCard"
-                         required>
+                  <input type="radio" name="payMethod" value="0" id="creditCard" required>
                   <label for="creditCard">信用卡</label>
                 </div>
                 <div class="payment-method">
-                  <input type="radio"
-                         name="payMethod"
-                         value="1"
-                         id="remittance">
+                  <input type="radio" name="payMethod" value="1" id="remittance">
                   <label for="remittance">匯款</label>
-                </div>
-                <div class="payment-method">
-                  <input type="radio"
-                         name="payMethod"
-                         value="2"
-                         id="ecpay">
-                  <label for="ecpay">綠界支付</label>
                 </div>
               </div>
 
@@ -225,12 +211,7 @@
               <div id="creditCardFields" style="display: none;">
                 <div class="form-group mt-3">
                   <label>卡號後四碼：</label>
-                  <input type="text"
-                         name="cardLast4"
-                         class="form-control"
-                         maxlength="4"
-                         pattern="\d{4}"
-                         disabled>
+                  <input type="text" name="cardLast4" class="form-control" maxlength="4" pattern="\d{4}" disabled>
                 </div>
               </div>
 
@@ -238,14 +219,11 @@
               <div id="remittanceFields" style="display: none;">
                 <div class="form-group mt-3">
                   <label>匯款帳號：</label>
-                  <input type="text"
-                         name="remAcct"
-                         class="form-control"
-                         maxlength="20"
-                         disabled>
+                  <input type="text" name="remAcct" class="form-control" maxlength="20" disabled>
                 </div>
               </div>
             </div>
+          </div>
           </div>
 
           <div x-show="errorMessage"
@@ -283,10 +261,11 @@
           </button>
         </div>
       </form>
-
     </div>
     <div th:replace="~{back-end/footer :: f}"></div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
     <script type="text/javascript" th:src="@{/js/nav.js}"></script>
     <script>
       (async function() {
