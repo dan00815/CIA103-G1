@@ -164,14 +164,26 @@
     <div class="btn-container">
         <div>
             <a th:href="@{/bb/select_page_bb}" class="btn">
+            <span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
                 <i class="fas fa-search"></i> 公告查詢
             </a>
         </div>
         <div>
-            <a th:href="@{/bb/addMsg}" class="btn">
-                <i class="fas fa-plus-circle"></i> 新增公告
-            </a>
-        </div>
+    		<a th:href='addMsg' class="btn">
+    			<span class="inner">
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			      </span>
+		      <i class="fa fa-plus"></i> 新增公告
+    		</a>
+    	</div>
     </div>
 
     <div th:insert="~{/back-end/footer :: footer}"></div>
