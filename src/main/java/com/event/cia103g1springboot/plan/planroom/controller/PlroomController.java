@@ -58,10 +58,12 @@ public String addPlanRooms(
         @RequestParam("roomQty") List<Integer> roomQuantities,
         @RequestParam("roomPrice") List<Integer> roomPrices,
         @RequestParam("roomTypeName") List<String> roomTypeNames,
+        @RequestParam("reservedRoom") List<Integer> reservedRooms,
+
         RedirectAttributes redirectAttributes) {
     // 檢查數據一致性
-    if (roomTypeIds == null || roomQuantities == null || roomPrices == null || roomTypeNames == null ||
-            roomTypeIds.size() != roomQuantities.size() || roomTypeIds.size() != roomPrices.size() || roomTypeIds.size() != roomTypeNames.size()) {
+    if (roomTypeIds == null || roomQuantities == null || roomPrices == null || roomTypeNames == null || reservedRooms == null ||
+            roomTypeIds.size() != roomQuantities.size() || roomTypeIds.size() != roomPrices.size() || roomTypeIds.size() != roomTypeNames.size()|| roomTypeIds.size() != reservedRooms.size()) {
         redirectAttributes.addFlashAttribute("errorMessage", "房型數據不匹配或不完整！");
         return "redirect:/planroom/add";
     }
@@ -80,6 +82,7 @@ public String addPlanRooms(
             Integer roomQty = roomQuantities.get(i);
             Integer roomPrice = roomPrices.get(i);
             String roomTypeName = roomTypeNames.get(i);
+            Integer reservedRoom = reservedRooms.get(i);
 
             if (roomQty <= 0 || roomPrice <= 0) {
                 throw new IllegalArgumentException("房型數量或價格無效，請檢查輸入數據！");
@@ -99,6 +102,7 @@ public String addPlanRooms(
             planRoom.setRoomTypeName(roomTypeName);
             planRoom.setRoomQty(roomQty);
             planRoom.setRoomPrice(roomPrice);
+            planRoom.setReservedRoom(reservedRoom);
 
             planRooms.add(planRoom);
         }
@@ -132,23 +136,13 @@ public String addPlanRooms(
         return "plan/planroom/editpage";
     }
 
-//        @Transactional
-//        @PostMapping("/edit")
-//        public String edit(PlanRoom planRoom, Model model) {
-//            planRoomService.save(planRoom);
-//
-//            return "redirect:/planroom/listall";
-//        }
-
-////  修改區
-
     @Transactional
     @PostMapping("/edit")
     public String edit(PlanRoom planRoom,
                        @RequestParam("roomQty") Integer roomQty,
                        @RequestParam("originalRoomQty") Integer originalRoomQty,
-                       @RequestParam("roomTypeName") String roomTypeName,
-                       Model model) {
+                       @RequestParam("roomTypeName") String roomTypeName
+                       ) {
         planRoomService.save(planRoom);
         int roomCapacity = planRoomService.extractCapacityFromRoomTypeName(roomTypeName);
         int roomTotalCapacity = (roomQty - originalRoomQty) * roomCapacity;
