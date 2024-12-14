@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{back-end/emp/base}">
+<head>
+    <title>員工列表</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="header-right">
+                <span id="userInfo"></span>
+            </div>
+            <table id="empTable" class="myTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>頭像</th>
+                        <th>姓名</th>
+                        <th>帳號</th>
+                        <th>職位</th>
+                        <th>入職日期</th>
+                        <th>狀態</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            $(function() {
+                //顯示用戶信息
+                var loginUser = JSON.parse(localStorage.getItem('loginUser'));
+                if (loginUser) {
+                    $('#userInfo').text('歡迎, ' + loginUser.empName);
+                }
+
+                var table = $('#empTable').DataTable({
+                    ajax: {
+                        url: '/api/employee/list',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        { data: 'empId' },
+                        { 
+                            data: 'empImg',
+                            render: function(data) {
+                                if (data) {
+                                    return '<img src="data:image/jpeg;base64,' + data + '" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">';
+                                }
+                                return '<img src="/images/default-avatar.png" style="width: 50px; height: 50px; border-radius: 50%;">';
+                            }
+                        },
+                        { data: 'empName' },
+                        { data: 'empAcct' },
+                        { data: 'empJobTitle' },
+                        { data: 'hireDate' },
+                        { 
+                            data: 'empStat',
+                            render: function(data) {
+                                return data === 1 ? '在職' : '離職';                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                var btns = '<button class="btn edit-btn" ' +
+                                    'data-id="' + row.empId + '">編輯</button> ';
+                                if (row.empStat === 1) {
+                                    btns += '<button class="btn deactivate-btn" ' +
+                                        'data-id="' + row.empId + '">停用</button>';
+                                }
+                                return btns;
+                            }
+                        }
+                    ],
+                    paging: true,
+                    ordering: true,
+                    pageLength: 5,
+                    lengthMenu: [5, 10, 20],
+                    searching: true,
+                    language: {
+                        info: "顯示第 _START_ 至 _END_ 條記錄，共 _TOTAL_ 條",
+                        infoEmpty: "無記錄",
+                        infoFiltered: "",
+                        zeroRecords: "無匹配記錄",
+                        lengthMenu: "每頁顯示 _MENU_ 條記錄",
+                        search: "搜索:",
+                        paginate: {
+                            first: "首頁",
+                            last: "末頁",
+                            next: "下一頁",
+                            previous: "上一頁"
+                        }
+                    }
+                });
+
+                // 停用員工
+                $('#empTable').on('click', '.deactivate-btn', function() {
+                    var empId = $(this).data('id');
+                    if (confirm('確定要停用該員工嗎？')) {
+                        $.ajax({
+                            url: '/api/employee/deactivate/' + empId,
+                            type: 'PUT',
+                            success: function() {
+                                alert('停用成功');
+                                table.ajax.reload();
+                            },
+                            error: function() {
+                                alert('操作失敗');
+                            }
+                        });
+                    }
+                });
+
+                // 編輯員工
+                $('#empTable').on('click', '.edit-btn', function() {
+                    var empId = $(this).data('id');
+                    window.location.href = '/emp/edit/' + empId;
+                });
+
+                // 登出功能
+                $('#logoutBtn').on('click', function() {
+                    $.ajax({
+                        url: '/api/employee/logout',
+                        type: 'POST',
+                        success: function(response) {
+                            // 清除localStorage中的用户信息
+                            localStorage.removeItem('loginUser');
+                            alert('登出成功');
+                            window.location.href = '/emp/login';
+                        },
+                        error: function() {
+                            alert('登出失敗');
+                        }
+                    });
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

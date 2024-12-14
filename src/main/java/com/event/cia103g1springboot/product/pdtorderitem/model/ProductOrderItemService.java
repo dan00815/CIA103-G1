@@ -2,7 +2,6 @@ package com.event.cia103g1springboot.product.pdtorderitem.model;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,7 @@ public class ProductOrderItemService {
 	
 	public List<ProductOrderItemVO> getOrderItemsByPdtOrderId(Integer pdtOrderId) {
 		return repository.findByPdtOrderId(pdtOrderId);
-}
+	}
+
 	
 }

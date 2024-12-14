@@ -1,6 +1,7 @@
 
 package com.event.cia103g1springboot.bb.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -51,8 +52,10 @@ public class MsgIdController {
 		}
 
 		model.addAttribute("bbVO",bbVO);
-		model.addAttribute("getOne_For_Display",true);
-		return "back-end/bb/select_page_bb";
+		List<BBVO> list2 = new ArrayList<>();
+		list2.add(bbVO);
+		model.addAttribute("msgListData",list2);
+		return "back-end/bb/listAllMsg";
 	}
 
 	@ExceptionHandler(value = {ConstraintViolationException.class})

@@ -36,19 +36,46 @@ public class ROFrontController {
 	
 	@PostMapping("roomOrderList")
 	public String roomOrderList (@RequestParam("planOrderId") String planOrderId,ModelMap model )throws IOException  {
-		if(planOrderId == null || planOrderId.trim().length()==0 || planOrderId.isEmpty()) {
-			model.addAttribute("errorMessage","查無資料");
-			model.addAttribute("errorMessage","行程訂單編號不可空白");
-			return "front-end/roomOrder/selectRO";
-		}
-		PlanOrder newPO = poSvc.findPlanOrderById(Integer.valueOf(planOrderId));
-		model.addAttribute("planOrder",newPO);
-		List<ROVO> roListByPOId = roSvc.getByPlan(newPO.getPlanOrderId());
-		model.addAttribute("roListByPOId",roListByPOId);
-		ROVO firstRO = roListByPOId.get(0);
-		RTVO newRT = rtSvc.getOneRT(firstRO.getRtVO().getRoomTypeId());
-		model.addAttribute("rtVO",newRT);
-	
+		if (planOrderId == null || planOrderId.trim().isEmpty()) {
+	        model.addAttribute("errorMessage2", "行程訂單編號不可為空白");
+	        return "front-end/roomOrder/selectRO";
+	    }
+
+	    // 確保轉換為數字時不報錯
+	    Integer planOrderIdInt;
+	    try {
+	        planOrderIdInt = Integer.valueOf(planOrderId);
+	    } catch (NumberFormatException e) {
+	        model.addAttribute("errorMessage2", "行程訂單編號格式不正確");
+	        return "front-end/roomOrder/selectRO";
+	    }
+
+	    // 查詢計劃訂單
+	    PlanOrder newPO = poSvc.getOnePlanOrder(planOrderIdInt);
+	    if (newPO == null) {
+	        model.addAttribute("errorMessage2", "查無此行程訂單資料");
+	        return "front-end/roomOrder/selectRO";
+	    }
+	    // 查詢房型訂單
+	    List<ROVO> roListByPOId = roSvc.getByPlan(newPO.getPlanOrderId());
+	    if (roListByPOId == null || roListByPOId.isEmpty()) {
+	        model.addAttribute("planOrder", newPO);
+	        model.addAttribute("errorMessage2", "該行程訂單下無任何房型訂單資料");
+	        return "front-end/roomOrder/selectRO";
+	    }
+
+	    // 確保非空後處理
+	    ROVO firstRO = roListByPOId.get(0);
+	    RTVO newRT = rtSvc.getOneRT(firstRO.getRtVO().getRoomTypeId());
+	    if (newRT == null) {
+	        model.addAttribute("errorMessage2", "無法查詢到對應的房型資訊");
+	        return "front-end/roomOrder/selectRO";
+	    }
+
+	    // 將查詢結果放入 model
+	    model.addAttribute("planOrder", newPO);
+	    model.addAttribute("roListData", roListByPOId);
+	    model.addAttribute("rtVO", newRT);
 		return "front-end/roomOrder/roomOrderList";
 	}
 	

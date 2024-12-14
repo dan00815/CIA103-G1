@@ -1,5 +1,6 @@
 package com.event.cia103g1springboot.room.roomtype.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +51,9 @@ public class RTIdController {
 			return "back-end/rt/select_page_RT";
 		}
 		model.addAttribute("rtVO",rtVO);
-		model.addAttribute("getRT_For_Display","true");
+		List<RTVO> result = new ArrayList<>();
+		result.add(rtVO);
+		model.addAttribute("rtListData",result);
 		return "back-end/rt/select_page_RT";
 	}
 	

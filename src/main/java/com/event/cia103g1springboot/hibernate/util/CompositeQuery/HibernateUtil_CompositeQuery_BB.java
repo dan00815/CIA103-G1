@@ -76,7 +76,7 @@ public class HibernateUtil_CompositeQuery_BB {
 			}
 			System.out.println("predicateList.size()="+predicateList.size());
 			criteriaQuery.where(predicateList.toArray(new Predicate[predicateList.size()]));
-			criteriaQuery.orderBy(builder.asc(root.get("msgid")));
+			criteriaQuery.orderBy(builder.desc(root.get("isPinned")));
 			Query query = session.createQuery(criteriaQuery);
 			list = query.getResultList();
 

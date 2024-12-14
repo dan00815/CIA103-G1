@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
     <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
-	<div th:insert="~{/front-end/nav :: nav}"></div>
 	<div id="header"><i class="fa-solid fa-box"></i> 商品管理</div>
     <div id="sub-header"><i class="fa fa-plus"></i> 新增商品</div>
-    
     <div>
         <h3>以下欄位皆為必填</h3>
         <form class="cus_form" th:action="@{/product/addPdtAndImgs}" method="post" th:object="${pdtVO}" enctype="multipart/form-data">
@@ -39,7 +38,7 @@
         
         	<div>
                 <label for="pdtname-text">商品名稱:</label>
-                <input class="form-control" id="pdtname-text" type="text" th:field="*{pdtName}" onclick="hideContent('pdtName.errors');" placeholder="請輸入商品名稱"/><br/>
+                <input class="form-control" id="pdtname-text" type="text" th:field="*{pdtName}" onclick="hideContent('pdtName.errors');" placeholder="請輸入商品名稱"/>
                 <span th:if="${#fields.hasErrors('pdtName')}" th:errors="*{pdtName}" class="error" id="pdtName.errors"></span>
             </div>
             
@@ -51,7 +50,7 @@
             
             <div>
                 <label for="PdtPrice">商品售價:</label>
-                <input class="form-control" id="PdtPrice" type="text" th:field="*{pdtPrice}" onclick="hideContent('pdtPrice.errors');" placeholder="請輸入商品售價"/><br/>
+                <input class="form-control" id="PdtPrice" type="text" th:field="*{pdtPrice}" onclick="hideContent('pdtPrice.errors');" placeholder="請輸入商品售價"/>
                 <span th:if="${#fields.hasErrors('pdtPrice')}" th:errors="*{pdtPrice}" class="error" id="pdtPrice.errors"></span>
             </div>
 			<div class="form-group">

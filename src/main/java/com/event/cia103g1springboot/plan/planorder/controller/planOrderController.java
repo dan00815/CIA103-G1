@@ -346,7 +346,7 @@ public class planOrderController {
         }
     }
 
-    //    後端------------------------------------------------------
+    //    後台------------------------------------------------------
     @GetMapping("/listall")
     public String listAll(Model model) {
         List<PlanOrder> orders = planOrderService.findAllPlanOrders();
@@ -363,6 +363,19 @@ public class planOrderController {
         }
         model.addAttribute("order", order);
         return "plan/planorder/view";
+    }
+
+
+    @PostMapping("/cancel/{id}")
+    public String cancel(@PathVariable Integer id, Model model) throws MessagingException {
+        PlanOrder order = planOrderService.findPlanOrderById(id);
+        if (order != null) {
+            order.setOrderStat(4);  // 設置狀態為取消
+            planOrderService.addPlanOrder(order);  // 保存更改
+            planOrderService.sendCancelPlanOrdMail(order, 4);  // 調用 service 的郵件發送方法
+        }
+
+        return "redirect:/planord/listall";
     }
 
 

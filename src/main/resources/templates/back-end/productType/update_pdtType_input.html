@@ -5,14 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>商品類別修改 - update_pdtType_input.html</title>
 	<link rel="stylesheet" th:href="@{/css/bb.css}" />
-	<link rel="stylesheet" th:href="@{/css/elm.css}" />
+	<link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+	<link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        rel="stylesheet"
+    />
 </head>
 <body>
-	<div id="header">商品類別管理</div>
-    <div id="sub-header">編輯類別資料</div>
+	<div id="header"><i class="fa-solid fa-box"></i> 商品類別管理</div>
+    <div id="sub-header"><i class="fa-solid fa-pen-to-square"></i> 編輯類別資料</div>
     
     <form class="cus_form" th:action="@{updatePdtType}" method="post" th:object="${pdtTypeVO}" >
-<!-- 	enctype="multipart/form-data"> -->
 		<div>
 			<label for="msgid-text" >類別編號:</label>
 			<input class="form-control" id="msgid-text" type="text" th:field="*{pdtTypeId}" readonly /><br/>
@@ -30,7 +33,7 @@
           </div>
           <div>
                 <button type="submit" class="btn">
-			        送出修改
+			        <i class="fa-solid fa-pen"></i> 送出修改
 			        <span class="inner">
 			          <span class="blob"></span>
 			          <span class="blob"></span>
@@ -50,7 +53,7 @@
 		        <span class="blob"></span>
 		        <span class="blob"></span>
 		      </span>
-		      類別查詢
+		      <i class="fa fa-search"></i> 類別查詢
     		</a>
     	</div>
         <div>
@@ -61,7 +64,7 @@
 		        <span class="blob"></span>
 		        <span class="blob"></span>
 		      </span>
-		      類別列表
+		      <i class="fa-solid fa-clipboard-list"></i> 類別列表
     		</a>
     	</div>
     </div>

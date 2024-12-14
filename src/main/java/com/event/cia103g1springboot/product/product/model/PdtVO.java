@@ -35,7 +35,7 @@ public class PdtVO implements java.io.Serializable{
 
 	@Column(name="pdtname")
 	@NotEmpty(message="商品名稱: 請勿空白")
-	@Size(min=2,max=20,message="員工職位: 長度必需在{min}到{max}之間")
+	@Size(min=2,max=20,message="商品名稱: 長度必需在{min}到{max}之間")
 	private String pdtName;
 
 	@Column(name="pdtdesc")

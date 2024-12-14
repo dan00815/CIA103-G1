@@ -14,6 +14,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +46,34 @@ public class PlanOrderService {
     		Optional<PlanOrder> optional = planOrderRepository.findById(planOrderId);
     		return optional.orElse(null);
     	}
+
+        public PlanOrder cancelord(Integer planOrderId, Integer orderStatus){
+            PlanOrder planOrder =planOrderRepository.findByPlanOrderIdAndOrderStat(planOrderId,orderStatus);
+            planOrder.setOrderStat(orderStatus);
+            return  planOrderRepository.save(planOrder);
+        }
+
+
+    public void sendCancelPlanOrdMail(PlanOrder order,Integer Status) throws MessagingException {
+        Context context = new Context();
+        context.setVariable("memberName", order.getMemVO().getName());
+        context.setVariable("planName", order.getPlan().getPlanType().getPlanName());
+        context.setVariable("orderDate", order.getOrderDate());      // 改為英文
+        context.setVariable("cancelDate", LocalDateTime.now());      // 改為英文
+        context.setVariable("orderStatus", order.getOrderStat());    // 改為英文
+        context.setVariable("totalAmount", order.getTotalPrice());   // 改為英文
+        String mailContent = templateEngine.process("plan/planfront/plancancelemail", context);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+        helper.setTo("mm950490@gmail.com");
+        helper.setSubject("鄰星嗨嗨:行程訂單取消通知");
+        helper.setText(mailContent, true);
+
+        mailSender.send(message);
+    }
+
+
 
     public void sendPlanOrdMail(PlanOrder order, List<planOrderController.RoomSelection> rooms) throws MessagingException {
         Integer totalRoomPrice = rooms.stream()

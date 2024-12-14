@@ -149,7 +149,7 @@ public class RTController {
 		Map<String,String[]> map = req.getParameterMap();
 		List<RTVO> list = rtSvc.getAllRT(map);
 		model.addAttribute("rtListData",list);
-		return "back-end/rt/listAllRT";
+		return "back-end/rt/select_page_RT";
 	}
 		
 	
