@@ -41,6 +41,7 @@ addRoomButton.addEventListener("click", () => {
             <input type="hidden" name="roomTypeId" value="${roomTypeId}">
             <input type="hidden" name="roomTypeName" value="${roomTypeName}">
             <input type="hidden" name="roomPrice" value="${roomPrice}">
+            <input type="hidden" name="reservedRoom" value="0">
         </div>
         <div class="quantity-controls">
             <button type="button" class="quantity-btn" onclick="decreaseQty(this)">-</button>
