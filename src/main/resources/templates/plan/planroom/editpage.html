@@ -84,15 +84,15 @@
                    readonly>
         </div>
 
-        <div class="form-group">
-            <label>
-                <i class="fas fa-dollar-sign"></i> 房型總數：
-            </label>
-            <input type="number" class="form-control basic_input"
-                   th:value="${planroom.rtvo.roomQty}"
-                   id="totalRoomQty"
-                   readonly>
-        </div>
+<!--        <div class="form-group">-->
+<!--            <label>-->
+<!--                <i class="fas fa-dollar-sign"></i> 房型總數：-->
+<!--            </label>-->
+<!--            <input type="number" class="form-control basic_input"-->
+<!--                   th:value="${planroom.rtvo.roomQty}"-->
+<!--                   id="totalRoomQty"-->
+<!--                   readonly>-->
+<!--        </div>-->
 
         <div class="form-group">
             <label>
@@ -108,19 +108,19 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label>
-                <i class="fas fa-bookmark"></i> 已預訂數量：
-            </label>
-            <input type="number" id="reservedRoom" name="reservedRoom"
-                   class="form-control basic_input"
-                   th:value="${planroom.reservedRoom}"
-                   required>
-            <div class="error-message"
-                 th:if="${errors != null and errors.get('reservedRoom') != null}"
-                 th:text="${errors.get('reservedRoom')}">
-            </div>
-        </div>
+<!--        <div class="form-group">-->
+<!--            <label>-->
+<!--                <i class="fas fa-bookmark"></i> 已預訂數量：-->
+<!--            </label>-->
+<!--            <input type="number" id="reservedRoom" name="reservedRoom"-->
+<!--                   class="form-control basic_input"-->
+<!--                   th:value="${planroom.reservedRoom}"-->
+<!--                   required>-->
+<!--            <div class="error-message"-->
+<!--                 th:if="${errors != null and errors.get('reservedRoom') != null}"-->
+<!--                 th:text="${errors.get('reservedRoom')}">-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
     <input type="hidden" name="roomTypeId" th:value="${planroom.roomTypeId}">
     <button type="submit" class="btn">
@@ -136,47 +136,50 @@
 
 <div th:replace="~{back-end/footer :: f}"></div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const roomQtyInput = document.getElementById('roomQty');
-        const reservedRoomInput = document.getElementById('reservedRoom');
-        const totalRoomQtyInput = document.getElementById('totalRoomQty');
-        const form = document.querySelector('form');
 
-        function validateRoomQty() {
-            const roomQty = parseInt(roomQtyInput.value);
-            const reservedRoom = parseInt(reservedRoomInput.value);
-            const totalRoomQty = parseInt(totalRoomQtyInput.value);
 
-            let isValid = true;
-            let errorMessage = '';
 
-            if (roomQty > totalRoomQty) {
-                isValid = false;
-                errorMessage = '分配房間數量不能大於房型總數！';
-                roomQtyInput.classList.add('error');
-            } else if (roomQty < reservedRoom) {
-                isValid = false;
-                errorMessage = '已預訂數量不能大於分配房間數量！';
-                roomQtyInput.classList.add('error');
-            } else {
-                roomQtyInput.classList.remove('error');
-            }
-
-            return { isValid, errorMessage };
-        }
-
-        form.addEventListener('submit', function(e) {
-            const validation = validateRoomQty();
-            if (!validation.isValid) {
-                e.preventDefault();
-                alert(validation.errorMessage);
-            }
-        });
-
-        roomQtyInput.addEventListener('input', function() {
-            validateRoomQty();
-        });
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const roomQtyInput = document.getElementById('roomQty');
+    //     const reservedRoomInput = document.getElementById('reservedRoom');
+    //     const totalRoomQtyInput = document.getElementById('totalRoomQty');
+    //     const form = document.querySelector('form');
+    //
+    //     function validateRoomQty() {
+    //         const roomQty = parseInt(roomQtyInput.value);
+    //         const reservedRoom = parseInt(reservedRoomInput.value);
+    //         const totalRoomQty = parseInt(totalRoomQtyInput.value);
+    //
+    //         let isValid = true;
+    //         let errorMessage = '';
+    //
+    //         if (roomQty > totalRoomQty) {
+    //             isValid = false;
+    //             errorMessage = '分配房間數量不能大於房型總數！';
+    //             roomQtyInput.classList.add('error');
+    //         } else if (roomQty < reservedRoom) {
+    //             isValid = false;
+    //             errorMessage = '已預訂數量不能大於分配房間數量！';
+    //             roomQtyInput.classList.add('error');
+    //         } else {
+    //             roomQtyInput.classList.remove('error');
+    //         }
+    //
+    //         return { isValid, errorMessage };
+    //     }
+    //
+    //     form.addEventListener('submit', function(e) {
+    //         const validation = validateRoomQty();
+    //         if (!validation.isValid) {
+    //             e.preventDefault();
+    //             alert(validation.errorMessage);
+    //         }
+    //     });
+    //
+    //     roomQtyInput.addEventListener('input', function() {
+    //         validateRoomQty();
+    //     });
+    // });
 </script>
 </body>
 </html>
