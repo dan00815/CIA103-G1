@@ -53,6 +53,10 @@ public class PlanOrderService {
             return  planOrderRepository.save(planOrder);
         }
 
+    public List<PlanOrder> findPlanOrdersByMemId(Integer memId) {
+        return planOrderRepository.findByMemVO_MemId(memId);
+    }
+
 
     public void sendCancelPlanOrdMail(PlanOrder order,Integer Status) throws MessagingException {
         Context context = new Context();

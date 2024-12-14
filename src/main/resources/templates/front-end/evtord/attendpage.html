@@ -155,6 +155,24 @@
     <form th:action="@{'/confirm/' + ${event.evtId}}" method="post" id="eventForm">
         <div class="event-info">
             <h2 class="event-title" th:text="${event.evtName}"></h2>
+            <div class="info-grid" style="margin-bottom: 20px;">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-route"></i>行程名稱
+                    </div>
+                    <div class="info-value">
+                        <span th:text="${planOrder.plan.planType.planName}"></span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-file-invoice"></i>訂單編號
+                    </div>
+                    <div class="info-value">
+                        <span th:text="${planOrder.planOrderId}"></span>
+                    </div>
+                </div>
+            </div>
             <div class="info-grid">
 
                 <div class="info-item">

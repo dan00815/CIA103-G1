@@ -4,6 +4,10 @@ import com.event.cia103g1springboot.event.evtimgmodel.EvtImgService;
 import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.event.evtmodel.EvtService;
 import com.event.cia103g1springboot.event.evtmodel.EvtVO;
+import com.event.cia103g1springboot.plan.plan.model.Plan;
+import com.event.cia103g1springboot.plan.plan.model.PlanService;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 @Validated
 @RequestMapping("/event")
@@ -34,6 +39,11 @@ public class EvtController {
 
     @Autowired
     EvtImgService evtImgService;
+
+    @Autowired
+    private PlanService planService;
+    @Autowired
+    private PlanOrderService planOrderService;
 
     //可以把前端傳進來的DATETIMELOCAL字串轉成符合TIMESTAMP格式 超爽
 
@@ -172,6 +182,23 @@ public class EvtController {
             return "redirect:/sucessandfail";
         }
     }
+
+
+    @GetMapping("/planevt")
+    public String addplanevt(PlanOrder planord, Model model){
+     List<Plan> plans = planService.getAllPlans();
+     List <String> plansname = new ArrayList<String>();
+     for (Plan plan : plans) {
+         plansname.add(plan.getPlanType().getPlanName()) ;
+     }
+     List<EvtVO> evts  = evtService.getAllEvts();
+//     planord.setEvtOrderVO();
+     model.addAttribute("evts", evts);
+     model.addAttribute("plansname", plansname);
+        return "back-end/evt/evtplan";
+    }
+
+
 
 
     @GetMapping("/calendar")
