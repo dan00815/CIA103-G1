@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>商品列表 - listAllPdt.html</title>
 
-    <!-- 引入Bootstrap和Font Awesome -->
-     <!-- 引入Bootstrap、Font Awesome與DataTables樣式 -->
+    <!-- 引入Bootstrap、Font Awesome與DataTables樣式 -->
+     <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
+    />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
-	<link rel="stylesheet" th:href="@{/css/bb.css}" />
-	<link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link rel="stylesheet" th:href="@{/css/bb.css}" />
     <style>
-
         .table-hover tbody tr:hover {
             background-color: #f1f1f1;
         }
-
-        .pdt-img {
+         .pdt-img {
             width: 120px;
-            height: auto;
+            max-height:90px;
             border-radius: 8px;
         }
 
@@ -41,6 +44,7 @@
         .btn-container a {
             text-decoration: none;
         }
+
         /* DataTables 分頁按鈕樣式調整 */
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 5px 10px;
@@ -69,21 +73,19 @@
         .dataTables_wrapper .dataTables_filter input {
             margin-left: 0.5em;
         }
-        
-        #edit:hover{
-        	background-color:rgb(248, 236, 88);
+
+        #edit:hover {
+            background-color: rgb(248, 236, 88);
         }
-        
-        #delete:hover{
-        	background-color:rgb(252, 90, 95);
+
+        #delete:hover {
+            background-color: rgb(252, 90, 95);
         }
     </style>
 </head>
-
 <body>
     <div id="header"><i class="fa-solid fa-box"></i> 商品管理</div>
-   	<div id="sub-header"><i class="fa-solid fa-clipboard-list"></i> 商品列表</div>
-
+    <div id="sub-header"><i class="fa-solid fa-clipboard-list"></i> 商品列表</div>
 
     <!-- 商品列表表格 -->
     <div class="container mt-4">
@@ -107,10 +109,10 @@
                     <tr>
                         <td th:text="${pdtVOStat.count}"></td>
                         <td th:text="${pdtVO.pdtId}"></td>
-                        <td th:text="${pdtVO.pdtTypeVO.pdtTypeId} + ' [' + ${pdtVO.pdtTypeVO.pdtTypeName} + ']'"></td>
+                        <td th:text="${pdtVO.pdtTypeVO.pdtTypeId} + ' [' + ${pdtVO.pdtTypeVO.pdtTypeName} + ']'" ></td>
                         <td>
-                            <span th:classappend="${pdtVO.pdtStat == 1 ? 'status-badge status-active' : 'status-badge status-inactive'}"
-                                th:text="${pdtVO.pdtStat == 1 ? '已上架' : '未上架'}"></span>
+                            <span th:classappend="${pdtVO.pdtStat == 1 ? 'badge bg-success' : 'badge bg-secondary'}"
+                                  th:text="${pdtVO.pdtStat == 1 ? '已上架' : '未上架'}"></span>
                         </td>
                         <td th:text="${pdtVO.pdtName}"></td>
                         <td th:text="${pdtVO.pdtDesc}"></td>
@@ -121,7 +123,7 @@
                         <td>
                             <form method="post" th:action="@{/product/getPdt_For_Update}">
                                 <input type="hidden" name="pdtId" th:value="${pdtVO.pdtId}" />
-                                <button type="submit" class="btn-info btn-sm" id="edit">
+                                <button type="submit" class="btn btn-info btn-sm" id="edit">
                                     <i class="fa fa-edit"></i> 編輯
                                 </button>
                             </form>
@@ -129,7 +131,7 @@
                         <td>
                             <form method="post" th:action="@{/product/deletePdt}" onsubmit="return confirmDelete();">
                                 <input type="hidden" name="pdtId" th:value="${pdtVO.pdtId}" />
-                                <button type="submit" class="btn-danger btn-sm" id="delete">
+                                <button type="submit" class="btn btn-danger btn-sm" id="delete">
                                     <i class="fa fa-trash"></i> 刪除
                                 </button>
                             </form>
@@ -142,39 +144,28 @@
 
     <!-- 按鈕區 -->
     <div class="btn-container">
-    	<div>
-    		<a th:href="@{/}" class="btn">
-	    		<span class="inner">
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			      </span>
-			      <i class="fa fa-home"></i> 功能總覽
-    		</a>
-    	</div>
-    	<div>
-    		<a th:href="@{/product/select_page_pdt}" class="btn">
-	    		<span class="inner">
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			      </span>
-			      <i class="fa fa-search"></i> 商品查詢
-    		</a>
-    	</div>
-		<div>
-    		<a th:href="@{/product/addPdt}" class="btn">
-	    		<span class="inner">
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			      </span>
-			      <i class="fa fa-plus"></i> 新增商品
-    		</a>
-    	</div>
+        <div>
+            <a th:href="@{/product/select_page_pdt}" class="btn">
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+                <i class="fa fa-search"></i> 商品查詢
+            </a>
+        </div>
+        <div>
+            <a th:href="@{/product/addPdt}" class="btn">
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+                <i class="fa fa-plus"></i> 新增商品
+            </a>
+        </div>
     </div>
 
     <div th:insert="~{/back-end/footer :: footer}"></div>
@@ -182,36 +173,29 @@
     <!-- 引入外部資源 -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-	<script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    
-    <script type="text/javascript">
-	   $(document).ready(function () {
-	       $('#pdt').DataTable({
-	           paging: true,
-	           ordering: true,
-	           pageLength: 5,
-	           lengthMenu: [ 5, 10, 15, 20],
-	           searching: true,
-	           language: {
-	               info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
-	               infoEmpty: "無資料可顯示",
-	               infoFiltered: "",
-	               zeroRecords: "請確認查詢條件",
-	               lengthMenu: "每頁顯示 _MENU_ 筆資料",
-	           },
-	       });
-	   });
-	   
-	   function confirmDelete() {
-	       return confirm("是否確定刪除此圖片？");
-	   }
-   </script>
-</body>
+    <script>
+        $(document).ready(function () {
+            $('#pdt').DataTable({
+                paging: true,
+                ordering: true,
+                pageLength: 5,
+                lengthMenu: [5, 10, 20],
+                searching: true,
+                language: {
+                    info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+                    infoEmpty: "無資料可顯示",
+                    infoFiltered: "",
+                    zeroRecords: "無匹配資料",
+                    lengthMenu: "每頁顯示 _MENU_ 筆資料",
+                    search: "搜尋：",
+                },
+            });
+        });
 
+        function confirmDelete() {
+            return confirm("是否確定刪除此商品？");
+        }
+    </script>
+</body>
 </html>

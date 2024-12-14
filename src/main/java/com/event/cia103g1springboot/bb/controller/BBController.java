@@ -83,40 +83,7 @@ public class BBController {
 			   bbSvc.addMsg(bbVO);
 			   model.addAttribute("success","-(新增成功)");
 			   bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
-				model.addAttribute("bbVO",bbVO);
-				if(bbVO.getPoststat() == 1) {
-					List<MemVO> allMem = memRepository.findAll();
-					for(MemVO acc : allMem) {
-						try {
-							if(acc.getMemType() == 1) {
-								MemberNotifyVO notify = new MemberNotifyVO();
-								notify.setMember(acc);
-								notify.setNotifyType(null);
-								
-								Integer msgType = Integer.valueOf(bbVO.getMsgtype());
-								switch(msgType) {
-									case(1):{
-										notify.setNotifyCon("佈告欄發佈了新的行程通知!快去看看吧~");
-										break;
-									}
-									case(2):{
-										notify.setNotifyCon("佈告欄發佈了新的活動通知!快去看看吧~");
-										break;
-									}
-									case(3):{
-										notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
-										break;
-									}
-									case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
-								}
-								mns.createNotification(notify);
-							}
-						}catch(Exception e) {
-							e.printStackTrace();
-							model.addAttribute("errorMessage","通知發佈失敗");
-						}
-					}
-				}
+			   model.addAttribute("bbVO",bbVO);
 			  } catch (Exception e) {
 			   System.out.println("處理失敗：" + e.getMessage());
 			   e.printStackTrace();
@@ -148,39 +115,6 @@ public class BBController {
 			model.addAttribute("success","-(修改成功)");
 			bbVO = bbSvc.getOneMsg(Integer.valueOf(bbVO.getMsgid()));
 			model.addAttribute("bbVO",bbVO);
-			if(bbVO.getPoststat() == 1) {
-				List<MemVO> allMem = memRepository.findAll();
-				for(MemVO acc : allMem) {
-					try {
-						if(acc.getMemType() == 1) {
-							MemberNotifyVO notify = new MemberNotifyVO();
-							notify.setMember(acc);
-							notify.setNotifyType(null);
-							
-							Integer msgType = Integer.valueOf(bbVO.getMsgtype());
-							switch(msgType) {
-								case(1):{
-									notify.setNotifyCon("佈告欄發佈了新的行程通知!快去看看吧~");
-									break;
-								}
-								case(2):{
-									notify.setNotifyCon("佈告欄發佈了新的活動通知!快去看看吧~");
-									break;
-								}
-								case(3):{
-									notify.setNotifyCon("佈告欄發佈了新的商城通知!快去看看吧~");
-									break;
-								}
-								case(4):notify.setNotifyCon("佈告欄發佈了新的通知!快去看看吧~");
-							}
-							mns.createNotification(notify);
-						}
-					}catch(Exception e) {
-						e.printStackTrace();
-						model.addAttribute("errorMessage","通知發佈失敗");
-					}
-				}
-			}
 			return "back-end/bb/listOneMsg";
 		  } catch (Exception e) {
 			   e.printStackTrace();
