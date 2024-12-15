@@ -1,71 +1,305 @@
 <!DOCTYPE html>
 <html lang="zh-tw" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
-    />
-    <link rel="stylesheet" href="../static/css/elm.css" />
-    <link rel="stylesheet" href="../static/css/progress.css" />
-  </head>
-  <body>
-    <!-- 導覽列 -->
-    <nav>
-      <a id="logo_area" href="">
-        <div class="img_con">
-          <img src="https://picsum.photos/100" alt="" />
-        </div>
-        <div class="vertical-line"></div>
-        <h3>鄰星嗨嗨</h3>
-      </a>
-
-      <ul>
-        <li><a href="">行程預定</a></li>
-        <li><a href=""th:href="@{/roomtype/roomTypeList}">房型價格</a></li>
-        <li><a href="" th:href="@{/front/list}">活動預約</a></li>
-       <li><a href=""th:href="@{/product/productlist}">商城</a></li>
-        <li><a href="">討論區</a></li>
-        <li><a href=""th:href="@{/bullrtinBoard/bbList}">公告</a></li>
-        <!-- <li style="color: chocolate; font-size: 1.75rem">小吳, 您好</li> -->
-        <!-- 平常隱藏，登入時才打開 -->
-      </ul>
-
-      <button class="hamburger hamburger--collapse" type="button">
-        <span class="hamburger-box">
-          <span class="hamburger-inner"></span>
-        </span>
-
-        <div class="ham_list showList">
-          <a href="https://www.yahoo.com.tw" target="_blank">註冊會員</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員登入</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員中心</a>
-          <!-- <a href="https://www.yahoo.com.tw" target="_blank">登出</a> -->
-        </div>
-      </button>
-    </nav>
-
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Document</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+<link rel="stylesheet" href="../static/css/new_elm.css" />
+<link rel="stylesheet" href="../static/css/home.css" />
+<link rel="stylesheet" href="../static/css/progress.css" />
+</head>
+<body>
+	<div id="prev_container">
+		<button id="click_into">click</button>
+		<div id="home_prev">
+			<div class="focus_closer">
+				<img src="images/home/travel1.jpg" alt="" />
+			</div>
+			<div>
+				<img src="images/home/travel2.jpg" alt="" />
+			</div>
+			<div>
+				<img src="images/home/travel3.jpg" alt="" />
+			</div>
+			<div>
+				<img src="images/home/travel4.jpg" alt="" />
+			</div>
+		</div>
+		<div id="filter">
+			<p>
+				LIN XIN HI~HI~ <br /> <span>郵輪訂房網站</span>
+			</p>
+		</div>
+	</div>
+	<!-- 導覽列 -->
+	<div th:replace="~{front-end/nav}"></div>
+	<!-- 登出動畫 -->
 	<div th:insert="~{/front-end/mem/progressbar :: progress}"
 		th:if="${msg}"></div>
-    <div style="height: 1000px"></div>
-    <div th:replace="~{back-end/footer :: f}"></div>
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
+	<!-- 	貼主要內容 -->
+	<section id="carousel">
+		<div>
+			<a href=""><img src="images/home/travel2.jpg" /></a>
+		</div>
+		<div>
+			<a href=""><img src="https://picsum.photos/id/239/1400/600" /></a>
+		</div>
+		<div>
+			<a href=""><img src="https://picsum.photos/id/240/1400/600" /></a>
+		</div>
+		<div>
+			<a href=""><img src="https://picsum.photos/id/241/1400/600" /></a>
+		</div>
+		<div>
+			<a href=""><img src="https://picsum.photos/id/242/1400/600" /></a>
+		</div>
+	</section>
+
+	<main>
+		<div id="tour_area">
+			<h2>行程推薦</h2>
+			<div class="fun_container">
+				<a href="" class="tour_aTag">預定行程</a>
+			</div>
+
+			<p class="tour_area_intro">
+				<span>從日出到日落，與你相伴！ <span class="bg_color_bar"></span>
+				</span> <br />在郵輪的甲板上，看霞光染紅天際，擁抱大自然的無限美好。在這短暫又永恆的時光裡，每一刻的悸動都讓心靈更豐盈，每一秒的共度都讓彼此更加緊密。這是一場怦然心動的旅程，更是心靈深處的滋養，讓我們在海上之間相依相伴，共享最純粹的美好。
+			</p>
+
+			<div class="intro">
+				<div class="intro_cont">
+					<p>
+						<span>日本</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
+						<br /> <a href="" style="padding-left: 45%">報名連結</a>
+					</p>
+					<div class="two_img_con">
+						<div>
+							<img src="images/home/jou1.jpg" alt="" />
+						</div>
+						<div>
+							<img src="images/home/jou2.jpg" alt="" />
+						</div>
+					</div>
+				</div>
+
+				<div class="intro_cont" style="margin-top: 70px">
+					<p>
+						<span>北歐</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
+						<br /> <a href="" style="padding-left: 45%">報名連結</a>
+					</p>
+					<div class="two_img_con">
+						<div>
+							<img src="images/home/jou3.jpg" alt="" />
+						</div>
+						<div>
+							<img src="images/home/jou4.jpg" alt="" />
+						</div>
+					</div>
+				</div>
+				<div class="intro_cont">
+					<p>
+						<span>愛情海</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
+						<br /> <a href="" style="padding-left: 45%">報名連結</a>
+					</p>
+					<div class="two_img_con">
+						<div>
+							<img src="images/home/jou5.jpg" alt="" />
+						</div>
+						<div>
+							<img src="images/home/jou6.jpg" alt="" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 活動預約 -->
+		<div id="menu">
+			<div>
+				<img src="images/home/t01.jpg" alt="" />
+			</div>
+
+			<h2>活動預約</h2>
+			<div class="menu-container">
+				<div class="menu-item" onclick="showSlider('indoor')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm1.png" alt="" />
+					</div>
+
+					<p>室內活動</p>
+					<button class="btn-circle">V</button>
+				</div>
+				<div class="menu-item" onclick="showSlider('outdoor')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm2.png" alt="" />
+					</div>
+					<p>戶外活動</p>
+					<button class="btn-circle">V</button>
+				</div>
+				<div class="menu-item" onclick="showSlider('night')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm3.png" alt="" />
+					</div>
+					<p>夜晚時光</p>
+					<button class="btn-circle">V</button>
+				</div>
+				<div class="menu-item" onclick="showSlider('rent')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm4.png" alt="" />
+					</div>
+					<p>租借設施</p>
+					<button class="btn-circle">V</button>
+				</div>
+				<div class="menu-item" onclick="showSlider('festive')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm5.png" alt="" />
+					</div>
+					<p>限定活動</p>
+					<button class="btn-circle">V</button>
+				</div>
+				<div class="menu-item" onclick="showSlider('family')">
+					<div class="icon">
+						<img src="images/home/menu/evtelm6.png" alt="" />
+					</div>
+					<p>親子友善</p>
+					<button class="btn-circle">V</button>
+				</div>
+			</div>
+			<p class="menu_text">點選我們的按鈕吧!!</p>
+		</div>
+
+		<!-- 圖片滑動區域 -->
+		<div id="slider" class="hidden">
+			<button class="close-btn" onclick="closeSlider()">×</button>
+			<div class="slider-content">
+				<button class="prev-btn" onclick="prevImage()">⬅</button>
+				<div class="slider-images hidden" id="slider-indoor">
+					<img src="images/home/menu/indoor01.jpg" alt="電影院" /> <img
+						src="images/home/menu/indoor02.jpg" alt="音樂廳" /> <img
+						src="images/home/menu/indoor03.webp" alt="賭場" />
+				</div>
+				<div class="slider-images hidden" id="slider-outdoor">
+					<img src="images/home/menu/outdoor01.jpg" alt="衝衝衝" /> <img
+						src="images/home/menu/outdoor02.jpg" alt="下水跟上大家" /> <img
+						src="images/home/menu/outdoor03.jpg" alt="我在天上飛" />
+				</div>
+				<div class="slider-images hidden" id="slider-night">
+					<img src="images/home/menu/night1.jpg" alt="夜晚電影" /> <img
+						src="images/home/menu/night2.jpg" alt="夜晚煙火" /> <img
+						src="images/home/menu/night3.jpg" alt="夜晚星空" />
+				</div>
+				<div class="slider-images hidden" id="slider-rent">
+					<img src="images/home/menu/rent1.jpg" alt="租借舞廳" /> <img
+						src="images/home/menu/rent2.jpg" alt="租借健身房" /> <img
+						src="images/home/menu/rent3.jpg" alt="租借兒童遊樂區" />
+				</div>
+				<div class="slider-images hidden" id="slider-festive">
+					<img src="images/home/menu/festive1.jpg" alt="限定活動米其林三星" /> <img
+						src="images/home/menu/festive2.jpg" alt="限定活動DJ舞會" /> <img
+						src="images/home/menu/festive3.jpg" alt="限定活動聯誼" />
+				</div>
+				<div class="slider-images hidden" id="slider-family">
+					<img src="images/home/menu/family1.jpg" alt="親子活動" /> <img
+						src="images/home/menu/family2.jpg" alt="親子友善" /> <img
+						src="images/home/menu/family3.jpg" alt="促進親子關係" />
+				</div>
+				<button class="next-btn" onclick="nextImage()">➡</button>
+			</div>
+		</div>
+	</main>
 
 
-    <script>
+	<!-- 商品分頁 -->
+	<section class="product-section">
+		<div class="product-block">
+			<div class="product-info">
+				<div class="color-block"></div>
+				<h2>01</h2>
+				<h3>生活用品</h3>
+			</div>
+			<div class="product-images">
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt1.jpg" alt="生活用品" />
+					</a>
+				</div>
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt2.jpg" alt="生活用品" />
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="product-block" style="flex-direction: row-reverse">
+			<div class="product-info">
+				<div class="color-block"></div>
+				<h2>02</h2>
+				<h3>時尚配件</h3>
+			</div>
+			<div class="product-images">
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt3.jpg" alt="泳衣" />
+					</a>
+				</div>
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt4.jpg" alt="配件" />
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="product-block">
+			<div class="product-info">
+				<div class="color-block"></div>
+				<h2>03</h2>
+				<h3>特色伴手禮</h3>
+			</div>
+			<div class="product-images">
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt5.jpg" alt="馬卡龍" />
+					</a>
+				</div>
+				<div>
+					<a href="https://www.yahoo.com.tw"> <img
+						src="images/home/pdt/pdt6.jpg" alt="餅乾禮盒" />
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- 	貼主要內容 -->
+	<div th:replace="~{back-end/footer :: f}"></div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+	<script type="text/javascript" th:src="@{/js/evt.js}"></script>
+	<script type="text/javascript" th:src="@{/js/home.js}"></script>
+
+	<script>
       const ham_list = document.querySelector(".ham_list");
       const nav = document.querySelector("nav");
 
@@ -111,5 +345,5 @@
 					
 		}
     </script>
-  </body>
+</body>
 </html>
