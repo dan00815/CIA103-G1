@@ -13,6 +13,7 @@ import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -88,17 +89,31 @@ public class EvtOrderController {
     }
 
 
-    //拿所有活動訂單明細並分頁
+    //拿所有活動訂單明細並分頁+搜尋
     @GetMapping("/ordlistall")
-    public String orderlistall(@RequestParam(defaultValue = "0") Integer page, Model model,Integer status) {
-        if(status!=null){
-            Page<EvtOrderVO>evtOrderVOStatus = evtOrderService.findAllByEvtOrderStat(status,page);
-            model.addAttribute("ord", evtOrderVOStatus);
-        }else {
-        Page<EvtOrderVO> evtOrderPage = evtOrderService.getAllEvtorders(page);
-        model.addAttribute("ord", evtOrderPage);}
+    public String orderlistall(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "") String keyword,
+            Integer status,
+            Model model) {
+        Page<EvtOrderVO> resultPage;
+        // 沒寫關鍵字就拿整頁+狀態
+        if (keyword.trim().isEmpty()) {
+            if (status != null) {
+                resultPage = evtOrderService.findAllByEvtOrderStat(status, page);
+            } else {
+                resultPage = evtOrderService.getAllEvtorders(page);
+            }
+        } else {
+            // 有搜尋關鍵字時,用關鍵字查
+            String searchKeyword = keyword.trim();
+            String searchStatus = status != null ? status.toString() : null;
+            resultPage = evtOrderService.Query(searchKeyword, searchStatus, page);
+        }
+        model.addAttribute("ord", resultPage);
         return "/back-end/evtord/orderlist";
     }
+
 
     @Transactional
     @PostMapping("/confirm/{id}")
@@ -135,7 +150,7 @@ public class EvtOrderController {
     }
 
     //活動明細 有會員資訊 活動資訊 報名時間、備註....然後審核可以寄MAIL通知bla~~
-    @GetMapping("/orderdetail")
+    @GetMapping("/orderdetail/{id}")
     public String orderdetail(@PathVariable Integer id, Model model) {
         EvtOrderVO evtord = evtOrderService.getOneEvt(id);
         EvtVO evt = evtService.getOneEvt(evtord.getEvtVO().getEvtId());

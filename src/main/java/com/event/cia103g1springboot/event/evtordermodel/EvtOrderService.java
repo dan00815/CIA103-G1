@@ -4,6 +4,7 @@ import com.event.cia103g1springboot.event.evtmodel.EvtVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,5 +58,10 @@ public class EvtOrderService {
         return evtOrderRepository.findByEvtOrderStat(status, pageRequest);
     }
 
-
+    //加入搜尋ㄉ
+    public Page<EvtOrderVO> Query(String keyword, String status, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 5, Sort.by("evtOrderId").descending());
+        return evtOrderRepository.findWithDynamicQuery(keyword, status, pageRequest);
+    }
 }
+
