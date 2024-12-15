@@ -160,35 +160,73 @@ form.cus_form .img_prev ul.prev_ul_el li img {
   background-color: white;
 }
 
-.myTable th {
-  border-right: 2px solid rgba(0, 0, 0, 0.7);
-  background-color: rgb(30, 143, 255);
+
+.myTable {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
 }
+
+
+.myTable th {
+  border-right: 2px solid rgba(0, 0, 0, 0.2);
+  background-color: #347ab7;
+  color: #ffffff;
+  padding: 12px 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 .myTable th:first-child {
   border-top-left-radius: 10px;
 }
+
 .myTable th:last-child {
   border-right: none;
   border-top-right-radius: 10px;
 }
+
 .myTable tbody tr td {
-  border-right: 2px solid rgba(0, 0, 0, 0.7);
+  border-right: 2px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
 }
+
 .myTable tbody tr td:last-child {
   border-right: none;
 }
+
 .myTable tbody tr:last-child td:first-child {
   border-bottom-left-radius: 10px;
 }
+
 .myTable tbody tr:last-child td:last-child {
   border-bottom-right-radius: 10px;
 }
+
+/* 行配色 */
 .myTable tbody tr:nth-child(odd) {
-  background-color: rgba(135, 206, 250, 0.8);
+  background-color: #f8f9fa;
 }
+
 .myTable tbody tr:nth-child(even) {
-  background-color: rgba(65, 105, 225, 0.8);
+  background-color: #e9ecef;
 }
+
+.myTable tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+/* 表格資料置中 */
+.myTable th,
+.myTable tr,
+.myTable td{
+	text-align: center;
+	vertical-align: middle;
+}
+
 
 .basic_input {
   margin-left: 10px;
