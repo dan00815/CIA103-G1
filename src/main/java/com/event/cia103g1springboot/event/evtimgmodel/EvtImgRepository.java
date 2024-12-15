@@ -15,6 +15,8 @@ public interface EvtImgRepository extends JpaRepository<EvtImgVO,Integer> {
     List<EvtImgVO> findByEvtVOEvtId(Integer evtId);
     Optional<EvtImgVO> findById(Integer imgId);
 
+
+    //拿上架、已額滿圖片 innerjoin
     @Modifying
     @Query("SELECT ei FROM EvtImgVO ei JOIN ei.evtVO e WHERE e.evtStat IN :evtStats")
     List<EvtImgVO> findPublishImg(@Param("evtStats") List<Integer> evtStats);

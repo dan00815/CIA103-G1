@@ -37,10 +37,10 @@ function showEventPopup(eventData) {
     const popup = document.createElement('div');
     popup.className = 'event-popup';
 
-    // 使用 template literal 建立彈窗內容
+
     popup.innerHTML = `
         <button class="popup-close">&times;</button>
-        <div class="popup-header">${eventData.title}</div>
+        <div class="popup-header"><a href="/front/detail/${eventData.id}">${eventData.title}</a></div>
         <div class="popup-content">
             <div class="popup-row">
                 <span class="popup-label">日期：</span>

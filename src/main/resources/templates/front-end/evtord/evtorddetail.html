@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>活動訂單詳情</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+    <link rel="stylesheet" href="../static/css/elm.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Noto Sans TC', sans-serif;
+            /* 移除 body 的 padding，因為 nav 需要貼齊頂部 */
+            padding: 0;
+        }
+
+        /* 新增容器的上部 padding 來替代原本 body 的 padding */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;  /* 移到這裡 */
+        }
+
+        /* 其他樣式保持不變 */
+        .order-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #4a90e2;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-label {
+            min-width: 100px;  /* 改為 min-width 確保標籤不會被擠壓 */
+            color: #666;
+            font-size: 15px;
+        }
+
+        .item-value {
+            color: #333;
+            font-weight: 500;
+            flex: 1;
+            padding-left: 15px;  /* 加入左側間距 */
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-completed {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #4a90e2;
+            color: white !important;  /* 確保連結顏色不會被 nav 樣式覆蓋 */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 20px 0 40px 0;  /* 調整上下邊距 */
+        }
+
+        .back-button:hover {
+            background-color: #357abd;
+            color: white !important;
+            transform: translateY(-2px);
+            text-decoration: none;  /* 確保懸停時沒有下劃線 */
+        }
+
+        .back-button svg {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;  /* 手機版減少間距 */
+            }
+
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+
+            .item-value {
+                padding-left: 0;  /* 手機版移除左側間距 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{front-end/nav}"></div>
+    <div class="container">
+        <!-- 進行中訂單 -->
+        <div class="order-section" th:if="${not #lists.isEmpty(activeOrders)}">
+            <h2 class="section-title">進行中的訂單</h2>
+            <div class="order-card" th:each="order : ${activeOrders}">
+                <div class="order-item">
+                    <span class="item-label">活動名稱</span>
+                    <span class="item-value" th:text="${order.evtName}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">活動日期</span>
+                    <span class="item-value" th:text="${#temporals.format(order.evtDate, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">參加人數</span>
+                    <span class="item-value" th:text="${order.evtAttend}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">訂單備註</span>
+                    <span class="item-value" th:text="${order.evtRemarks}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">訂單狀態</span>
+                    <span class="status-badge status-active" th:text="${order.evtOrderStat}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 歷史訂單 -->
+        <div class="order-section" th:if="${not #lists.isEmpty(historyOrders)}">
+            <h2 class="section-title">歷史訂單</h2>
+            <div class="order-card" th:each="order : ${historyOrders}">
+                <div class="order-item">
+                    <span class="item-label">活動名稱</span>
+                    <span class="item-value" th:text="${order.evtName}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">活動日期</span>
+                    <span class="item-value" th:text="${#temporals.format(order.evtDate, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">參加人數</span>
+                    <span class="item-value" th:text="${order.evtAttend}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">訂單備註</span>
+                    <span class="item-value" th:text="${order.evtRemarks}"></span>
+                </div>
+                <div class="order-item">
+                    <span class="item-label">訂單狀態</span>
+                    <span class="status-badge status-completed" th:text="${order.evtOrderStat}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 返回按鈕 -->
+        <a href="javascript:history.back()" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            返回上一頁
+        </a>
+    </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+
+</body>
+</html>

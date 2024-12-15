@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -116,21 +118,17 @@ public class planOrderController {
             String cartKey = "plan:cart:" + request.getPlanId();
 
             Map<String, String> cartData = new HashMap<>();
+            //傑克森的轉型工具
             ObjectMapper mapper = new ObjectMapper();
-
-            // 存入房間資訊
+            //rooms物件轉json寫入
             cartData.put("rooms", mapper.writeValueAsString(request.getRooms()));
 
-            // 存入價格資訊
             cartData.put("totalPrice", String.valueOf(request.getTotalPrice()));
 
-            // 存入人數資訊
             cartData.put("attendeeCount", String.valueOf(request.getAttendeeCount()));
 
-            // 存入行程ID
             cartData.put("planId", String.valueOf(request.getPlanId()));
 
-            // 寫入 Redis 並設置過期時間
             redisTemplate.opsForHash().putAll(cartKey, cartData);
             redisTemplate.expire(cartKey, 30, TimeUnit.MINUTES);
 
@@ -372,7 +370,38 @@ public class planOrderController {
         }
     }
 
+    @GetMapping("/planorddetail")
+    @Transactional
+    public String frontPlanOrderDetail(Model model, HttpSession session) {
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        Set<PlanOrder> planOrders = memVO.getPlanOrder();
+
+        List<PlanOrder> activeOrders = new ArrayList<>();
+        List<PlanOrder> historyOrders = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+
+        for (PlanOrder order : planOrders) {
+            //狀態沒寫很細只能用時間判斷= =
+            if (order.getPlan().getStartDate().isAfter(now)){
+                activeOrders.add(order);
+            } else {
+                historyOrders.add(order);
+            }
+        }
+        model.addAttribute("activeOrders", activeOrders);
+        model.addAttribute("historyOrders", historyOrders);
+
+        return "plan/planorder/planorddetail";
+    }
+
+
+
+
+
+
+
     //    後台------------------------------------------------------
+    //列所有訂單
     @GetMapping("/listall")
     public String listAll(Model model) {
         List<PlanOrder> orders = planOrderService.findAllPlanOrders();
@@ -380,7 +409,7 @@ public class planOrderController {
         return "plan/planorder/planordlist";
     }
 
-
+    //行程訂單明細
     @GetMapping("/view/{id}")
     public String viewOrder(@PathVariable Integer id, Model model) {
         PlanOrder order = planOrderService.findPlanOrderById(id);
@@ -391,6 +420,7 @@ public class planOrderController {
         return "plan/planorder/view";
     }
 
+    //取消訂單
     @Transactional
     @PostMapping("/cancel/{id}")
     public String cancel(@PathVariable Integer id, Model model) throws MessagingException {

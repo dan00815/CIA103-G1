@@ -7,15 +7,15 @@
 <body>
 	<ul class="side_bar" th:fragment="profileSB">
 		<li class="list_item"><a th:href="@{/mem/profile}">基本資料</a></li>
-		<li class="list_item"><a href="">我的通知</a></li>
+		<li class="list_item"><a th:href="@{/member/notify}">我的通知</a></li>
 		<li class="list_item"><a href="">查看購物車</a></li>
 		<li class="list_item my_list">我的訂單</li>
 		<li class="expand_list">
 			<p>
-				<a href="">活動訂單詳情</a>
+				<a href="/frontOrderDetail">活動訂單詳情</a>
 			</p>
 			<p>
-				<a href="">行程訂單詳情</a>
+				<a href="/planord/planorddetail">行程訂單詳情</a>
 			</p>
 			<p>
 				<a href="">商品訂單詳情</a>
