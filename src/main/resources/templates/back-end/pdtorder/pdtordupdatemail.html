@@ -2,9 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>商城訂單取消通知</title>
+<title>商城訂單狀態更新通知</title>
 <style>
-  body {
+ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -19,19 +19,22 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .header {
-    color: #dc3545;
-    border-bottom: 2px solid #dc3545;
+    color: rgb(36, 94, 172);
+    border-bottom: 2px solid rgb(36, 94, 172);
     padding-bottom: 10px;
     margin-bottom: 20px;
+    font-size: 1.5em;
+    text-align: center;
   }
   .notification {
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
+    background-color:rgb(233, 239, 248);
+    border: 1px solid #d4edda;
     border-radius: 10px;
     padding: 20px;
   }
   .notification p {
     margin: 10px 0;
+    line-height: 1.6;
   }
   .details {
     margin: 20px 0;
@@ -59,6 +62,9 @@
     padding: 8px;
     border-bottom: 1px solid #dee2e6;
   }
+  .details table tbody tr:last-child td {
+    border-bottom: none;
+  }
   .footer {
     color: #666;
     font-size: 14px;
@@ -69,41 +75,44 @@
 </head>
 <body>
 <div class="container">
-  <h2 class="header">商城訂單取消通知</h2>
+  <h2 class="header">商城訂單更新通知</h2>
 
   <div class="notification">
     <p>親愛的 <span th:text="${recName}"></span> 您好：</p>
-    <p>您的商城訂單已取消，以下是訂單詳情：</p>
+    <p>您的商城訂單已更新，以下是訂單詳情：</p>
     <div class="details">
       <ul>
         <li>會員編號：<span th:text="${memId}"></span></li>
         <li>訂單編號：<span th:text="${pdtOrderId}"></span></li>
         <li>訂單成立時間：<span th:text="${orderDate}"></span></li>
-        <li>訂單狀態：<span th:text="${orderStat == 6 ? '訂單取消' : '其他狀態'}"></span></li>
+        <li>訂單狀態：<span th:text="${orderStat == 3 ? '配送中' : '其他狀態'}"></span></li>
         <li>電話：<span th:text="${recTel}"></span></li>
         <li>寄送地址：<span th:text="${recAddr}"></span></li>
         <li>訂單金額：NT$ <span th:text="${#numbers.formatDecimal(orderAmt, 0, 'COMMA', 0, 'POINT')}"></span></li>
       </ul>
-      <table>
-        <thead>
-          <tr>
-            <th>品名</th>
-            <th>單價</th>
-            <th>數量</th>
-            <th>小計</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="item : ${pdtItems}">
-            <td th:text="${item.pdtName}"></td>
-            <td th:text="${item.pdtPrice}"></td>
-            <td th:text="${item.orderQty}"></td>
-            <td th:text="${item.orderQty * item.pdtPrice}"></td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <p>訂單明細</p>
+        <table>
+          <thead>
+            <tr>
+              <th>品名</th>
+              <th>數量</th>
+              <th>單價</th>
+              <th>小計</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item : ${pdtItems}">
+              <td th:text="${item.pdtName}"></td>
+              <td th:text="${item.orderQty}"></td>
+              <td th:text="${item.pdtPrice}"></td>
+              <td th:text="${item.orderQty * item.pdtPrice}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <p>如有任何問題，請隨時與我們聯絡。</p>
+    <p>請至訂單管理中心確認訂單詳情，如有任何問題，請隨時與我們聯絡。</p>
     <p>如需即時協助，請撥打客服專線：(02)1234-5678</p>
   </div>
 

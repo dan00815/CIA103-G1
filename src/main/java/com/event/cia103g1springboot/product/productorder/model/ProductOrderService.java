@@ -80,8 +80,10 @@ public class ProductOrderService {
 		repository.updateTheOrderStat(orderStat, pdtOrderId);
 	}
 
-	public void sendCancelPdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
-		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
+	
+	
+//	包裝mail所需內容資訊
+	public Context pdtOrdContext(ProductOrderVO pdtOrd) {
 		List<ProductOrderItemVO> pdtItems = pdtItemSvc.getOrderItemsByPdtOrderId(pdtOrd.getPdtOrderId());
 		Context context = new Context();
 		context.setVariable("memId", pdtOrd.getMemVO().getMemId());
@@ -93,8 +95,19 @@ public class ProductOrderService {
 		context.setVariable("orderStat", pdtOrd.getOrderStat());
 		context.setVariable("orderAmt", pdtOrd.getOrderAmt());
 		context.setVariable("pdtItems", pdtItems);
-		String mailContext = templateEngine.process("back-end/pdtorder/pdtordcanclemail",context);
 		
+		return context;
+	}
+	
+//	訂單取消發送mail
+	public void sendCancelPdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
+		
+//		包裝會員及訂單明細
+		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
+		Context context = pdtOrdContext(pdtOrd);
+		String mailContext = templateEngine.process("back-end/pdtorder/pdtordcanclemail",context);
+
+//		設定mail資訊
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message,false,"UTF-8");
 		helper.setTo(mem.getEmail());
@@ -104,25 +117,31 @@ public class ProductOrderService {
 		mailSender.send(message);
 	}
 	
+//	訂單成立發送mail
 	public void sendSuccessPdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
 		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
-		List<ProductOrderItemVO> pdtItems = pdtItemSvc.getOrderItemsByPdtOrderId(pdtOrd.getPdtOrderId());
-		Context context = new Context();
-		context.setVariable("memId", pdtOrd.getMemVO().getMemId());
-		context.setVariable("pdtOrderId", pdtOrd.getPdtOrderId());
-		context.setVariable("orderDate", pdtOrd.getOrderDate());
-		context.setVariable("recName", pdtOrd.getRecName());
-		context.setVariable("recAddr",pdtOrd.getRecAddr());
-		context.setVariable("recTel", pdtOrd.getRecTel());
-		context.setVariable("orderStat", pdtOrd.getOrderStat());
-		context.setVariable("orderAmt", pdtOrd.getOrderAmt());
-		context.setVariable("pdtItems", pdtItems);
+		Context context = pdtOrdContext(pdtOrd);
 		String mailContext = templateEngine.process("back-end/pdtorder/pdtordsuccessemail",context);
 		
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message,false,"UTF-8");
 		helper.setTo(mem.getEmail());
 		helper.setSubject("[鄰星嗨嗨] 商城訂單成立通知");
+		helper.setText(mailContext,true);
+		
+		mailSender.send(message);
+	}
+
+//	訂單更新發送mail
+	public void sendUpdatePdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
+		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
+		Context context = pdtOrdContext(pdtOrd);
+		String mailContext = templateEngine.process("back-end/pdtorder/pdtordupdatemail",context);
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message,false,"UTF-8");
+		helper.setTo(mem.getEmail());
+		helper.setSubject("[鄰星嗨嗨] 商城訂單更新通知");
 		helper.setText(mailContext,true);
 		
 		mailSender.send(message);

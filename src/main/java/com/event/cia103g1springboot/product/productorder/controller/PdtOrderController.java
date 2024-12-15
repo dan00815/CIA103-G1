@@ -51,6 +51,7 @@ public class PdtOrderController {
 		pdtOrderSvc.updateProductOrder(productOrderVO);
 		model.addAttribute("productOrderVO", productOrderVO);
 		
+//		修改後訂單狀態為取消發送取消mail
 		if(productOrderVO.getOrderStat().equals(6)) {
 			try {
 				pdtOrderSvc.sendCancelPdtOrdMail(productOrderVO);
@@ -59,12 +60,21 @@ public class PdtOrderController {
 					model.addAttribute("errorMessage","取消信件寄送失敗");
 			}
 			
+//		修改後訂單狀態為成立發送成功mail
 		}else if(productOrderVO.getOrderStat().equals(2)) {
 			try {
 				pdtOrderSvc.sendSuccessPdtOrdMail(productOrderVO);
 			}catch(Exception e) {
 					e.printStackTrace();
 					model.addAttribute("errorMessage","成立信件寄送失敗");
+			}
+//		其他狀態發送狀態更新mail	
+		}else {
+			try {
+				pdtOrderSvc.sendUpdatePdtOrdMail(productOrderVO);
+			}catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("errorMessage","更新信件寄送失敗");
 			}
 		}
 		
