@@ -393,9 +393,54 @@ public class planOrderController {
 
         return "plan/planorder/planorddetail";
     }
+   // 因該跟上面那個大同小異
+    @GetMapping("/memorder/{memId}")
+    public String viewOrdersByMember(@PathVariable Long memId, Model model, HttpSession session) {
+        // 從 Session 中取得會員資訊
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+
+        // 檢查會員登入狀態
+        if (memVO == null) {
+            return "redirect:/login"; // 如果未登入，跳轉至登入頁面
+        }
 
 
+        // 查詢會員的所有行程訂單
+        List<PlanOrder> planOrders = planOrderService.findPlanOrdersByMemId(memVO.getMemId());
+        if (planOrders == null || planOrders.isEmpty()) {
+            model.addAttribute("errorMessage", "目前沒有任何行程訂單！");
+            model.addAttribute("mem", memVO);
+            return "plan/planorder/planmemlist"; // 返回無訂單頁面
+        }
 
+        // 將資料傳遞至頁面
+        model.addAttribute("name",memVO.getName());
+        model.addAttribute("mem", memVO);
+        model.addAttribute("orders", planOrders);
+
+        return "plan/planorder/planmemlist"; // 返回訂單列表頁面
+    }
+
+    //會員行程訂單明細
+    @GetMapping("/memview/{id}")
+    public String memviewOrder(@PathVariable Integer id, Model model, HttpSession session,
+                               @RequestParam(required = false) Integer index) {
+        // 從 Session 中取得會員資訊
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+
+        // 查詢訂單
+        PlanOrder order = planOrderService.findByMemIdAndPlanOrderId(memVO.getMemId(), id);
+
+
+        // 確保訂單屬於當前會員
+        if (!order.getMemVO().getMemId().equals(memVO.getMemId())) {
+            return "redirect:/planord/memorder/" + memVO.getMemId(); // 防止訪問其他會員的訂單
+        }
+        model.addAttribute("index",index);
+        model.addAttribute("name",memVO.getName());
+        model.addAttribute("order", order);
+        return "plan/planorder/memplanview";
+    }
 
 
 
