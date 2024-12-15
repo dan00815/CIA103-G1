@@ -13,10 +13,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"
-    />
+   
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
@@ -154,7 +151,7 @@
     </style>
 </head>
 <body>
-	<div th:insert="~{/front-end/nav :: nav}"></div>
+	<div th:replace="~{front-end/nav}"></div>
     <div id="header"><i class="fa-solid fa-gift"></i> 行程預定</div>
     <div id="sub-header"><i class="fa-solid fa-list"></i> 選擇房型</div>
     <div class="my-class">
