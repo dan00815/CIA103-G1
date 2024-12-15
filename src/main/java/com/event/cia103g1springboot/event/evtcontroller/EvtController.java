@@ -45,7 +45,6 @@ public class EvtController {
     @Autowired
     private PlanOrderService planOrderService;
 
-    //可以把前端傳進來的DATETIMELOCAL字串轉成符合TIMESTAMP格式 超爽
 
     @GetMapping("/listall")
     public String listAll(@RequestParam(defaultValue = "0") Integer page, Model model,EvtVO evtVO) {
