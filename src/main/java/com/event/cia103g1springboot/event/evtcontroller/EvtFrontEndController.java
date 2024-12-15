@@ -48,7 +48,7 @@ public class EvtFrontEndController {
 
         Page<EvtVO> events;
 
-        // 如果有任何搜尋條件，使用複合查詢
+        // 有條件就直接查
         if (keyword != null || startDate != null || endDate != null ||
                 minAttend != null || maxAttend != null) {
 
@@ -61,7 +61,7 @@ public class EvtFrontEndController {
 
             events = evtService.findActiveEvents(criteria, page);
         } else {
-            // 如果沒有搜尋條件，使用原本的列表查詢，但要改成分頁版本
+            //原本的
             events = evtService.findByEvtStatOrderByEvtDateAsc2(1, 3, page);
         }
 
