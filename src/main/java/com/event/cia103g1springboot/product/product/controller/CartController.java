@@ -227,6 +227,16 @@ public class CartController {
 		Integer newPdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);
 		session.setAttribute("newPdtOrderId", newPdtOrderId);
 		System.out.println("自增的訂單 ID: " + newPdtOrderId);
+		
+
+		if(productOrderVO.getOrderStat().equals(2)) {
+			try {
+				pdtOrderSvc.sendSuccessPdtOrdMail(productOrderVO);
+			}catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("errorMessage","成立信件寄送失敗");
+			}
+		}
 
 		/*************************** 3.新增訂單明細 *****************************************/
 		List<CartVO> cart = (List<CartVO>) session.getAttribute("cart");
@@ -242,6 +252,8 @@ public class CartController {
 				System.out.println("訂單明細新增成功");
 			}
 		}
+		
+			
 		return "redirect:orderSuccessPage";
 
 	}

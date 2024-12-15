@@ -51,6 +51,9 @@ public class RTFrontController {
 		Map<String,String[]> map = req.getParameterMap();
 		List<RTVO> list = rtSvc.getAllRT(map);
 		model.addAttribute("rtListData",list);
+		if(list == null) {
+			model.addAttribute("errorMessage","查無相符房型");
+		}
 		return "front-end/roomtype/roomTypeList";
 	}
 	
