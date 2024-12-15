@@ -1,12 +1,22 @@
 package com.event.cia103g1springboot.product.productorder.model;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.SessionFactory;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import com.event.cia103g1springboot.member.mem.model.MemService;
+import com.event.cia103g1springboot.member.mem.model.MemVO;
+import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemService;
+import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemVO;
 
 
 //請自行引入打開
@@ -18,7 +28,18 @@ public class ProductOrderService {
 	
 	@Autowired
 	ProductOrderRepository repository;
+	
+	@Autowired
+	JavaMailSender mailSender;
+	
+	@Autowired
+	TemplateEngine templateEngine;
 
+	@Autowired
+	MemService memSvc;
+	
+	@Autowired
+	ProductOrderItemService pdtItemSvc;
 	
 	public Integer addProductOrder(ProductOrderVO productOrderVO) {
 		ProductOrderVO savedOrder = repository.save(productOrderVO);
@@ -59,4 +80,51 @@ public class ProductOrderService {
 		repository.updateTheOrderStat(orderStat, pdtOrderId);
 	}
 
+	public void sendCancelPdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
+		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
+		List<ProductOrderItemVO> pdtItems = pdtItemSvc.getOrderItemsByPdtOrderId(pdtOrd.getPdtOrderId());
+		Context context = new Context();
+		context.setVariable("memId", pdtOrd.getMemVO().getMemId());
+		context.setVariable("pdtOrderId", pdtOrd.getPdtOrderId());
+		context.setVariable("orderDate", pdtOrd.getOrderDate());
+		context.setVariable("recName", pdtOrd.getRecName());
+		context.setVariable("recAddr",pdtOrd.getRecAddr());
+		context.setVariable("recTel", pdtOrd.getRecTel());
+		context.setVariable("orderStat", pdtOrd.getOrderStat());
+		context.setVariable("orderAmt", pdtOrd.getOrderAmt());
+		context.setVariable("pdtItems", pdtItems);
+		String mailContext = templateEngine.process("back-end/pdtorder/pdtordcanclemail",context);
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message,false,"UTF-8");
+		helper.setTo(mem.getEmail());
+		helper.setSubject("[鄰星嗨嗨] 商城訂單取消通知");
+		helper.setText(mailContext,true);
+		
+		mailSender.send(message);
+	}
+	
+	public void sendSuccessPdtOrdMail(ProductOrderVO pdtOrd) throws MessagingException{
+		MemVO mem = memSvc.getMem(pdtOrd.getMemVO().getMemId());
+		List<ProductOrderItemVO> pdtItems = pdtItemSvc.getOrderItemsByPdtOrderId(pdtOrd.getPdtOrderId());
+		Context context = new Context();
+		context.setVariable("memId", pdtOrd.getMemVO().getMemId());
+		context.setVariable("pdtOrderId", pdtOrd.getPdtOrderId());
+		context.setVariable("orderDate", pdtOrd.getOrderDate());
+		context.setVariable("recName", pdtOrd.getRecName());
+		context.setVariable("recAddr",pdtOrd.getRecAddr());
+		context.setVariable("recTel", pdtOrd.getRecTel());
+		context.setVariable("orderStat", pdtOrd.getOrderStat());
+		context.setVariable("orderAmt", pdtOrd.getOrderAmt());
+		context.setVariable("pdtItems", pdtItems);
+		String mailContext = templateEngine.process("back-end/pdtorder/pdtordsuccessemail",context);
+		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message,false,"UTF-8");
+		helper.setTo(mem.getEmail());
+		helper.setSubject("[鄰星嗨嗨] 商城訂單成立通知");
+		helper.setText(mailContext,true);
+		
+		mailSender.send(message);
+	}
 }

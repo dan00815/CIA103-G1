@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>商城訂單成立通知</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .header {
+    color: #dc3545;
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .notification {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .notification p {
+    margin: 10px 0;
+  }
+  .details {
+    margin: 20px 0;
+  }
+  .details ul {
+    list-style: none;
+    padding: 0;
+  }
+  .details ul li {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  .details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  .details table thead th {
+    background-color: #f8f9fa;
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  .details table tbody td {
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .footer {
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2 class="header">商城訂單成立通知</h2>
+
+  <div class="notification">
+    <p>親愛的 <span th:text="${recName}"></span> 您好：</p>
+    <p>您的商城訂單已成立，以下是訂單詳情：</p>
+    <div class="details">
+      <ul>
+        <li>會員編號：<span th:text="${memId}"></span></li>
+        <li>訂單編號：<span th:text="${pdtOrderId}"></span></li>
+        <li>訂單成立時間：<span th:text="${orderDate}"></span></li>
+        <li>訂單狀態：<span th:text="${orderStat == 2 ? '訂單成立' : '其他狀態'}"></span></li>
+        <li>電話：<span th:text="${recTel}"></span></li>
+        <li>寄送地址：<span th:text="${recAddr}"></span></li>
+        <li>訂單金額：NT$ <span th:text="${#numbers.formatDecimal(orderAmt, 0, 'COMMA', 0, 'POINT')}"></span></li>
+      </ul>
+      <div>
+      	<p>訂單明細</p>
+	      <table>
+	        <thead>
+	          <tr>
+	            <th>品名</th>
+	            <th>單價</th>
+	            <th>數量</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          <tr th:each="item : ${pdtItems}">
+	            <td th:text="${item.pdtName}"></td>
+	            <td th:text="${item.pdtPrice}"></td>
+	            <td th:text="${item.orderQty}"></td>
+	          </tr>
+	        </tbody>
+	      </table>
+      </div>
+    </div>
+    <p>如有任何問題，請隨時與我們聯絡。</p>
+    <p>如需即時協助，請撥打客服專線：(02)1234-5678</p>
+  </div>
+
+  <p class="footer">謝謝您的理解與配合。</p>
+</div>
+</body>
+</html>

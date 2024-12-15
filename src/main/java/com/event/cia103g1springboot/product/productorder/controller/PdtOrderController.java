@@ -51,6 +51,22 @@ public class PdtOrderController {
 		pdtOrderSvc.updateProductOrder(productOrderVO);
 		model.addAttribute("productOrderVO", productOrderVO);
 		
+		if(productOrderVO.getOrderStat().equals(6)) {
+			try {
+				pdtOrderSvc.sendCancelPdtOrdMail(productOrderVO);
+			}catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("errorMessage","取消信件寄送失敗");
+			}
+			
+		}else if(productOrderVO.getOrderStat().equals(2)) {
+			try {
+				pdtOrderSvc.sendSuccessPdtOrdMail(productOrderVO);
+			}catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("errorMessage","成立信件寄送失敗");
+			}
+		}
 		
 		return "back-end/pdtorder/listPdtOrder";
 	}
