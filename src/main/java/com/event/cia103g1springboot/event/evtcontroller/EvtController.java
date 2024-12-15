@@ -191,6 +191,7 @@ public class EvtController {
         currentDate = (date != null && !date.isEmpty()) ? LocalDate.parse(date) : LocalDate.now();
         // 獲取活動列表
         List<EvtVO> events = evtService.getEventsForWeek(currentDate);
+
         model.addAttribute("currentDate", currentDate);
         //拿上週
         model.addAttribute("prevWeek", currentDate.minusWeeks(1).toString());

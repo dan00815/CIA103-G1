@@ -28,7 +28,10 @@ import org.thymeleaf.context.Context;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -65,8 +68,8 @@ public class EvtOrderController {
                          @PathVariable Integer id,
                          Model model,
                          HttpSession session) {
-        // 確保使用正確的變數名稱
-        EvtVO event = evtService.getOneEvt(id);  // 注意這裡用 event 而不是 evt
+
+        EvtVO event = evtService.getOneEvt(id);
         MemVO memVO = (MemVO) session.getAttribute("auth");
         PlanOrder planOrder = planOrderService.findPlanOrderById(planOrderId);
 
@@ -132,7 +135,7 @@ public class EvtOrderController {
     }
 
     //活動明細 有會員資訊 活動資訊 報名時間、備註....然後審核可以寄MAIL通知bla~~
-    @GetMapping("/orderdetail/{id}")
+    @GetMapping("/orderdetail")
     public String orderdetail(@PathVariable Integer id, Model model) {
         EvtOrderVO evtord = evtOrderService.getOneEvt(id);
         EvtVO evt = evtService.getOneEvt(evtord.getEvtVO().getEvtId());
@@ -140,6 +143,32 @@ public class EvtOrderController {
         model.addAttribute("evt", evt);
         //之後拿會員~行程~~
         return "back-end/evtord/orderdetail";
+    }
+
+    @Transactional
+    @GetMapping("/frontOrderDetail")
+    public String frontOrderDetail(Model model, HttpSession session) {
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        Set<EvtOrderVO> evtords = memVO.getEvtOrders();
+
+        // 歷史訂單、進行中
+        List<EvtOrderVO> activeOrders = new ArrayList<>();
+        List<EvtOrderVO> historyOrders = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now();
+        for (EvtOrderVO order : evtords) {
+            // 判斷訂單狀態
+//          依據活動日期判斷
+            if (order.getEvtDate().isAfter(now) ) {
+                activeOrders.add(order);
+            } else {
+                historyOrders.add(order);
+            }
+        }
+        model.addAttribute("activeOrders", activeOrders);
+        model.addAttribute("historyOrders", historyOrders);
+
+        return "front-end/evtord/evtorddetail";
     }
 
     @Transactional
