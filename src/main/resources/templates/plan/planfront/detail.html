@@ -145,6 +145,64 @@
         [x-cloak] {
             display: none !important;
         }
+        .event-images-section {
+            background: white;
+            padding: 15px;  /* 減少內邊距 */
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;  /* 置中 */
+            max-width: 95%;  /* 控制最大寬度 */
+        }
+
+        .carousel-item {
+            height: 350px;  /* 調整高度 */
+            background-color: #f8f9fa;
+        }
+
+        .carousel-image-container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;  /* 減少圖片周圍的留白 */
+        }
+
+        .carousel-item img {
+            object-fit: contain;
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        .carousel-indicators {
+            margin-bottom: 0.5rem;  /* 縮小指示器與圖片的距離 */
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 8%;  /* 縮小控制按鈕的寬度 */
+        }
+
+        .view-event-btn {
+            background-color: #0080ff;
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .view-event-btn:hover {
+            background-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 128, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -224,7 +282,7 @@
                     </select>
                 </div>
 
-                <!-- 已選房型列表 -->
+                <!-- 已選房型 -->
                 <div class="selected-rooms">
                     <template x-for="room in selectedRooms" :key="room.id">
                         <div class="room-item">
@@ -258,7 +316,7 @@
                             </div>
                         </div>
                     </template>
-
+                    </div>
                 </div>
 
                 <!-- 價格摘要 -->
@@ -276,6 +334,51 @@
                         <span class="fw-bold">總金額：</span>
                         <span class="text-primary fw-bold" x-text="`${totalPrice}元`"></span>
                     </div>
+                </div>
+            <div class="event-images-section">
+                <h4 class="mb-3"><i class="fas fa-images"></i> 活動照片</h4>
+                <div id="eventImageCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+                    <!-- 輪播指示器 -->
+                    <div class="carousel-indicators">
+                        <div th:each="img, stat : ${evtImgVO}">
+                            <button type="button"
+                                    data-bs-target="#eventImageCarousel"
+                                    th:data-bs-slide-to="${stat.index}"
+                                    th:class="${stat.first} ? 'active' : ''"
+                                    aria-current="true">
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="carousel-inner">
+                        <div th:each="img, stat : ${evtImgVO}"
+                             th:class="'carousel-item ' + ${stat.first ? 'active' : ''}">
+                            <div class="carousel-image-container">
+                                <img th:src="@{'/image/' + ${img.evtImgId}}"
+                                     class="d-block w-100"
+                                     alt="活動圖片">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 輪播控制按鈕 -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#eventImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#eventImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+
+                <div class="text-center mt-3">
+                    <a th:href="@{/front/list}"
+                       class="btn btn-primary view-event-btn">
+                        <i class="fas fa-external-link-alt"></i> 查看所有活動
+                    </a>
                 </div>
             </div>
 
@@ -295,11 +398,13 @@
             </div>
 <div th:replace="~{back-end/footer :: f}"></div>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
         crossorigin="anonymous"></script>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
 <script>
+    //阿派
     document.addEventListener('alpine:init', () => {
         Alpine.data('roomSelection', () => ({
             selectedRoomTypeId: '',
@@ -360,7 +465,7 @@
                 this.selectedRooms = this.selectedRooms.filter(r => r.id !== id);
             },
 
-            // 新增人數相關方法
+            // 新增人數
             updateAttendeeCount(change) {
                 const newCount = this.attendeeCount + change;
                 if (newCount >= 1 && newCount <= this.maxAttendees) {
@@ -372,7 +477,7 @@
                 this.attendeeCount = Math.max(1, Math.min(this.maxAttendees, this.attendeeCount));
             },
 
-            // 計算相關屬性
+            // 先算
             get tripTotal() {
                 return this.planPrice * this.attendeeCount;
             },
@@ -386,7 +491,7 @@
                 return this.tripTotal + this.roomTotal;
             },
 
-            // 提交方法更新
+            // 至少住一間吧
             async submitSelection() {
                 if (this.selectedRooms.length === 0) {
                     alert('請至少選擇一個房型');

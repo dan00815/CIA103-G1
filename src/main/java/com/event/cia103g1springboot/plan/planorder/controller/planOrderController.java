@@ -1,4 +1,6 @@
 package com.event.cia103g1springboot.plan.planorder.controller;
+import com.event.cia103g1springboot.event.evtimgmodel.EvtImgService;
+import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
 import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
@@ -29,10 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RequestMapping("/planord")
@@ -57,16 +56,35 @@ public class planOrderController {
     @Autowired
     MemberNotifyService memberNotifyService;
 
+    @Autowired
+    EvtImgService evtImgService;
+
 
     @GetMapping("/detail/{id}")
     public String planDetail(@PathVariable Integer id, Model model) {
         Plan plan = planService.findPlanById(id);
 
+
+        List<EvtImgVO> allImages = evtImgService.findPublishevtImg(1, 3);
+        List<EvtImgVO> randomImages;
+
+        if (allImages != null && !allImages.isEmpty()) {
+            // 如果圖片少於5張直接全拿
+            if (allImages.size() <= 5) {
+                randomImages = allImages;
+            } else {
+                // 隨機拿5張
+                Collections.shuffle(allImages);
+                randomImages = allImages.subList(0, 5);
+            }
+            model.addAttribute("evtImgVO", randomImages);
+        }
+
         if (plan == null) {
             throw new RuntimeException("Plan not found with ID: " + id); // 防止空值問題
         }
 
-        // 為前端準備房型數據
+        // 拿房型
         List<Map<String, Object>> roomDataList = new ArrayList<>();
         for (PlanRoom planRoom : plan.getPlanRoom()) {
             Map<String, Object> roomData = new HashMap<>();
@@ -79,7 +97,7 @@ public class planOrderController {
             roomDataList.add(roomData);
         }
 
-        // 將數據轉換為 JSON 字符串
+        // 數據轉 JSON
         try {
             ObjectMapper mapper = new ObjectMapper();
             String roomDataJson = mapper.writeValueAsString(roomDataList);
@@ -87,7 +105,6 @@ public class planOrderController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         model.addAttribute("plan", plan);
         return "plan/planfront/detail";
     }

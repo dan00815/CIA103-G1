@@ -64,7 +64,7 @@ public class EvtController {
             EvtVO savedEvt = evtService.addEvt(evtVO);
 
             //圖片放的路徑
-            String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+            String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
             File uploadDir = new File(resourcePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -136,7 +136,7 @@ public class EvtController {
                 for (EvtImgVO oldImage : oldImages) {
                     evtImgService.deleteEventImage(oldImage.getEvtImgId());
                     // 刪除路徑的檔案
-                    String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+                    String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
                     File oldFile = new File(resourcePath, oldImage.getEvtImgName());
                     if (oldFile.exists()) {
                         oldFile.delete();
@@ -146,7 +146,7 @@ public class EvtController {
             // 更新活動資訊
             EvtVO updatedEvt = evtService.addEvt(evtVO);
             //處理新圖片上傳
-            String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+            String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
             File uploadDir = new File(resourcePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -182,24 +182,6 @@ public class EvtController {
             return "redirect:/sucessandfail";
         }
     }
-
-
-    @GetMapping("/planevt")
-    public String addplanevt(PlanOrder planord, Model model){
-     List<Plan> plans = planService.getAllPlans();
-     List <String> plansname = new ArrayList<String>();
-     for (Plan plan : plans) {
-         plansname.add(plan.getPlanType().getPlanName()) ;
-     }
-     List<EvtVO> evts  = evtService.getAllEvts();
-//     planord.setEvtOrderVO();
-     model.addAttribute("evts", evts);
-     model.addAttribute("plansname", plansname);
-        return "back-end/evt/evtplan";
-    }
-
-
-
 
     @GetMapping("/calendar")
     public String showCalendar(Model model, @RequestParam(required = false) String date) {

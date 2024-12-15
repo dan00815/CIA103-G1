@@ -320,7 +320,7 @@
     });
 </script>
 
-<!-- 檢查行程訂單的函數 -->
+<!-- 訂單檢查  -->
 <script th:inline="javascript">
     function checkPlanOrder() {
         const hasPlanOrder = [[${hasPlanOrder != null && hasPlanOrder}]];
@@ -331,7 +331,7 @@
             return;
         }
 
-        const eventId = [[${evt.evtId}]];  // 改為 evt
+        const eventId = [[${evt.evtId}]];
         const planOrderId = [[${planOrder?.planOrderId}]];
         window.location.href = `/planevt/${planOrderId}/attend/${eventId}`;
     }
