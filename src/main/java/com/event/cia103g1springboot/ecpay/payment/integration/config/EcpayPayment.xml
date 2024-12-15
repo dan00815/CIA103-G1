@@ -140,32 +140,32 @@
                 <pattern>^.{0,200}$</pattern>
             </param>
         </condparam>
-<!--         <option>BARCODE</option> -->
-<!--         <condparam owner="BARCODE"> -->
-<!--             <param type="Int"  require="0" name="StoreExpireDate"> -->
-<!--                 <mode>BETWEEN</mode> -->
-<!--                 <maximum>99</maximum> -->
-<!--                 <minimal>1</minimal> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="Desc_1"> -->
-<!--                 <pattern>^.{0,20}$</pattern> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="Desc_2"> -->
-<!--                 <pattern>^.{0,20}$</pattern> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="Desc_3"> -->
-<!--                 <pattern>^.{0,20}$</pattern> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="Desc_4"> -->
-<!--                 <pattern>^.{0,20}$</pattern> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="PaymentInfoURL"> -->
-<!--                 <pattern>^.{0,200}$</pattern> -->
-<!--             </param> -->
-<!--             <param type="String"  require="0" name="ClientRedirectURL"> -->
-<!--                 <pattern>^.{0,200}$</pattern> -->
-<!--             </param> -->
-<!--         </condparam> -->
+        <option>BARCODE</option>
+        <condparam owner="BARCODE">
+            <param type="Int"  require="0" name="StoreExpireDate">
+                <mode>BETWEEN</mode>
+                <maximum>99</maximum>
+                <minimal>1</minimal>
+            </param>
+            <param type="String"  require="0" name="Desc_1">
+                <pattern>^.{0,20}$</pattern>
+            </param>
+            <param type="String"  require="0" name="Desc_2">
+                <pattern>^.{0,20}$</pattern>
+            </param>
+            <param type="String"  require="0" name="Desc_3">
+                <pattern>^.{0,20}$</pattern>
+            </param>
+            <param type="String"  require="0" name="Desc_4">
+                <pattern>^.{0,20}$</pattern>
+            </param>
+            <param type="String"  require="0" name="PaymentInfoURL">
+                <pattern>^.{0,200}$</pattern>
+            </param>
+            <param type="String"  require="0" name="ClientRedirectURL">
+                <pattern>^.{0,200}$</pattern>
+            </param>
+        </condparam>
         <!--<option>GooglePay</option> 2019/09/30暫時關閉GooglePay-->
       </param>
       <param  type="String"  require="0" name="ClientBackURL">
