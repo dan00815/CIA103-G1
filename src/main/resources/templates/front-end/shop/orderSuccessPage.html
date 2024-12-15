@@ -13,9 +13,9 @@
             padding: 50px;
         }
 
-        h1 {
+        h2 {
             color: #007bff;
-            font-size: 3em;
+            font-size: 2em;
             margin-bottom: 20px;
         }
 
@@ -42,6 +42,12 @@
             display: inline-block;
             max-width: 600px;
             margin: auto;
+        }
+        
+        .animation {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
         }
     </style>
 
@@ -85,7 +91,11 @@
 </head>
 <body>
 	<div class="container">
-	    <h1>訂購成功！</h1>
+	    <h2>訂購成功！</h2>
+		    <div class="animation">
+	            <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+	            <dotlottie-player src="https://lottie.host/c0dd8665-b92a-4974-ba4d-18fbf89165b6/RewGCRS9BS.lottie" background="transparent" speed="1" style="width: 200px; height: 200px" loop autoplay></dotlottie-player>
+	        </div>
 	    <p>您的訂單已經成功提交。正在引導您至付款頁面...</p>
 	    <p>如果頁面沒有自動跳轉，請<a href="javascript:void(0);" onclick="submitPostForm();">點擊這裡</a>。</p>
     </div>

@@ -78,7 +78,7 @@
       <ul>
         <li>會員編號：<span th:text="${memId}"></span></li>
         <li>訂單編號：<span th:text="${pdtOrderId}"></span></li>
-        <li>訂單成立時間：<span th:text="${orderDate}"></span></li>
+        <li>訂單成立時間：<span th:text="${#dates.format(orderDate, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
         <li>訂單狀態：<span th:text="${orderStat == 6 ? '訂單取消' : '其他狀態'}"></span></li>
         <li>電話：<span th:text="${recTel}"></span></li>
         <li>寄送地址：<span th:text="${recAddr}"></span></li>

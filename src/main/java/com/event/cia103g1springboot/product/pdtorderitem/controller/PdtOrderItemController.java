@@ -31,7 +31,7 @@ public class PdtOrderItemController {
 			@RequestParam("pdtOrderId") String pdtOrderId, 
 			@RequestParam("orderStat") String orderStat, 
 			@RequestParam("orderDate") String orderDate, 
-			Model model, HttpSession session) {
+			Model model) {
 		
 	    // 日期解析和格式化器
 	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");

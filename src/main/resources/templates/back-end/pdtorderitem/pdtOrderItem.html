@@ -30,12 +30,12 @@
 
 	<!------------------------------- content ------------------------------->
     <div class="container mt-5">
-        <h1 class="text-center mb-4">訂單資訊</h1>
+        <h1 class="text-center mb-4">訂單明細</h1>
         <!-- 訂單資訊 Header -->
         <div class="order-header">
             <div>
-                <p><strong>訂單編號:</strong> <span th:text="${pdtOrderId}"></span></p>
-<!--                 <p><strong>訂單狀態:</strong> <span th:text="${orderStatName]}"></span></p> -->
+                <p><strong>訂單編號:</strong> <span id="orderId" th:text="${pdtOrderId}"></span></p>
+                
 				<p><strong>訂單狀態:</strong> 
 				   <span th:switch="${orderStat}">
 				       <span th:case="0">未付款</span>
@@ -57,8 +57,14 @@
                 <p><strong>訂單日期:</strong> <span th:text="${orderDate}"></span></p>
             </div>
             <div class="order-actions">
-                <button class="btn btn-danger"><i class="fas fa-times"></i> 標記為無效訂單</button>
-                <button class="btn btn-success"><i class="fas fa-truck"></i> 立即出貨</button>
+            	<button class="btn" id="exportPdfBtn"><i class="fas fa-file"></i> 匯出PDF
+            		<span class="inner">
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			        </span>
+            	</button>
             </div>
         </div>
 
@@ -103,6 +109,47 @@
 	        </span>
         </a>
     </div>
+    
+    <script>
+    document.getElementById("exportPdfBtn").addEventListener("click", function() {
+        // 獲取 pdtOrderId
+        var pdtOrderId = document.getElementById("orderId").textContent.trim();
+
+        // 使用 fetch 發送 POST 請求
+        fetch('/pdtorderitem/export/pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                pdtOrderId: pdtOrderId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('匯出失敗！');
+            }
+            return response.blob(); // 將回應轉為 Blob 格式
+        })
+        .then(blob => {
+            // 創建一個 Blob URL 並下載文件
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+
+            // 文件名可以根據需要設置
+            a.download = `order-${pdtOrderId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url); // 釋放 URL 物件
+        })
+        .catch(error => {
+            console.error('錯誤:', error);
+            alert('匯出失敗，請稍後重試！');
+        });
+    });
+    </script>
 
 </body>
 </html>
