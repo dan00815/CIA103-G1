@@ -3,6 +3,7 @@ import com.event.cia103g1springboot.event.evtimgmodel.EvtImgService;
 import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.event.evtordermodel.EvtOrderService;
 import com.event.cia103g1springboot.event.evtordermodel.EvtOrderVO;
+import com.event.cia103g1springboot.hibernate.util.CompositeQuery.CompositeQueryEvt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,12 +47,13 @@ public class EvtService {
         evtRepository.save(evtVO);
     }
 
+    @Transactional
     public EvtVO getOneEvt(Integer evtId) {
         Optional<EvtVO> optional = evtRepository.findByEvtId(evtId);
         return optional.orElse(new EvtVO());
     }
 
-
+    @Transactional
     public Page<EvtVO> getAllEvts(int page) {
         PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("evtId").descending());
         Page<EvtVO> evtPage = evtRepository.findAll(pageRequest);
@@ -85,14 +88,13 @@ public class EvtService {
     }
 
 
-    public List<EvtVO> findByEvtStatOrderByEvtDateAsc(Integer status) {
-        return evtRepository.findByEvtStatOrderByEvtDateAsc(status);
+    public Page<EvtVO> findByEvtStatOrderByEvtDateAsc2(Integer status1,Integer status2,int page) {
+        PageRequest pageRequest = PageRequest.of(page, 8, Sort.by("evtDate").descending());
+        return evtRepository.findByEvtStatOrEvtStatOrderByEvtDateAsc(status1, status2,pageRequest);
     }
 
-    public List<EvtVO> findByEvtStatOrderByEvtDateAsc2(Integer status1,Integer status2) {
-        return evtRepository.findByEvtStatOrEvtStatOrderByEvtDateAsc(status1, status2);
-    }
 
+    @Transactional
     public void attend(Integer eventId, EvtOrderVO evtOrderVO) {
         // 1. 取得活動資訊
         EvtVO event = getOneEvt(eventId);
@@ -111,6 +113,14 @@ public class EvtService {
         // 4. 新增訂單
         evtOrderService.addEvtOrder(evtOrderVO);
     }
+
+
+    @Transactional
+    public Page<EvtVO> findActiveEvents(Map<String, Object> criteria, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 8, Sort.by("evtDate").descending());
+        return evtRepository.findAll(CompositeQueryEvt.findActiveEvents(criteria), pageRequest);
+    }
+
 
     @Transactional
     public EvtVO addEventWithImages(EvtVO evtVO, MultipartFile[] files) throws IOException {

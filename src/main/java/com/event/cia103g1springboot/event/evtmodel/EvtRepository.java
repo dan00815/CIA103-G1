@@ -1,6 +1,9 @@
 package com.event.cia103g1springboot.event.evtmodel;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -9,9 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface EvtRepository extends JpaRepository<EvtVO, Integer> {
+public interface EvtRepository extends JpaRepository<EvtVO, Integer> , JpaSpecificationExecutor<EvtVO> {
 
-    List<EvtVO> findByEvtStatOrEvtStatOrderByEvtDateAsc(Integer stat1, Integer stat2);
+    Page<EvtVO> findByEvtStatOrEvtStatOrderByEvtDateAsc(Integer stat1, Integer stat2, Pageable page);
 
 
     Optional<EvtVO> findByEvtId(Integer evtId);
