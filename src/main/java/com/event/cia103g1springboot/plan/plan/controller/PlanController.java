@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping("/api/plan")
+    @RequestMapping("/api/plan")
 public class PlanController {
 
     @Autowired

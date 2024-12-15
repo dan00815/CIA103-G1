@@ -60,22 +60,27 @@ public class EvtOrderController {
     @Autowired
     private PlanOrderService planOrderService;
 
-    @GetMapping("/attend/{id}")
-    public String attend(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
-        EvtVO event = evtService.getOneEvt(id);
+    @GetMapping("/planevt/{planOrderId}/attend/{id}")
+    public String attend(@PathVariable Integer planOrderId,
+                         @PathVariable Integer id,
+                         Model model,
+                         HttpSession session) {
+        // 確保使用正確的變數名稱
+        EvtVO event = evtService.getOneEvt(id);  // 注意這裡用 event 而不是 evt
         MemVO memVO = (MemVO) session.getAttribute("auth");
+        PlanOrder planOrder = planOrderService.findPlanOrderById(planOrderId);
 
-        //額滿直接把人送回家 addFlashAttribute好用= =
-        if (event.getEvtAttend() >= event.getEvtMax()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "該活動報名人數已額滿");
-            return "redirect:/front/list";
+        if (event == null || memVO == null || planOrder == null) {
+            return "redirect:/error";
         }
-        //只生成key
 
         String captchaKey = "captcha:" + event.getEvtId();
-        model.addAttribute("memVO", memVO);
+
         model.addAttribute("event", event);
+        model.addAttribute("memVO", memVO);
+        model.addAttribute("planOrder", planOrder);
         model.addAttribute("captchaKey", captchaKey);
+
         return "front-end/evtord/attendpage";
     }
 
@@ -151,14 +156,14 @@ public class EvtOrderController {
             evt.setEvtAttend(updatedAttendance);
             evtService.addEvt(evt);
                 notification.setMember(memVO);
-                notification.setNotifyType(6);  // 行程
+                notification.setNotifyType(2);  // 活動
                 notification.setNotifyCon("親愛的"+" "+memVO.getName()+" "+"會員您好:"+"\n"+"很抱歉，您的活動報名失敗："+"活動名稱:" + order.getEvtName() +" "+
                         "，活動訂單編號：" + order.getEvtOrderId()+"，有任何問題歡迎致電或來信詢問");
                 notification.setBusinessKey("Evt_ORDER_" + order.getEvtOrderId());
                 memberNotifyService.createNotification(notification);
             }else {
                 notification.setMember(memVO);
-                notification.setNotifyType(6);  // 行程
+                notification.setNotifyType(2);  // 活動
                 notification.setNotifyCon("親愛的"+" "+memVO.getName()+" "+"會員您好:"+"\n"+"您的活動報名成功，" +"活動名稱:" +order.getEvtName() +" "+
                         "，活動訂單編號：" + order.getEvtOrderId()+"，活動訂單成立通知");
                 notification.setBusinessKey("Evt_ORDER_" + order.getEvtOrderId());

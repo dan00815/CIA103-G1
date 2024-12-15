@@ -7,6 +7,7 @@
 //import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 //import com.event.cia103g1springboot.plan.plan.model.Plan;
 //import com.event.cia103g1springboot.plan.plan.model.PlanRepository;
+//import com.event.cia103g1springboot.plan.plan.model.PlanService;
 //import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
 //import com.event.cia103g1springboot.plan.planorder.model.PlanOrderRepository;
 //import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
@@ -84,71 +85,23 @@
 //
 //    @Autowired
 //    MemRepository memRepository;
-//
+//    @Autowired
+//    PlanService planService;
 //
 //    @Transactional
 //    @Override
 //    public void run(String... args) throws Exception {
-//        // 建立商品類型
-//            // 建立會員
-//            MemVO mem = new MemVO();
-//            mem.setName("測試會員");
-//            mem.setMemType(1);
-//            mem.setMemAcct("test123");
-//            mem.setMemPwd("Test123");
-//            mem.setBirth(java.sql.Date.valueOf("1990-01-01"));
-//            mem.setSex(1);
-//            mem.setEmail("test@test.com");
-//            mem.setTel("0912345678");
-//            mem.setAddr("台北市測試區");
-//            memRepository.save(mem);
-//            System.out.println("會員ID: " + mem.getMemId());
-//
-//            // 建立商品類型
-//            PdtTypeVO type = new PdtTypeVO();
-//            type.setPdtTypeName("測試分類");
-//            type.setPdtTypeDesc("測試類別描述");
-//            pdtTypeRepository.save(type);
-//            System.out.println("商品類型ID: " + type.getPdtTypeId());
-//
-//            // 建立商品
-//            PdtVO product = new PdtVO();
-//            product.setPdtName("測試商品");
-//            product.setPdtDesc("商品描述");
-//            product.setPdtPrice(100);
-//            product.setPdtStat((byte) 1);
-//            product.setPdtTypeVO(type);
-//            pdtRepository.save(product);
-//            System.out.println("商品ID: " + product.getPdtId());
-//
-//            // 建立訂單
-//            ProductOrderVO order = new ProductOrderVO();
-//            order.setMemVO(mem);  // 直接設定會員物件
-//            order.setOrderAmt(100);
-//            order.setOrderStat(1);
-//            order.setPayMethod(1);
-//            order.setDelMethod(1);
-//            order.setRecName("測試收件人");
-//            order.setRecAddr("測試地址");
-//            order.setRecTel("0229876543");
-//            productOrderRepository.save(order);
-//            System.out.println("訂單ID: " + order.getPdtOrderId());
-//
-//            // 建立訂單項目
-//            ProductOrderItemVO item = new ProductOrderItemVO();
-//            item.setPdtOrderId(order.getPdtOrderId());
-//            item.setPdtId(product.getPdtId());
-//            item.setPdtPrice(product.getPdtPrice());
-//            item.setPdtName(product.getPdtName());
-//            item.setOrderQty(1);
-//            productOrderItemRepository.save(item);
-//            System.out.println("訂單項目: orderId=" + item.getPdtOrderId() + ", pdtId=" + item.getPdtId());
-
-
+//        List<Plan> plans = planService.getAllPlans();
+//        for (Plan plan : plans) {
+//            System.out.println(plan.getPlanType().getPlanName());
 //        }
 //
-//
 //    }
+//    }
+//
+//
+//
+//
 //
 ////        System.out.println("開始測試通知功能...");
 ////

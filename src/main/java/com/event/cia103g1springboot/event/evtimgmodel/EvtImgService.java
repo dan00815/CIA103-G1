@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,12 @@ public class EvtImgService {
             return null;
         }
     }
+
+    //拿資料庫所有照片
+    public List<EvtImgVO> findPublishevtImg(Integer evtStat1, Integer evtStat2) {
+        return evtImgRepository.findPublishImg(Arrays.asList(evtStat1, evtStat2));
+    }
+
 
     // 取得活動的所有圖片
     public List<EvtImgVO> getEventImages(EvtVO evtVO) {

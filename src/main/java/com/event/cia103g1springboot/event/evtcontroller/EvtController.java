@@ -4,6 +4,10 @@ import com.event.cia103g1springboot.event.evtimgmodel.EvtImgService;
 import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.event.evtmodel.EvtService;
 import com.event.cia103g1springboot.event.evtmodel.EvtVO;
+import com.event.cia103g1springboot.plan.plan.model.Plan;
+import com.event.cia103g1springboot.plan.plan.model.PlanService;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 @Validated
 @RequestMapping("/event")
@@ -34,6 +39,11 @@ public class EvtController {
 
     @Autowired
     EvtImgService evtImgService;
+
+    @Autowired
+    private PlanService planService;
+    @Autowired
+    private PlanOrderService planOrderService;
 
     //可以把前端傳進來的DATETIMELOCAL字串轉成符合TIMESTAMP格式 超爽
 
@@ -54,7 +64,7 @@ public class EvtController {
             EvtVO savedEvt = evtService.addEvt(evtVO);
 
             //圖片放的路徑
-            String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+            String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
             File uploadDir = new File(resourcePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -126,7 +136,7 @@ public class EvtController {
                 for (EvtImgVO oldImage : oldImages) {
                     evtImgService.deleteEventImage(oldImage.getEvtImgId());
                     // 刪除路徑的檔案
-                    String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+                    String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
                     File oldFile = new File(resourcePath, oldImage.getEvtImgName());
                     if (oldFile.exists()) {
                         oldFile.delete();
@@ -136,7 +146,7 @@ public class EvtController {
             // 更新活動資訊
             EvtVO updatedEvt = evtService.addEvt(evtVO);
             //處理新圖片上傳
-            String resourcePath = new File("src/main/resources/static/images").getAbsolutePath();
+            String resourcePath = new File("src/main/resources/static/evtimg").getAbsolutePath();
             File uploadDir = new File(resourcePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -172,7 +182,6 @@ public class EvtController {
             return "redirect:/sucessandfail";
         }
     }
-
 
     @GetMapping("/calendar")
     public String showCalendar(Model model, @RequestParam(required = false) String date) {

@@ -257,7 +257,23 @@
             <div class="progress-fill" th:style="'width: ' + ${(evt.evtAttend * 100 / evt.evtMax)} + '%'"></div>
         </div>
 
-        <a th:href="@{'/attend/' + ${evt.evtId}}" class="btn attend-btn">
+        <a th:href="@{/planevt/{planOrderId}/attend/{evtId}(planOrderId=${planOrder.planOrderId},evtId=${evt.evtId})}"
+           th:if="${hasPlanOrder}"
+           class="btn attend-btn">
+            <div class="inner">
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+            </div>
+            <i class="fas fa-user-plus"></i> 我要報名
+        </a>
+
+        <a href="#"
+           th:unless="${hasPlanOrder}"
+           onclick="if(confirm('需要先報名行程才能參加活動！要前往報名行程嗎？')) window.location.href = '/api/plan/planfront';
+"
+           class="btn attend-btn">
             <div class="inner">
                 <div class="blob"></div>
                 <div class="blob"></div>
@@ -274,8 +290,8 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
+<!-- 輪播的初始化 -->
 <script>
-
     const swiper = new Swiper('.swiper', {
         effect: 'coverflow',
         grabCursor: true,
@@ -302,6 +318,23 @@
             prevEl: '.swiper-button-prev',
         }
     });
+</script>
+
+<!-- 訂單檢查  -->
+<script th:inline="javascript">
+    function checkPlanOrder() {
+        const hasPlanOrder = [[${hasPlanOrder != null && hasPlanOrder}]];
+        if (!hasPlanOrder) {
+            if (confirm('需要先報名行程才能參加活動！要前往報名行程嗎？')) {
+                window.location.href = '[[@{/front/plan/list}]]';
+            }
+            return;
+        }
+
+        const eventId = [[${evt.evtId}]];
+        const planOrderId = [[${planOrder?.planOrderId}]];
+        window.location.href = `/planevt/${planOrderId}/attend/${eventId}`;
+    }
 </script>
 </body>
 </html>

@@ -5,12 +5,17 @@ import com.event.cia103g1springboot.event.evtimgmodel.EvtImgService;
 import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.event.evtmodel.EvtService;
 import com.event.cia103g1springboot.event.evtmodel.EvtVO;
+import com.event.cia103g1springboot.member.mem.model.MemVO;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +26,8 @@ public class EvtFrontEndController {
     EvtService evtService;
     @Autowired
     EvtImgService evtImgService;
+    @Autowired
+    PlanOrderService planOrderService;
 
 
 
@@ -33,15 +40,36 @@ public class EvtFrontEndController {
     }
 
     //根據活動id拿照片跟活動內容
-    @GetMapping("/detail/{id}")//
-    public String showEventDetail(@PathVariable Integer id, Model model) {
-
+    @GetMapping("/detail/{id}")
+    public String showEventDetail(@PathVariable Integer id, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        // 先取得活動相關資訊
         EvtVO event = evtService.getOneEvt(id);
-
         List<EvtImgVO> evtImgs = evtImgService.getImagesByEvtId(id);
 
-        model.addAttribute("evtImgs", evtImgs);
+        //先讓沒報名和沒登入都能看活動詳情
         model.addAttribute("evt", event);
+        model.addAttribute("evtImgs", evtImgs);
+
+        //檢查會員登入狀態及行程訂單
+        //有登入直接抓他訂單,沒登入滾去報名行程
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+        if (memVO != null) {
+            List<PlanOrder> planOrders = planOrderService.findPlanOrdersByMemId(memVO.getMemId());
+            boolean hasPlanOrder = !planOrders.isEmpty();
+
+            if (hasPlanOrder) {
+                model.addAttribute("planOrder", planOrders.get(0));
+            }
+            model.addAttribute("hasPlanOrder", hasPlanOrder);
+        } else {
+            model.addAttribute("hasPlanOrder", false);
+        }
+        //額滿送回家
+        if (event.getEvtAttend() >= event.getEvtMax()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "該活動報名人數已額滿");
+            return "redirect:/front/list";
+        }
+
         return "front-end/evt/eventdetail";
     }
     
