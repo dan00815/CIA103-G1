@@ -18,4 +18,6 @@ public interface PlanOrderRepository extends JpaRepository<PlanOrder, Integer> {
     List<PlanOrder> findByMemVO_MemId(Integer memId);
 
   PlanOrder findByPlanOrderIdAndOrderStat(Integer id, Integer status);
+
+    PlanOrder findByMemVO_MemIdAndPlanOrderId(Integer memId, Integer planOrderId);
 }

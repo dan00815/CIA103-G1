@@ -112,5 +112,9 @@ public class PlanOrderService {
 
         mailSender.send(message);
     }
+
+    public PlanOrder findByMemIdAndPlanOrderId(Integer memId, Integer planOrderId) {
+        return planOrderRepository.findByMemVO_MemIdAndPlanOrderId(memId, planOrderId);
+    }
 }
 

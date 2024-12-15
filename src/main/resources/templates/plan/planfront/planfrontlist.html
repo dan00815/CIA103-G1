@@ -228,32 +228,32 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
 <script>
-    const ham_list = document.querySelector(".ham_list");
-    const nav = document.querySelector("nav");
-
-    document
-        .querySelector(".hamburger")
-        .addEventListener("click", function () {
-            this.classList.toggle("is-active");
-        });
-
-    ham_list.addEventListener("click", function (e) {
-        e.stopPropagation();
-    });
-
-    $(".hamburger").on("click", function () {
-        $(".ham_list").toggleClass("showList");
-    });
-
-    window.addEventListener("scroll", (e) => {
-        if (this.scrollY !== 0) {
-            nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
-            nav.style.boxShadow = "0px 8px 10px lightgray";
-        } else {
-            nav.style.backgroundColor = "lightblue";
-            nav.style.boxShadow = "none";
-        }
-    });
+    // const ham_list = document.querySelector(".ham_list");
+    // const nav = document.querySelector("nav");
+    //
+    // document
+    //     .querySelector(".hamburger")
+    //     .addEventListener("click", function () {
+    //         this.classList.toggle("is-active");
+    //     });
+    //
+    // ham_list.addEventListener("click", function (e) {
+    //     e.stopPropagation();
+    // });
+    //
+    // $(".hamburger").on("click", function () {
+    //     $(".ham_list").toggleClass("showList");
+    // });
+    //
+    // window.addEventListener("scroll", (e) => {
+    //     if (this.scrollY !== 0) {
+    //         nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
+    //         nav.style.boxShadow = "0px 8px 10px lightgray";
+    //     } else {
+    //         nav.style.backgroundColor = "lightblue";
+    //         nav.style.boxShadow = "none";
+    //     }
+    // });
     $(document).ready(function() {
         $("#planTable").DataTable({
             paging: true,

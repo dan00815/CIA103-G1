@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>行程訂單詳情</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <link rel="stylesheet" th:href="@{/css/elm.css}" />
+  <style>
+    .order-card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin: 30px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .order-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0080ff, #00ffbf);
+    }
+
+    .section-title {
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #eef2f7;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 50px;
+      height: 2px;
+      background: #0080ff;
+    }
+
+    .info-section {
+      background: #f8fafb;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-item {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+      background: rgba(0,128,255,0.05);
+      border-radius: 8px;
+    }
+
+    .info-label {
+      min-width: 150px;
+      color: #6c757d;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-label i {
+      color: #0080ff;
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .info-value {
+      color: #2c3e50;
+      font-weight: 500;
+      flex-grow: 1;
+    }
+
+    .status-badge {
+      padding: 8px 15px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .status-paid {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .price-value {
+      font-size: 1.2rem;
+      color: #0080ff;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 40px;
+      left: 40px;
+      z-index: 100;
+      padding: 12px 24px;
+      border-radius: 50px;
+      background: #fff;
+      color: #0080ff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid #0080ff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn:hover {
+      background: #0080ff;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .back-btn i {
+      font-size: 1.2rem;
+    }
+
+    .total-price {
+      background: #f8f9fa;
+      color: #2c3e50;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: right;
+      margin-top: 20px;
+      border: 1px solid #e9ecef;
+    }
+
+    .total-price .label {
+      font-size: 1.1rem;
+      color: #6c757d;
+    }
+
+    .total-price .amount {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0080ff;
+      margin-top: 5px;
+    }
+
+    .action-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel {
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-footer {
+      justify-content: center;
+      border: none;
+      padding: 15px;
+    }
+
+    .btn-modal-confirm {
+      display: block;
+      margin: 0 auto;
+
+      .btn-modal-confirm:hover {
+        background-color: #f4978e;
+        color: white;
+        border-color: #0080ff;
+      }
+    }
+
+  </style>
+
+
+  </style>
+</head>
+<body>
+<a th:href="@{/planord/memorder/{memId}(memId=${session.auth.memId})}" class="back-btn">
+  <i class="fas fa-arrow-left"></i>
+  返回列表
+</a>
+
+<div class="container mt-5 pt-5">
+  <div class="order-card">
+    <h2 class="section-title">
+      <i class="fas fa-file-invoice me-2"></i>
+      行程詳情 #<span th:text="${index}"></span>
+    </h2>
+
+    <div class="info-section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-user"></i>
+                            會員姓名
+                        </span>
+            <span class="info-value" th:text="${name}"></span>
+          </div>
+          <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-calendar-alt"></i>
+                            訂單日期
+                        </span>
+            <span class="info-value" th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span>
+          </div>
+          <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-info-circle"></i>
+                            訂單狀態
+                        </span>
+            <span th:class="'status-badge ' +
+                            ${order.orderStat == 0 ? 'status-pending' :
+                             order.orderStat == 1 ? 'status-paid' : 'status-cancelled'}"
+                  th:text="${order.orderStat == 0 ? '未付款' :
+                                     order.orderStat == 1 ? '已付款' : '已取消'}">
+                        </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-credit-card"></i>
+                            付款方式
+                        </span>
+            <span class="info-value" th:text="${order.payMethod == 0 ? '信用卡' :
+                               order.payMethod == 1 ? '轉帳' : '其他'}"></span>
+          </div>
+          <div class="info-item" th:if="${order.payMethod == 0 and order.cardLast4 != null}">
+                        <span class="info-label">
+                            <i class="fas fa-credit-card"></i>
+                            卡號末四碼
+                        </span>
+            <span class="info-value" th:text="${order.cardLast4}"></span>
+          </div>
+          <div class="info-item" th:if="${order.payMethod == 1 and order.remAcct != null}">
+                        <span class="info-label">
+                            <i class="fas fa-university"></i>
+                            轉帳帳號
+                        </span>
+            <span class="info-value" th:text="${order.remAcct}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3 class="section-title h5">行程資訊</h3>
+      <div class="info-item">
+                <span class="info-label">
+                    <i class="fas fa-route"></i>
+                    行程名稱
+                </span>
+        <span class="info-value" th:text="${order.plan.planType.planName}"></span>
+      </div>
+      <div class="info-item">
+                <span class="info-label">
+                    <i class="fas fa-dollar-sign"></i>
+                    行程價格
+                </span>
+        <span class="info-value price-value">NT$ <span th:text="${order.planPrice}"></span></span>
+      </div>
+      <div class="info-item">
+                <span class="info-label">
+                    <i class="fas fa-bed"></i>
+                    房間價格
+                </span>
+        <span class="info-value price-value">NT$ <span th:text="${order.roomPrice}"></span></span>
+      </div>
+    </div>
+
+    <div class="total-price">
+      <div class="label">總金額</div>
+      <div class="amount">NT$ <span th:text="${order.totalPrice}"></span></div>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+<div th:replace="~{back-end/footer :: f}"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
