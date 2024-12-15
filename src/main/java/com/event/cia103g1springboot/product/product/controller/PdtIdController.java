@@ -60,7 +60,6 @@ public class PdtIdController {
 			return "back-end/product/select_page_pdt";
 		}
 		model.addAttribute("pdtVO", pdtVO);
-		model.addAttribute("getPdt_For_Display", "true");
 		return "back-end/product/select_page_pdt";
 	}
 	

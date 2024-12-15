@@ -76,6 +76,7 @@ public class HibernateUtil_CompositeQuery_RT {
 	        if (tx != null) {
 	            tx.rollback(); // 回滾交易
 	        }
+	        
 	        System.err.println("查詢商品列表時出現錯誤，已回滾交易。");
 	        ex.printStackTrace();
 

@@ -48,7 +48,7 @@ public class PdtController {
 	}
 	@GetMapping("/listAllPdt")
 	public String listAllPdt(Model model) {
-		return "back-end/product/listAllPdt";
+		return "back-end/product/select_page_pdt";
 	}
 	
 	@ModelAttribute("pdtListData")
@@ -138,7 +138,7 @@ public class PdtController {
 		List<PdtVO> list = pdtSvc.getAll();
 		model.addAttribute("pdtListData", list);
 		model.addAttribute("success", "- (刪除成功)");
-		return "back-end/product/listAllPdt"; // 刪除完成後轉交listAllEmp.html
+		return "back-end/product/select_page_pdt"; // 刪除完成後轉交listAllEmp.html
 	}
 	
 	@ModelAttribute("pdtTypeListData")
@@ -167,7 +167,7 @@ public class PdtController {
 		Map<String, String[]> map = req.getParameterMap();
 		List<PdtVO> list = pdtSvc.getAll(map);
 		model.addAttribute("pdtListData", list);
-		return "back-end/product/listAllPdt";
+		return "back-end/product/select_page_pdt";
 	}
 		
 }

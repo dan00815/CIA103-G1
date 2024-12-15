@@ -79,6 +79,11 @@ public class BBController {
 		  try {
 			   // 轉換日期時間
 			   LocalDateTime dateTime = LocalDateTime.parse(posttimeStr);
+			   if(dateTime.isAfter(LocalDateTime.now())) {
+				   model.addAttribute("errorMessage","發佈日期:不可晚於當下日期時間");
+				   return "back-end/bb/addMsg";
+			   }
+			   
 			   bbVO.setPosttime(Timestamp.valueOf(dateTime));
 			   bbSvc.addMsg(bbVO);
 			   model.addAttribute("success","-(新增成功)");
