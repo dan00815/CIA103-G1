@@ -218,8 +218,9 @@ form.cus_form .img_prev ul.prev_ul_el li img {
       0 0 10px 5px rgba(0, 123, 255, 0.3);
   }
 }
+
 nav {
-  background-color: lightblue;
+  background-color: white;
   display: flex;
   align-items: center;
   position: sticky;
@@ -235,13 +236,14 @@ nav #logo_area {
   left: 3%;
   gap: 20px;
   text-decoration: none;
-  color: rgb(0, 0, 0);
+  color: #66b2b2 0, 0, 0;
+  letter-spacing: 0.2cm;
 }
 nav #logo_area .img_con {
   width: 80px;
 }
 nav #logo_area .img_con img {
-  width: 100%;
+  width: 120%;
 }
 nav #logo_area .vertical-line {
   width: 2px;
@@ -278,7 +280,7 @@ nav ul li a {
 }
 nav ul li a:hover {
   transform: scale(1.1);
-  color: lightgoldenrodyellow;
+  color: rgba(0, 0, 255, 0.7);
 }
 nav .hamburger.is-active:hover {
   opacity: 1;
@@ -330,12 +332,12 @@ nav .hamburger div.ham_list a {
   width: 100%;
   padding: 10px 0;
   font-size: 1.25rem;
-  color: rgb(79, 194, 232);
+  color: black;
   transition: all 0.1s;
 }
 nav .hamburger div.ham_list a:hover {
-  background-color: lightblue;
-  color: white;
+  font-weight: bold;
+  color: rgba(0, 0, 255, 0.7);
   transform: scale(1.1);
 }
 
@@ -349,9 +351,10 @@ nav .hamburger div.ham_list a:hover {
   background-color: white;
 }
 
+
 footer {
   height: 50px;
   text-align: center;
   line-height: 50px;
   background-color: rgba(173, 216, 230, 0.3);
-} /*# sourceMappingURL=elm.css.map */
+}
