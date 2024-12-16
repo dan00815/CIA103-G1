@@ -61,29 +61,40 @@
         
        </div>
 	        <div class="button-container">
-		        <div>
-		    		<a th:href="@{/roomOrder/select_page_RO}" class="btn">
-		    			<span class="inner">
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				      </span>
-				      <i class="fa fa-search"></i> 訂房明細查詢
-		    		</a>
-		    	</div>
-			    <div>
-		    		<a th:href="@{/roomOrder/listAllRO}" class="btn">
-		    			<span class="inner">
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				      </span>
-				      <i class="fa-solid fa-clipboard-list"></i> 訂房明細列表
-		    		</a>
-		    	</div>
-	    </div>
+        <div>
+    		<a th:href="@{/roomOrder/select_page_RO}" class="btn">
+	    		<span class="inner">
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			      </span>
+	    		<i class="fa fa-search"></i> 訂房明細查詢
+    		</a>
+    	</div>
+    	<div>
+    		<a th:href=@{/roomOrder/listAllRO} class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa-solid fa-clipboard-list"></i> 訂房明細列表
+    		</a>
+   		</div>
+        <div>
+    		<a th:href="@{/roomOrder/addRO}" class="btn">
+	    		<span class="inner">
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			        <span class="blob"></span>
+			      </span>
+	    		<i class="fa fa-plus"></i> 新增訂單明細
+    		</a>
+    	</div>
+    </div>
 	<div th:insert="~{/back-end/footer :: footer}"></div>
    <script type="text/javascript" th:src="@{/js/nav.js}"></script>
     <script type="text/javascript">

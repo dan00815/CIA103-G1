@@ -21,31 +21,6 @@
 
     <style>
         /* 調整頁面主樣式 */
-    .btn {
-            background-color: #007bff;
-            color: white;
-            border-radius: 30px;
-            position: relative;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn .inner {
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-            border-radius: 30px;
-        }
-
         .btn i {
             margin-right: 5px;
         }
@@ -217,31 +192,41 @@
         </table>
     </div>
 
-     <div class="button-container">
-        		
-	        	<div>
-		    		<a th:href="@{/product/select_page_pdt}" class="btn">
-		    			<span class="inner">
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				      </span>
-				      <i class="fa fa-search"></i> 商品查詢
-		    		</a>
-		    	</div>
-			    <div>
-		    		<a th:href="@{/product/listAllPdt}" class="btn">
-		    			<span class="inner">
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				        <span class="blob"></span>
-				      </span>
-				      <i class="fa-solid fa-clipboard-list"></i> 商品列表
-		    		</a>
-		    	</div>
-	    </div>
+     <div class="button-container">		
+       	<div>
+    		<a th:href="@{/product/select_page_pdt}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa fa-search"></i> 商品查詢
+    		</a>
+    	</div>
+	    <div>
+    		<a th:href="@{/product/listAllPdt}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa-solid fa-clipboard-list"></i> 商品列表
+    		</a>
+    	</div>
+    	<div>
+            <a th:href="@{/product/addPdt}" class="btn">
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+                <i class="fa fa-plus"></i> 新增商品
+            </a>
+        </div>
+	 </div>
 
     <div th:insert="~{/back-end/footer :: footer}"></div>
     <!-- 引入Bootstrap JS -->
