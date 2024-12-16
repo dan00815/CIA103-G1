@@ -73,9 +73,16 @@
             background-color: #fff5f5;
         }
 
-        .search-box {
-            margin-bottom: 20px;
+        form.cus_form{
+        	width:80%;
+        	
         }
+     	.wave{
+     		font-size:1.5rem;
+     		height:40px;
+			line-height: 40px;
+     	}
+     	
     </style>
 </head>
 <body>
@@ -89,8 +96,8 @@
          <div class="search-box">
             <form class="cus_form" method="post" th:action="@{listPostMsg_ByCompositeQuery}">
                 <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="msgtype" class="form-label">公告類別</label>
+                    <div class="col-md-2" >
+                        <label for="msgtype" class="form-label" >公告類別</label>
                         <select id="msgtype" name="msgtype" class="form-select">
                             <option value="">請選擇類別</option>
                             <option value="0">行程公告</option>
@@ -103,17 +110,17 @@
                         <label for="msgtitle" class="form-label">公告標題</label>
                         <input type="text" id="msgtitle" name="msgtitle" class="form-control" placeholder="請輸入關鍵字">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6" >
                         <label for="posttime" class="form-label">發佈時間</label>
                         <div class="input-group">
                             <input type="datetime-local" id="startPosttime" name="startPosttime" class="form-control">
-                            <span class="input-group-text">~</span>
+                            <span class="wave" style="margin:0px 20px">~</span>
                             <input type="datetime-local" id="endPosttime" name="endPosttime" class="form-control">
                         </div>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn">
 			        <i class="fa-solid fa-magnifying-glass"></i> 查詢公告
 			        <span class="inner">
 			          <span class="blob"></span>

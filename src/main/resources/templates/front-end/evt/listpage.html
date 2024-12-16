@@ -307,6 +307,18 @@
         min-width: 0; /* 允許輸入框收縮 */
         flex: 1;
     }
+    
+    .no-results{
+    	margin:10px 30px;
+    }
+    
+    h3, p {
+    	text-align: center;
+    }
+    
+    p {
+    	margin:15px 30px;
+    }
 </style>
 
 
@@ -317,7 +329,7 @@
     </div>
     <div th:if="${events == null or events.empty}" class="no-results">
         <h3>
-        <span th:if="${keyword != null and !keyword.empty}">
+        <span th:if="${keyword != null and !keyword.empty}" class="keyword">
             找不到符合 "<span th:text="${keyword}"></span>" 的活動
         </span>
         </h3>
