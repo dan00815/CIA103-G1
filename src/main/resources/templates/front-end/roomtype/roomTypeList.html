@@ -148,6 +148,37 @@
         	width:100%;
         }
         
+        form#historyRO {
+        position: fixed;
+        bottom: 20px; /* 距離底部 20px */
+        right: 20px;  /* 距離右側 20px */
+        z-index: 1000; /* 確保在其他元素之上 */
+    }
+
+    form#historyRO button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 10px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    form#historyRO button:hover {
+        background-color: #0056b3;
+        transform: scale(1.1); /* 放大效果 */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    form#historyRO button i {
+        margin-right: 8px;
+    }
+        
     </style>
 </head>
 <body>
@@ -185,6 +216,11 @@
                 	</a>
                 </div>
             </div>
+            <form id="historyRO" method="get" th:action="@{/roomOrder/historyRO}">
+                <button type="submit" class="btn-info btn-sm" id="edit">
+                    <i class="fa-solid fa-clipboard"></i> 訂房紀錄
+                </button>
+            </form>
         </main>
     </div>
     <div th:insert="~{/back-end/footer :: footer}"></div>
