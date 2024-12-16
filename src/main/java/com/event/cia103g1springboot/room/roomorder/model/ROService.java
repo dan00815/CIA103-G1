@@ -43,4 +43,8 @@ public class ROService {
 	 public List<ROVO> getByPlan(Integer planOrderId){
 		 return repository.getByPlan(planOrderId);
 	 }
+	 
+	 public List<ROVO> getByMemId(Integer memId){
+		 return repository.getByMemId(memId);
+	}
 }

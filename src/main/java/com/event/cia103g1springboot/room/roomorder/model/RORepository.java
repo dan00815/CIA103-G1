@@ -22,4 +22,9 @@ public interface RORepository extends JpaRepository<ROVO,Integer> {
 	@Query(value = "SELECT * FROM roomorder WHERE planOrderId =?1", nativeQuery = true)
 	List<ROVO> getByPlan(int planOrderId);
 	
+	@Transactional
+	@Modifying
+	@Query(value = "SELECT * FROM roomorder ro JOIN planOrder po ON ro.planOrderId = po.planOrderId WHERE po.memId =?1", nativeQuery = true)
+	List<ROVO> getByMemId(int memId);
+	
 }

@@ -31,3 +31,59 @@ footer {
     background-color: #495057;
     color: #fff;
 }
+
+            /*plan會員訂單*/
+
+/* 美化按鈕區域 */
+.filter-button-container {
+    display: flex;
+    justify-content: center; /* 按鈕置中 */
+    gap: 15px; /* 按鈕間距 */
+    margin-bottom: 20px; /* 與下方內容的間距 */
+    padding: 10px 0;
+    background: linear-gradient(to bottom, #e0f7ff, #ffffff); /* 漸層背景 */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 按鈕樣式 */
+.filter-btn {
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+}
+
+.filter-btn:hover {
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+    transform: translateY(-2px); /* 懸浮微微上移 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+/* 當前選中 (active) 的按鈕樣式 */
+.filter-btn.active {
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05); /* 放大效果 */
+}
+
+/* 響應式設計：小螢幕按鈕堆疊 */
+@media (max-width: 768px) {
+    .filter-button-container {
+        flex-direction: column; /* 垂直堆疊 */
+        align-items: center;
+    }
+
+    .filter-btn {
+        width: 80%; /* 寬度調整 */
+        margin: 5px 0; /* 間距 */
+    }
+}
