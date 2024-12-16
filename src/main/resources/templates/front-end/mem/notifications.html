@@ -1,132 +1,149 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>通知中心</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+<meta charset="UTF-8">
+<title>通知中心</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 
-    <link rel="stylesheet" th:href="@{/css/elm.css}">
-    <style>
-        .notification-item {
-            border-left: 4px solid #007bff;
-            margin-bottom: 10px;
-            padding: 15px;
-            background-color: #f0f0f0;  
-            transition: all 0.3s ease;
-        }
-        .notification-item.read {
-            border-left-color: #6c757d;
-            background-color: #ffffff;  
-        }
-        .notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .notification-content {
-            margin-left: 20px;
-        }
-        .notification-time {
-            color: #6c757d;
-            font-size: 0.9em;
-        }
-        .history-list {
-            margin-left: 40px;
-            margin-top: 10px;
-            border-left: 2px solid #dee2e6;
-            padding-left: 20px;
-            display: none;
-        }
-        .history-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
-        }
-        .notification-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .expand-btn {
-            cursor: pointer;
-            color: #007bff;
-        }
-        .expand-btn:hover {
-            color: #0056b3;
-        }
-    </style>
+<link rel="stylesheet" th:href="@{/css/new_elm.css}">
+<style>
+.notification-item {
+	border-left: 4px solid #007bff;
+	margin-bottom: 10px;
+	padding: 15px;
+	background-color: #f0f0f0;
+	transition: all 0.3s ease;
+}
+
+.notification-item.read {
+	border-left-color: #6c757d;
+	background-color: #ffffff;
+}
+
+.notification-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.notification-content {
+	margin-left: 20px;
+}
+
+.notification-time {
+	color: #6c757d;
+	font-size: 0.9em;
+}
+
+.history-list {
+	margin-left: 40px;
+	margin-top: 10px;
+	border-left: 2px solid #dee2e6;
+	padding-left: 20px;
+	display: none;
+}
+
+.history-item {
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 4px;
+	border: 1px solid #dee2e6;
+}
+
+.notification-actions {
+	display: flex;
+	gap: 10px;
+}
+
+.expand-btn {
+	cursor: pointer;
+	color: #007bff;
+}
+
+.expand-btn:hover {
+	color: #0056b3;
+}
+</style>
 </head>
 <body>
-<div th:replace="~{front-end/nav}"></div>
-    <div class="container mt-4">
-        <h2>通知中心 <span class="badge bg-primary" id="unreadCount">0</span></h2>
-        
-        <!-- 類型篩選 -->
-        <div class="btn-group mb-3" role="group">
-            <button type="button" class="btn btn-outline-primary" data-type="1">活動通知</button>
-            <button type="button" class="btn btn-outline-primary" data-type="2">活動訂單</button>
-            <button type="button" class="btn btn-outline-primary" data-type="3">商品訂單</button>
+	<div th:replace="~{front-end/nav}"></div>
+	<div class="container mt-4">
+		<h2>
+			通知中心 <span class="badge bg-primary" id="unreadCount">0</span>
+		</h2>
 
-            <button type="button" class="btn btn-outline-primary" data-type="4">商品通知</button>
-            <button type="button" class="btn btn-outline-primary" data-type="5">佈告欄</button>
-            <button type="button" class="btn btn-outline-primary" data-type="6">行程訂單</button>
-        </div>
+		<!-- 類型篩選 -->
+		<div class="btn-group mb-3" role="group">
+			<button type="button" class="btn btn-outline-primary" data-type="1">活動通知</button>
+			<button type="button" class="btn btn-outline-primary" data-type="2">活動訂單</button>
+			<button type="button" class="btn btn-outline-primary" data-type="3">商品訂單</button>
 
-        <!-- 搜索框 -->
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" id="searchInput" placeholder="搜索通知...">
-            <button class="btn btn-outline-secondary" type="button" id="searchBtn">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
+			<button type="button" class="btn btn-outline-primary" data-type="4">商品通知</button>
+			<button type="button" class="btn btn-outline-primary" data-type="5">佈告欄</button>
+			<button type="button" class="btn btn-outline-primary" data-type="6">行程訂單</button>
+		</div>
 
-        <!-- 全部已讀按鈕 -->
-        <button class="btn btn-primary mb-3" id="markAllReadBtn">
-            <i class="bi bi-check-all"></i> 全部標記為已讀
-        </button>
+		<!-- 搜索框 -->
+		<div class="input-group mb-3">
+			<input type="text" class="form-control" id="searchInput"
+				placeholder="搜索通知...">
+			<button class="btn btn-outline-secondary" type="button"
+				id="searchBtn">
+				<i class="bi bi-search"></i>
+			</button>
+		</div>
 
-        <!-- 通知列表 -->
-        <div id="notificationList">
-            <div th:each="notify : ${notifications}" th:class="${'notification-item ' + (notify.isRead ? 'read' : '')}"
-                 th:data-id="${notify.notifyId}">
-                <div class="notification-header">
-                    <div>
-                        <span class="badge bg-info" th:text="${notify.notifyTypeText}">通知類型</span>
-                        <span class="notification-time" th:text="${#temporals.format(notify.notifyTime, 'yyyy-MM-dd HH:mm')}">時間</span>
-                            <i class="bi bi-chevron-down expand-btn" title="展開歷史記錄"></i>
-                    </div>
-                    <div class="notification-actions">
-                        <button class="btn btn-sm btn-outline-primary mark-read-btn" th:if="${!notify.isRead}">
-                            <i class="bi bi-check"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger delete-btn">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="notification-content" th:text="${notify.notifyCon}">
-                    通知內容
-                </div>
-                <div class="history-list">
-                    <!-- 歷史記錄將通過JavaScript動態加載 -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <div th:replace="~{back-end/footer :: f}">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-                crossorigin="anonymous"></script>
-    <script type="text/javascript" th:src="@{/js/nav.js}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/notifications.js}"></script>
+		<!-- 全部已讀按鈕 -->
+		<button class="btn btn-primary mb-3" id="markAllReadBtn">
+			<i class="bi bi-check-all"></i> 全部標記為已讀
+		</button>
 
+		<!-- 通知列表 -->
+		<div id="notificationList">
+			<div th:each="notify : ${notifications}"
+				th:class="${'notification-item ' + (notify.isRead ? 'read' : '')}"
+				th:data-id="${notify.notifyId}">
+				<div class="notification-header">
+					<div>
+						<span class="badge bg-info" th:text="${notify.notifyTypeText}">通知類型</span>
+						<span class="notification-time"
+							th:text="${#temporals.format(notify.notifyTime, 'yyyy-MM-dd HH:mm')}">時間</span>
+						<i class="bi bi-chevron-down expand-btn" title="展開歷史記錄"></i>
+					</div>
+					<div class="notification-actions">
+						<button class="btn btn-sm btn-outline-primary mark-read-btn"
+							th:if="${!notify.isRead}">
+							<i class="bi bi-check"></i>
+						</button>
+						<button class="btn btn-sm btn-outline-danger delete-btn">
+							<i class="bi bi-trash"></i>
+						</button>
+					</div>
+				</div>
+				<div class="notification-content" th:text="${notify.notifyCon}">
+					通知內容</div>
+				<div class="history-list">
+					<!-- 歷史記錄將通過JavaScript動態加載 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:replace="~{back-end/footer :: f}"></div>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+			integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script th:src="@{/js/notifications.js}"></script>
+		<script type="text/javascript" th:src="@{/js/nav.js}"></script>
 </body>
 </html>

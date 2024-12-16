@@ -13,12 +13,41 @@
 			</div>
 		</li>
 
-		<!-- href="" style="color:white" -->
-		<th:block th:each="sysVO: ${session.auths}">
-			<li class="li_item"><a th:text=${sysVO.systemFunctionVO.funName}
-				href="/auth"></a></li>
+		<th:block th:each="auth: ${session.auths}">
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 101}">
+			<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/auth/listAllAuth}"></a>  <!-- 員工權限調整-->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 102}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a> <!-- 活動 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 103}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 商城權限管理 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 104}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 商品訂單管理 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 105}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>  <!-- 房型管理 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 106}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 行程管理 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 107}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>     <!-- 消息管理 -->
+			</li>	
+			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 108}">
+				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 訊息回復 -->
+			</li>	
 		</th:block>
 
+		<li class="li_item">
+<!-- 			<form th:action="@{/api/employee/logout}" method="POST"> -->
+<!-- 				<button>登出</button> -->
+				
+				<a th:href="@{/emp/login}">退出登入</a>   
+				
+<!-- 			</form> -->
+		</li>
 	</ul>
 </body>
 </html>

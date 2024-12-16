@@ -41,7 +41,7 @@ public class EmpJobController {
 
 //	auth首頁
 	@GetMapping("")
-	public String authIndex(ModelMap model) {
+	public String authIndex(HttpSession session, ModelMap model) {
 		return "back-end/auth/backHome";
 	}
 
@@ -52,7 +52,6 @@ public class EmpJobController {
 		model.addAttribute("empListData", allEmps);
 
 		return "back-end/auth/listAllAuths";
-
 	}
 
 	@GetMapping("update")
