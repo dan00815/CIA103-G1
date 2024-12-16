@@ -11,9 +11,6 @@
 // */
 //@Configuration
 //public class WebConfig implements WebMvcConfigurer {
-//    
-//	@Autowired
-//	LoginInterceptor loginInterceptor;
 //    /**
 //     * 添加視圖控制器
 //     * @param registry 視圖控制器註冊物件
