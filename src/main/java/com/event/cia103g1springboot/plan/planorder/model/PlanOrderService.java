@@ -81,7 +81,8 @@ public class PlanOrderService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
-        helper.setTo("mm950490@gmail.com");
+        //別改
+        helper.setTo(order.getMemVO().getEmail());
         helper.setSubject("鄰星嗨嗨:行程訂單取消通知");
         helper.setText(mailContent, true);
 
