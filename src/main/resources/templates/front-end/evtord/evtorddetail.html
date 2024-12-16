@@ -101,6 +101,15 @@
             background-color: #e3f2fd;
             color: #1976d2;
         }
+        .status-pending {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        .status-cancelled {
+            background-color: #ffebee;
+            color: #c62828;
+        }
 
         .status-completed {
             background-color: #e8f5e9;
@@ -157,10 +166,14 @@
 <body>
     <div th:replace="~{front-end/nav}"></div>
     <div class="container">
-        <!-- 進行中訂單 -->
+
         <div class="order-section" th:if="${not #lists.isEmpty(activeOrders)}">
             <h2 class="section-title">進行中的訂單</h2>
             <div class="order-card" th:each="order : ${activeOrders}">
+                <div class="order-item">
+                    <span class="item-label">活動訂單編號</span>
+                    <span class="item-value" th:text="${order.evtOrderId}"></span>
+                </div>
                 <div class="order-item">
                     <span class="item-label">活動名稱</span>
                     <span class="item-value" th:text="${order.evtName}"></span>
@@ -179,12 +192,15 @@
                 </div>
                 <div class="order-item">
                     <span class="item-label">訂單狀態</span>
-                    <span class="status-badge status-active" th:text="${order.evtOrderStat}"></span>
+                        <span class="status-badge" th:switch="${order.evtOrderStat}">
+                        <span th:case="0" class="status-badge status-pending">審核中</span>
+                        <span th:case="1" class="status-badge status-active">已成立</span>
+                        <span th:case="2" class="status-badge status-cancelled">已取消</span>
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- 歷史訂單 -->
         <div class="order-section" th:if="${not #lists.isEmpty(historyOrders)}">
             <h2 class="section-title">歷史訂單</h2>
             <div class="order-card" th:each="order : ${historyOrders}">
@@ -211,7 +227,6 @@
             </div>
         </div>
 
-        <!-- 返回按鈕 -->
         <a href="javascript:history.back()" class="back-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>

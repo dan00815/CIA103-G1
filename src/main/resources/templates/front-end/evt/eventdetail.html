@@ -192,7 +192,9 @@
         100% { opacity: 1; }
     }
 </style>
-
+<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <span th:text="${errorMessage}"></span>
+</div>
 <div class="event-details">
     <div class="event-header">
         <h1 class="event-title" th:text="${evt.evtName}"></h1>
