@@ -211,13 +211,13 @@
                 <div th:each="rtVO : ${rtListData}" class="product-item">
                 	<a class="product-item" th:href="@{/roomtype/roomTypeDetail}+'?roomTypeId='+${rtVO.roomTypeId}">
                 		<h1 class="title1" th:text="${rtVO.roomTypeName}"></h1>
-	                    <img th:src="@{/rt/DBGifReader_rtlist} + '?roomTypeId=' + ${rtVO.roomTypeId}" alt="房型圖片" />
+	                    <img th:src="@{/roomtype/DBGifReader_rtlist} + '?roomTypeId=' + ${rtVO.roomTypeId}" alt="房型圖片" />
 	                    <div class="product-price" th:text="'NT$ ' + ${rtVO.roomPrice}"></div>
 	                                
                 	</a>
                 </div>
             </div>
-            <form id="historyRO" method="get" th:action="@{/roomOrder/historyRO}">
+            <form id="historyRO" method="get" th:action="@{/roomorder/historyRO}">
                 <button type="submit" class="btn-info btn-sm" id="edit">
                     <i class="fa-solid fa-clipboard"></i> 訂房紀錄
                 </button>
