@@ -158,9 +158,7 @@
 
     }
     .calendar-link {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0 40px 0;
+        display: none;
     }
 
     .calendar-link .btn {
@@ -197,79 +195,69 @@
         color: #721c24;
     }
     .search-container {
-        max-width: 1500px;
+        max-width: 1200px;
         margin: 0 auto 40px;
         padding: 0 20px;
     }
 
     .search-form {
         background: white;
-        padding: 25px;
+        padding: 20px;
         border-radius: 15px;
         box-shadow: 0 4px 15px rgba(0, 128, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
-    .search-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);  /* 兩列佈局 */
+    .search-row {
+        display: flex;
         gap: 20px;
-        margin-bottom: 20px;
+        align-items: flex-end;
     }
 
-    .search-item {
+    .search-group {
         display: flex;
         flex-direction: column;
         gap: 8px;
     }
 
-    .search-item label {
-        color: #666;
-        font-size: 0.9rem;
+    .full-width {
+        width: 100%;
     }
 
     .search-input {
-        padding: 10px 15px;
+        padding: 8px 12px;
         border: 2px solid rgba(0, 128, 255, 0.2);
         border-radius: 8px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
 
-    .search-input:focus {
-        outline: none;
-        border-color: rgba(0, 128, 255, 0.5);
-        box-shadow: 0 2px 8px rgba(0, 128, 255, 0.1);
-    }
-
-    /* 日期範圍與人數範圍的橫向排列 */
     .date-inputs, .number-inputs {
         display: flex;
         align-items: center;
         gap: 10px;
+        min-width: 200px; /* 確保足夠的寬度 */
     }
 
-    .date-separator, .number-separator {
-        color: #666;
-    }
-
-    /* 按鈕樣式 */
-    .search-buttons {
+    .button-group {
         display: flex;
-        gap: 10px;
-        align-items: flex-end;
-        justify-content: flex-end;
+        gap: 8px;
+        align-items: flex-end; /* 與輸入框底部對齊 */
+        margin-left: auto; /* 推到右側 */
     }
 
-    .search-button, .reset-button {
-        padding: 10px 25px;
+    .search-button, .reset-button, .calendar-button {
+        padding: 8px 15px;
         border: none;
         border-radius: 8px;
-        font-size: 1rem;
+        font-size: 0.9rem;
         cursor: pointer;
-        transition: all 0.3s ease;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        white-space: nowrap;
+        height: 41px; /* 與輸入框同高 */
     }
 
     .search-button {
@@ -277,19 +265,47 @@
         color: white;
     }
 
-    .search-button:hover {
-        background: #0066cc;
-        transform: translateY(-2px);
-    }
-
     .reset-button {
         background: #f8f9fa;
         color: #666;
     }
 
-    .reset-button:hover {
-        background: #e9ecef;
-        transform: translateY(-2px);
+    .calendar-button {
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+    }
+    .search-row {
+        display: flex;
+        gap: 15px; /* 減少整體間距 */
+        align-items: flex-end;
+    }
+
+    .date-inputs, .number-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;  /* 減少內部間距 */
+        min-width: 180px; /* 調整寬度 */
+    }
+
+    .button-group {
+        display: flex;
+        gap: 6px;  /* 減少按鈕之間的間距 */
+        align-items: flex-end;
+        margin-left: 15px; /* 改用較小的左邊距 */
+    }
+
+    /* 調整輸入框和間隔文字的樣式 */
+    .date-separator, .number-separator {
+        color: #666;
+        margin: 0 4px; /* 減少分隔符號的間距 */
+    }
+
+    /* 如果需要的話，可以調整輸入框的寬度 */
+    .search-input {
+        padding: 8px 12px;
+        min-width: 0; /* 允許輸入框收縮 */
+        flex: 1;
     }
 </style>
 
@@ -321,76 +337,66 @@
 
     <div class="search-container">
         <form th:action="@{/front/list}" method="get" class="search-form">
-            <div class="search-grid">
-                <div class="search-item keyword-field">
-                    <label for="keyword">活動名稱/描述</label>
-                    <input type="text"
-                           id="keyword"
-                           name="keyword"
-                           th:value="${keyword}"
-                           class="search-input"
-                           placeholder="請輸入關鍵字">
+            <!-- 第一行 -->
+            <div class="search-row">
+                <div class="search-group full-width">
+                    <label>活動名稱/描述</label>
+                    <input type="text" name="keyword" th:value="${keyword}"
+                           class="search-input" placeholder="請輸入關鍵字">
                 </div>
+            </div>
 
-                <div class="search-item date-range">
-                    <label for="startDate">活動日期範圍</label>
+            <!-- 第二行 -->
+            <div class="search-row">
+                <div class="search-group">
+                    <label>活動日期範圍</label>
                     <div class="date-inputs">
-                        <input type="date"
-                               id="startDate"
-                               name="startDate"
-                               th:value="${startDate}"
+                        <input type="date" name="startDate" th:value="${startDate}"
                                class="search-input">
                         <span class="date-separator">至</span>
-                        <input type="date"
-                               id="endDate"
-                               name="endDate"
-                               th:value="${endDate}"
+                        <input type="date" name="endDate" th:value="${endDate}"
                                class="search-input">
                     </div>
                 </div>
 
-                <div class="search-item number-range">
+                <div class="search-group">
                     <label>參加人數範圍</label>
                     <div class="number-inputs">
-                        <input type="number"
-                               name="minAttend"
-                               th:value="${minAttend}"
-                               class="search-input"
-                               placeholder="最少人數">
+                        <input type="number" name="minAttend" th:value="${minAttend}"
+                               class="search-input" placeholder="最少人數">
                         <span class="number-separator">至</span>
-                        <input type="number"
-                               name="maxAttend"
-                               th:value="${maxAttend}"
-                               class="search-input"
-                               placeholder="最多人數">
+                        <input type="number" name="maxAttend" th:value="${maxAttend}"
+                               class="search-input" placeholder="最多人數">
                     </div>
                 </div>
 
-                <div class="search-buttons">
+                <div class="button-group">
                     <button type="submit" class="search-button">
                         <i class="fas fa-search"></i> 搜尋
                     </button>
                     <button type="button" class="reset-button" onclick="resetForm()">
                         <i class="fas fa-redo"></i> 重置
                     </button>
+                    <a th:href="@{/event/calendar}" class="calendar-button">
+                        <i class="fas fa-calendar-alt"></i> 查看活動行程表
+                    </a>
                 </div>
-
             </div>
         </form>
     </div>
 
 
-    <div class="calendar-link">
-        <a th:href="@{/event/calendar}" class="btn">
-            <div class="inner">
-                <div class="blob"></div>
-                <div class="blob"></div>
-                <div class="blob"></div>
-                <div class="blob"></div>
-            </div>
-            <i class="fas fa-calendar-alt"></i> 查看活動行程表
-        </a>
-    </div>
+<!--    <div class="calendar-link">-->
+<!--        <a th:href="@{/event/calendar}" class="btn">-->
+<!--            <div class="inner">-->
+<!--                <div class="blob"></div>-->
+<!--                <div class="blob"></div>-->
+<!--                <div class="blob"></div>-->
+<!--                <div class="blob"></div>-->
+<!--            </div>-->
+<!--            <i class="fas fa-calendar-alt"></i> 查看活動行程表-->
+<!--        </a>-->
+<!--    </div>-->
 
     <div class="event-grid">
         <div th:each="event : ${events}" class="event-card">

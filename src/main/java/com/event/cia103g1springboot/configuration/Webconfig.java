@@ -25,7 +25,7 @@ public class Webconfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/event/addpage").setViewName("back-end/evt/evtaddpage");
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/listpage").setViewName("front-end/listpage");
+//        registry.addViewController("/listpage").setViewName("front-end/listpage");
         registry.addViewController("/attend").setViewName("front-end/attendpage");
         registry.addViewController("/sucessandfail").setViewName("back-end/evt/sucessandfail");
 //        registry.addViewController("/sucessattend").setViewName("back-end/attendsucess");
