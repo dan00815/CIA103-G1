@@ -44,14 +44,16 @@ public class CompositeQueryEvt {
 
         // 日期範圍查詢
         if (criteria.get("startDate") != null) {
-            LocalDateTime startDate = (LocalDateTime) criteria.get("startDate");
+            LocalDate startDate = (LocalDate) criteria.get("startDate");
+            LocalDateTime startDateTime = startDate.atStartOfDay();
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                    root.get("evtDate"), startDate));
+                    root.get("evtDate"), startDateTime));
         }
         if (criteria.get("endDate") != null) {
-            LocalDateTime endDate = (LocalDateTime) criteria.get("endDate");
+            LocalDate endDate = (LocalDate) criteria.get("endDate");
+            LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
             predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                    root.get("evtDate"), endDate));
+                    root.get("evtDate"), endDateTime));
         }
 
         // 參加人數範圍查詢

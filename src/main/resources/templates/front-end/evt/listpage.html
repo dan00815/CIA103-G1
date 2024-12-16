@@ -320,9 +320,6 @@
         <span th:if="${keyword != null and !keyword.empty}">
             找不到符合 "<span th:text="${keyword}"></span>" 的活動
         </span>
-            <span th:unless="${keyword != null and !keyword.empty}">
-            目前沒有進行中的活動
-        </span>
         </h3>
         <p th:if="${keyword != null and !keyword.empty}">
             請嘗試使用其他關鍵字搜尋，或
