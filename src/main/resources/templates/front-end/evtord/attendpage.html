@@ -152,7 +152,7 @@
 </style>
 
 <div th:if="${event != null}" class="container">
-    <form th:action="@{'/confirm/' + ${event.evtId}}" method="post" id="eventForm">
+    <form th:action="@{'/confirm/' + ${event.evtId} + '/' + ${planOrder.planOrderId}}" method="post" id="eventForm">
         <div class="event-info">
             <h2 class="event-title" th:text="${event.evtName}"></h2>
             <div class="info-grid" style="margin-bottom: 20px;">

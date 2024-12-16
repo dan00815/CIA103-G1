@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/new_elm.css}" />
     <style>
-    	
+
         body {
             background-color: #f5f5f5;
         }
@@ -191,6 +191,7 @@
                 <th>開始日期</th>
                 <th>行程天數</th>
                 <th>已報名人數</th>
+                <th>剩餘房間數量</th>
                 <th>剩餘名額</th>
                 <th>報名狀態</th>
                 <th>詳情</th>
@@ -202,13 +203,32 @@
                 <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}">開始日期</td>
                 <td th:text="*{planType.planDay + '天'}">行程天數</td>
                 <td th:text="*{attEnd}">已報名人數</td>
-                <td th:text="*{attMax - attEnd}">剩餘名額</td>
                 <td>
-                    <span th:if="*{attEnd >= attMax}" class="status-full">已額滿</span>
-                    <span th:unless="*{attEnd >= attMax}">可報名</span>
+    <span th:with="roomCount=${plan.planRoom != null ? #aggregates.sum(plan.planRoom.![roomQty]) : 0}">
+        <span th:text="${roomCount}"></span>
+        <span th:if="${roomCount == 0}" class="status-full">（已額滿）</span>
+    </span>
                 </td>
                 <td>
-                    <a th:href="@{~/planord/detail/{id}(id=*{planId})}" class="btn-detail">
+    <span th:with="roomCount=${plan.planRoom != null ? #aggregates.sum(plan.planRoom.![roomQty]) : 0}">
+        <span th:if="${roomCount == 0}" class="status-full">已額滿</span>
+        <span th:unless="${roomCount == 0}" th:text="*{attMax - attEnd}">剩餘名額</span>
+    </span>
+                </td>
+                <td>
+                    <span th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}" class="status-full">已額滿</span>
+                    <span th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}">可報名</span>
+                </td>
+                <td>
+                    <a th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"
+                       href="javascript:void(0)"
+                       onclick="showFullMessage()"
+                       class="btn-detail">
+                        <i class="fas fa-info-circle"></i>查看行程
+                    </a>
+                    <a th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"
+                       th:href="@{~/planord/detail/{id}(id=*{planId})}"
+                       class="btn-detail">
                         <i class="fas fa-info-circle"></i>查看行程
                     </a>
                 </td>
@@ -278,6 +298,9 @@
             }
         });
     });
+    function showFullMessage() {
+        alert('很抱歉，此行程已額滿！');
+    }
 </script>
 </body>
 </html>

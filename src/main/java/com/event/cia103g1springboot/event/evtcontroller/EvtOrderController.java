@@ -112,10 +112,10 @@ public class EvtOrderController {
 
 
     @Transactional
-    @PostMapping("/confirm/{id}")
-    public String confirm(@PathVariable Integer id, EvtOrderVO evtOrderVO, Model model, HttpSession session) {
-
-        PlanOrder planOrder = planOrderService.findPlanOrderById(1);
+    @PostMapping("/confirm/{id}/{planOrderId}")
+    public String confirm(@PathVariable Integer id,@PathVariable Integer planOrderId,EvtOrderVO evtOrderVO, Model model, HttpSession session) {
+        //不用寫死ㄉ 用傳ㄉ
+        PlanOrder planOrder = planOrderService.findPlanOrderById(planOrderId);
         evtOrderVO.setPlanOrder(planOrder);
 
         MemVO memVO = (MemVO) session.getAttribute("auth");
