@@ -428,6 +428,11 @@ public class planOrderController {
         // 從 Session 中取得會員資訊
         MemVO memVO = (MemVO) session.getAttribute("auth");
 
+        // 檢查會員登入狀態
+        if (memVO == null) {
+            return "redirect:/login"; // 如果未登入，跳轉至登入頁面
+        }
+
         // 查詢訂單
         PlanOrder order = planOrderService.findByMemIdAndPlanOrderId(memVO.getMemId(), id);
 
@@ -442,6 +447,35 @@ public class planOrderController {
         return "plan/planorder/memplanview";
     }
 
+//  會員行程明細  ( 三個按鈕 )
+@GetMapping("/planord/filter")
+public String filterOrders(@RequestParam("type") String type, Model model, HttpSession session) {
+    MemVO memVO = (MemVO) session.getAttribute("auth");
+    List<PlanOrder> orders;
+
+    // 檢查會員登入狀態
+    if (memVO == null) {
+        return "redirect:/login"; // 如果未登入，跳轉至登入頁面
+    }
+
+    switch (type) {
+        case "active": // 進行中
+            orders = planOrderService.findActiveOrdersByMember(memVO.getMemId());
+            break;
+        case "history": // 歷史
+            orders = planOrderService.findHistoryOrdersByMember(memVO.getMemId());
+            break;
+        default: // 所有
+            orders = planOrderService.findPlanOrdersByMemId(memVO.getMemId());
+
+    }
+
+
+    model.addAttribute("name",memVO.getName());
+    model.addAttribute("orders", orders);
+    model.addAttribute("currentFilter", type);
+    return "plan/planorder/planmemlist"; // 返回 Thymeleaf 頁面
+}
 
 
 

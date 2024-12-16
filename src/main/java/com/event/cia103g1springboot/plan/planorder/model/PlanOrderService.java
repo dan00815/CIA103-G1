@@ -14,6 +14,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,16 @@ public class PlanOrderService {
 
     public List<PlanOrder> findPlanOrdersByMemId(Integer memId) {
         return planOrderRepository.findByMemVO_MemId(memId);
+    }
+    // 進行中
+    public List<PlanOrder> findActiveOrdersByMember(Integer memberId) {
+        LocalDate now = LocalDate.now();
+        return planOrderRepository.findActiveOrdersByMember(memberId, now);
+    }
+    // 歷史
+    public List<PlanOrder> findHistoryOrdersByMember(Integer memberId) {
+        LocalDate now = LocalDate.now();
+        return planOrderRepository.findByMemVO_MemIdAndPlan_EndDateBefore(memberId, now);
     }
 
 
