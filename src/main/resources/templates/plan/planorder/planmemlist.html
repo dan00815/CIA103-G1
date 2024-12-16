@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/elm.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plan.css}" />
     <style>
         body {
             background-color: #f9f9f9;
@@ -99,10 +100,28 @@
 <body>
 <div th:replace="~{front-end/nav}"></div>
 
+
+
+
 <div class="container mt-5">
     <div class="table-container">
-        <h1 class="text-center">會員：<span th:text="${name}"></span> 的所有行程訂單</h1>
+        <h1 id="order-title" class="text-center">
+            會員：<span id="member-name" th:text="${name}"></span> 的所有行程訂單
+        </h1>
 
+        <div class="filter-button-container d-flex justify-content-center mb-4">
+            <a th:href="@{/planord/planord/filter(type='all')}"
+               class="filter-btn"
+               th:classappend="${currentFilter == 'all'} ? 'active' : ''">所有行程</a>
+
+            <a th:href="@{/planord/planord/filter(type='active')}"
+               class="filter-btn"
+               th:classappend="${currentFilter == 'active'} ? 'active' : ''">進行中行程</a>
+
+            <a th:href="@{/planord/planord/filter(type='history')}"
+               class="filter-btn"
+               th:classappend="${currentFilter == 'history'} ? 'active' : ''">歷史記錄</a>
+        </div>
         <div th:if="${orders != null}">
             <table class="table myTable">
                 <thead>
@@ -110,8 +129,10 @@
                     <th>編號</th>
 <!--                    <th>行程編號</th>-->
                     <th>行程名稱</th>
-                    <th>訂單日期</th>
-                    <th>狀態</th>
+                    <th>開始時間</th>
+                    <th>結束時間</th>
+<!--                    <th>訂單日期</th>-->
+<!--                    <th>狀態</th>-->
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -124,11 +145,13 @@
                         <input type="hidden" class="order-id" th:value="${order.planOrderId}" />
                     </td>
                     <td th:text="${order.plan.planType.planName}"></td>
-                    <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td>
-                        <span th:text="${order.orderStat == 0 ? '未付款' : order.orderStat == 1 ? '已付款' : '已取消'}"
-                              class="fw-bold"></span>
-                    </td>
+                    <td th:text="${#temporals.format(order.plan.startDate ,'yyyy-MM-dd')}"> </td>
+                    <td th:text="${#temporals.format(order.plan.endDate ,'yyyy-MM-dd')}"> </td>
+<!--                    <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>-->
+<!--                    <td>-->
+<!--                        <span th:text="${order  .orderStat == 0 ? '未付款' : order.orderStat == 1 ? '已付款' : '已取消'}"-->
+<!--                              class="fw-bold"></span>-->
+<!--                    </td>-->
                     <td>
                         <a th:href="@{/planord/memview/{id}(id=${order.planOrderId},index=${iterStat.index + 1})}" class="btn btn-detail">
                             查看詳情
@@ -160,6 +183,42 @@
 
                 // 發送 GET 請求到後端
                 window.location.href = `/planord/memview/${orderId}`;
+            });
+        });
+    });
+
+// 三個按鈕
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const orderTitle = document.getElementById('order-title'); // 標題
+        const memberName = document.getElementById('member-name').innerText; // 取得會員名稱
+
+
+        // 監聽按鈕點擊事件
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有按鈕的 active 樣式
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // 給當前按鈕添加 active 樣式
+                button.classList.add('active');
+
+                // 獲取按鈕類型 (all, active, history)
+                const filterType = button.getAttribute('data-type');
+
+                // 根據 data-type 修改標題
+
+                let titleSuffix = "的所有行程訂單";
+
+                if (filterType === 'active') {
+                    titleSuffix = "的進行中行程訂單";
+                } else if (filterType === 'history') {
+                    titleSuffix = "的歷史行程訂單";
+                }
+                // 更新標題，保留會員名稱
+                orderTitle.innerText = `會員：${memberName} ${titleSuffix}`;
+
+                // 向後端發送 GET 請求
+                window.location.href = `/planord/filter?type=${filterType}`;
             });
         });
     });
