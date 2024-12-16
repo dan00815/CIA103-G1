@@ -30,7 +30,6 @@
 				<span th:if="${#fields.hasErrors('pdtTypeDesc')}" th:errors="*{pdtTypeDesc}" class="error" id="pdtTypeDesc.errors"></span>
 			</div>
 		<br>
-		<div class="button-container">
 			<button type="submit" class="btn">
 			        送出新增
 			        <span class="inner">
@@ -39,21 +38,43 @@
 			          <span class="blob"></span>
 			          <span class="blob"></span>
 			        </span>
-		      </button>
-	      	<div>
-	    		<a th:href='select_page_pdtType' class="btn">
-	    			<span class="inner">
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			      </span>
-			      類別查詢
-	    		</a>
-	    	</div>
-		</div>
-		
+		      </button>	
 	</form>
+	<div class="button-container">
+		<div>
+    		<a th:href='select_page_pdtType' class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      類別查詢
+    		</a>
+    	</div>
+        <div>
+	   		<a th:href="@{/productType/listAllPdtType}" class="btn">
+	   			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      類別列表
+	   		</a>
+	   	</div>
+        <div>
+	   		<a th:href='addPdtType' class="btn">
+	   			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      新增類別
+	   		</a>
+	   	</div>
+    </div>
 	</div>
 	<div th:insert="~{/back-end/footer :: footer}"></div>
 	<script type="text/javascript" th:src="@{/js/nav.js}"></script>

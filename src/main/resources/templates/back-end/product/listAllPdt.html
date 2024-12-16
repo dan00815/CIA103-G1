@@ -143,19 +143,30 @@
     </div>
 
     <!-- 按鈕區 -->
-    <div class="btn-container">
-        <div>
-            <a th:href="@{/product/select_page_pdt}" class="btn">
-                <span class="inner">
-                    <span class="blob"></span>
-                    <span class="blob"></span>
-                    <span class="blob"></span>
-                    <span class="blob"></span>
-                </span>
-                <i class="fa fa-search"></i> 商品查詢
-            </a>
-        </div>
-        <div>
+    <div class="button-container">		
+       	<div>
+    		<a th:href="@{/product/select_page_pdt}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa fa-search"></i> 商品查詢
+    		</a>
+    	</div>
+	    <div>
+    		<a th:href="@{/product/listAllPdt}" class="btn">
+    			<span class="inner">
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		        <span class="blob"></span>
+		      </span>
+		      <i class="fa-solid fa-clipboard-list"></i> 商品列表
+    		</a>
+    	</div>
+    	<div>
             <a th:href="@{/product/addPdt}" class="btn">
                 <span class="inner">
                     <span class="blob"></span>
@@ -166,7 +177,7 @@
                 <i class="fa fa-plus"></i> 新增商品
             </a>
         </div>
-    </div>
+	 </div>
 
     <div th:insert="~{/back-end/footer :: footer}"></div>
 
