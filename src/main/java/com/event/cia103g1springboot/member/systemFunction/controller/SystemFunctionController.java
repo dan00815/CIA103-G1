@@ -25,38 +25,38 @@ public class SystemFunctionController {
 	@Autowired
 	SystemFunctionService sysFunSvc;
 
-	@GetMapping("/listAll")
-	public String listAllSysFun(ModelMap model) {
+//	@GetMapping("/listAll")
+//	public String listAllSysFun(ModelMap model) {
+//
+//		return "back-end/sysFun/listAllSysFun";
+//	}
 
-		return "back-end/sysFun/listAllSysFun";
-	}
+//	@GetMapping("/addSysFun")
+//	public String addSysFun(ModelMap model) {
+//		SystemFunctionVO sysFunVO = new SystemFunctionVO();
+//		model.addAttribute("sysFunVO", sysFunVO);
+//		return "back-end/sysFun/addSysFun";
+//	}
 
-	@GetMapping("/addSysFun")
-	public String addSysFun(ModelMap model) {
-		SystemFunctionVO sysFunVO = new SystemFunctionVO();
-		model.addAttribute("sysFunVO", sysFunVO);
-		return "back-end/sysFun/addSysFun";
-	}
+//	@PostMapping("/addSysFun")
+//	public String insert(@Valid SystemFunctionVO sysFunVO, BindingResult result, ModelMap model) {
+//		sysFunSvc.addSysFun(sysFunVO);
+//		List<SystemFunctionVO> sysFuns = sysFunSvc.getAll();
+//		model.addAttribute("sysFunListData", sysFuns);
+//		return "back-end/sysFun/listAllSysFun";
+//	}
 
-	@PostMapping("/addSysFun")
-	public String insert(@Valid SystemFunctionVO sysFunVO, BindingResult result, ModelMap model) {
-		sysFunSvc.addSysFun(sysFunVO);
-		List<SystemFunctionVO> sysFuns = sysFunSvc.getAll();
-		model.addAttribute("sysFunListData", sysFuns);
-		return "back-end/sysFun/listAllSysFun";
-	}
+//	@PostMapping("/delFun")
+//	public String delete(@RequestParam("funId") String funId, ModelMap model) {
+//		System.out.println(Integer.valueOf(funId));
+//		sysFunSvc.deleteFun(Integer.valueOf(funId));
+//		return "redirect:/sysFun/listAll";
+//	}
 
-	@PostMapping("/delFun")
-	public String delete(@RequestParam("funId") String funId, ModelMap model) {
-		System.out.println(Integer.valueOf(funId));
-		sysFunSvc.deleteFun(Integer.valueOf(funId));
-		return "redirect:/sysFun/listAll";
-	}
-
-	@ModelAttribute("sysFunListData")
-	protected List<SystemFunctionVO> referenceListData(Model model) {
-		List<SystemFunctionVO> list = sysFunSvc.getAll();
-		return list;
-	}
+//	@ModelAttribute("sysFunListData")
+//	protected List<SystemFunctionVO> referenceListData(Model model) {
+//		List<SystemFunctionVO> list = sysFunSvc.getAll();
+//		return list;
+//	}
 
 }

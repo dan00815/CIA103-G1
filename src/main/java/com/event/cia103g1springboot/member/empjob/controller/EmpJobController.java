@@ -46,7 +46,17 @@ public class EmpJobController {
 	}
 
 	@GetMapping("listAllAuth")
-	public String listAllAuth(ModelMap model) {
+	public String listAllAuth(HttpSession session, ModelMap model) {
+		// 判斷訪問的人他的session中有沒有包含超管的權限編號
+		@SuppressWarnings("unchecked")
+		Set<EmpJobVO> auths = (Set<EmpJobVO>) session.getAttribute("auths");
+
+		// 先提取權限Id的集合
+		Set<Integer> authIds = auths.stream().map(EmpJobVO -> EmpJobVO.getSystemFunctionVO().getFunId())
+				.collect(Collectors.toSet());
+		if (authIds == null || !authIds.contains(101)) {
+			return "back-end/auth/noPermission";
+		}
 
 		List<EmployeeVO> allEmps = empSvc.getAllEmployees();
 		model.addAttribute("empListData", allEmps);
@@ -72,10 +82,6 @@ public class EmpJobController {
 			return map;
 		}).collect(Collectors.toList());
 
-//		EmpVO emp = empSvc.findOneEmp(Integer.valueOf(empId));
-
-//		empJobSvc.deleteOldAuth(Integer.valueOf(empId));   //要在這刪權限嗎
-
 		Map<String, Object> response = new HashMap<>();
 		response.put("auth", empAuths);
 		response.put("empId", empIdInt);
@@ -86,8 +92,9 @@ public class EmpJobController {
 
 	// 權限更新
 	@PostMapping("update")
-	public String update(@RequestParam("authTypes") List<Integer> authTypes, @RequestParam("empId") String empId,
-			HttpSession session, ModelMap model) {
+	public String update(
+			@RequestParam(value = "authTypes", required = false, defaultValue = "") List<Integer> authTypes,
+			@RequestParam("empId") String empId, HttpSession session, ModelMap model) {
 		// 還需要有empId
 		Integer empIdInt = Integer.valueOf(empId);
 		List<Integer> existAuths = empJobSvc.findAuthByEmpId(empIdInt);

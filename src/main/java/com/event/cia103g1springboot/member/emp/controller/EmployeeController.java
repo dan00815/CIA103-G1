@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.event.cia103g1springboot.member.emp.model.EmployeeService;
 import com.event.cia103g1springboot.member.emp.model.EmployeeVO;
+//github.com/dan00815/CIA103-G1.git
+import com.event.cia103g1springboot.member.empjob.model.EmpJobService;
+import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
 
 /**
  * 員工控制器類
@@ -30,27 +32,43 @@ import com.event.cia103g1springboot.member.emp.model.EmployeeVO;
 @RequestMapping("/api/employee")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+	@Autowired
+	private EmployeeService employeeService;
+	@Autowired
+	EmpJobService empJobSvc;
 
-    /**
-     * 員工登錄
-     * @param loginData 包含員工賬號和密碼
-     * @param session 用於存儲登錄用戶信息
-     * @return 登錄成功返回員工信息，否則返回錯誤信息
-     */
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpSession session) {
-        EmployeeVO employee = employeeService.login(loginData.get("empAcct"), loginData.get("empPwd"));
-        if (employee != null) {
-            // 將用戶信息存儲在 session 中
-            Set<EmpJobVO> auths = employee.getEmpJobs();
-            session.setAttribute("loginUser", employee);
-            session.setAttribute("auths", auths);
-            return ResponseEntity.ok(employee);
-        }
-        return ResponseEntity.badRequest().body("登錄失敗");
-    }
+	/**
+	 * 員工登錄
+	 * 
+	 * @param loginData 包含員工賬號和密碼
+	 * @param session   用於存儲登錄用戶信息
+	 * @return 登錄成功返回員工信息，否則返回錯誤信息
+	 */
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpSession session) {
+		EmployeeVO employee = employeeService.login(loginData.get("empAcct"), loginData.get("empPwd"));
+		if (employee != null) {
+			
+			if (employee.getEmpJobTitle().equals("超級管理員")) {
+				System.out.println(employee.getEmpId());
+				System.out.println("直接加權限");
+				EmpJobVO empJob = new EmpJobVO();
+				empJob.setEmpId(employee.getEmpId());
+				empJob.setFunId(101);
+				empJobSvc.addAuth(empJob);
+			}
+			System.out.println("存session");
+			// 將用戶信息存儲在 session 中
+			Set<EmpJobVO> auths = employee.getEmpJobs();
+			auths.stream().forEach(System.out::println);
+			System.out.println("印完");
+			
+			session.setAttribute("loginUser", employee);
+			session.setAttribute("auths", auths);
+			return ResponseEntity.ok(employee);
+		}
+		return ResponseEntity.badRequest().body("登錄失敗");
+	}
 
     /**
      * 員工登出

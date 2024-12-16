@@ -167,12 +167,20 @@ public class MemController {
 		return "front-end/mem/profile";
 	}
 
+//	@GetMapping("/modify_profile")
+//	public String getModifyProfile(ModelMap model) {
+//		model.addAttribute("modify", true);
+//
+//		MemVO mem = (MemVO) session.getAttribute("auth");
+//		model.addAttribute("memVO", mem);
+//		return "front-end/mem/profile";
+//	}
+
 	@PostMapping("/modify_profile")
 	public String modifyProfile(ModelMap model) {
 		model.addAttribute("modify", true);
 
 		MemVO mem = (MemVO) session.getAttribute("auth");
-//		mem.setMemImg(null);
 		model.addAttribute("memVO", mem);
 
 		return "front-end/mem/profile";
@@ -189,7 +197,6 @@ public class MemController {
 		memVO.setMemAcct(oneMem.getMemAcct());
 		memVO.setMemPwd(oneMem.getMemPwd());
 		memVO.setMemType(oneMem.getMemType());
-
 
 		if (!part.isEmpty()) {
 			byte[] buf = part.getBytes();
@@ -262,8 +269,12 @@ public class MemController {
 
 //		拿session裡面的id找到要改密碼的會員
 		Integer modify_id = (Integer) session.getAttribute("modify_id");
+		if (modify_id == null) {
+			errorMsgs.add("流程有誤，請返回忘記密碼頁面進行收信");
+			model.addAttribute("errorMsgs", errorMsgs);
+			return "front-end/mem/modifyPwd";
+		}
 		MemVO mem = (MemVO) memSvc.getMem(modify_id);
-		System.out.println(mem.getName());
 		mem.setMemPwd(memPwd);
 		memSvc.update(mem);
 		session.removeAttribute("modify_id");

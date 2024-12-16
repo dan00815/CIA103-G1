@@ -30,8 +30,17 @@
             
             <div class="form-group">
                 <label for="empJobTitle">職位：</label>
-                <input type="text" id="empJobTitle" name="empJobTitle" required 
-                       class="form-control basic_input">
+<!--                 <input type="text" id="empJobTitle" name="empJobTitle" required  -->
+<!--                        class="form-control basic_input"> -->
+                       
+                <select class="form-select form-select-md mb-2" aria-label=".form-select-sm example" id="empJobTitle" name="empJobTitle">
+				  <option selected>請選擇職位</option>
+				  <option value="超級管理員">超級管理員</option>
+				  <option value="活動管理員">活動管理員</option>
+				  <option value="商城管理員">商城管理員</option>
+				  <option value="商城管理員">房型管理員</option>
+				  <option value="行程管理員">行程管理員</option>
+				</select>
             </div>
             
             <button type="submit" class="btn">
