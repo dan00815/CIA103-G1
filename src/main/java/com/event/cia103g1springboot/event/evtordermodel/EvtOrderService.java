@@ -63,5 +63,11 @@ public class EvtOrderService {
         PageRequest pageRequest = PageRequest.of(page, 5, Sort.by("evtOrderId").descending());
         return evtOrderRepository.findWithDynamicQuery(keyword, status, pageRequest);
     }
+
+
+    public boolean hasUserRegisteredEvent(Integer memId, Integer evtId) {
+        //看會員是不是有重複報活動
+        return evtOrderRepository.existsByMemIdAndEvtId(memId, evtId);
+    }
 }
 

@@ -489,10 +489,13 @@ public String filterOrders(@RequestParam("type") String type, Model model, HttpS
     @GetMapping("/view/{id}")
     public String viewOrder(@PathVariable Integer id, Model model) {
         PlanOrder order = planOrderService.findPlanOrderById(id);
-        if (order == null) {
-            return "redirect:/planorder/listall";
-        }
+        Plan plan = order.getPlan();
+        Set<PlanRoom> planRooms = plan.getPlanRoom(); // 假設返回類型是 Set<PlanRoom>
+
+        // 將訂單和房型資訊添加到模型中
         model.addAttribute("order", order);
+        model.addAttribute("planRooms", planRooms);
+
         return "plan/planorder/view";
     }
 

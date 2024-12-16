@@ -68,10 +68,19 @@ public class EvtOrderController {
     public String attend(@PathVariable Integer planOrderId,
                          @PathVariable Integer id,
                          Model model,
-                         HttpSession session) {
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
 
         EvtVO event = evtService.getOneEvt(id);
         MemVO memVO = (MemVO) session.getAttribute("auth");
+
+        //有報名過就重導
+        boolean hasRegistered = evtOrderService.hasUserRegisteredEvent(memVO.getMemId(), id);
+        if (hasRegistered) {
+            redirectAttributes.addFlashAttribute("errorMessage", "您已經報名過此活動");
+            return "redirect:/front/detail/" + id;
+        }
+
         PlanOrder planOrder = planOrderService.findPlanOrderById(planOrderId);
 
         String captchaKey = "captcha:" + event.getEvtId();
