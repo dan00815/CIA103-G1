@@ -30,7 +30,7 @@
 				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/rt/select_page_RT}"></a>  <!-- 房型管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 106}">
-				<a th:text="${auth.systemFunctionVO.funName}"th:href="'#" ></a>   <!-- 行程管理 -->
+				<a th:text="${auth.systemFunctionVO.funName}"th:href="@{/plans/query}" ></a>   <!-- 行程管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 107}">
 				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/bb/select_page_bb}"></a>     <!-- 消息管理 -->
