@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.event.cia103g1springboot.member.emp.model.EmployeeService;
 import com.event.cia103g1springboot.member.emp.model.EmployeeVO;
 
+import java.util.Base64;
+
 @Controller
 @RequestMapping("/emp")
 public class EmployeeViewController {
@@ -20,7 +22,7 @@ public class EmployeeViewController {
 
     @GetMapping("/login")
     public String login() {
-        return "emp/login";
+        return "backindexlogin";
     }
 
     @GetMapping("/show")
@@ -28,6 +30,17 @@ public class EmployeeViewController {
         EmployeeVO loginUser = (EmployeeVO) session.getAttribute("loginUser");
         if (loginUser != null) {
             model.addAttribute("employee", loginUser);
+
+            // 取得員工圖片
+            byte[] empImg = loginUser.getEmpImg();
+            if (empImg != null && empImg.length > 0) {  // 確保圖片數據存在且不為空
+                String base64Image = Base64.getEncoder().encodeToString(empImg);
+                model.addAttribute("base64Image", base64Image);
+                System.out.println("圖片已轉換為 base64，長度: " + base64Image.length()); // 除錯用
+            } else {
+                System.out.println("找不到員工圖片數據"); // 除錯用
+            }
+
             return "back-end/emp/show";
         }
         return "redirect:/emp/login";
@@ -37,9 +50,31 @@ public class EmployeeViewController {
     public String editEmployee(@PathVariable("id") Integer id, Model model) {
         EmployeeVO employee = employeeService.getEmployeeProfile(id);
         model.addAttribute("employee", employee);
-        return "emp/edit";
+        return "back-end/emp/edit";
     }
+
+    @GetMapping("/list")
+    public String listEmployees(Model model) {
+        // 添加你的業務邏輯
+        return "back-end/emp/list"; // 更新視圖名稱
+    }
+
+    @GetMapping("/register")
+
+    public String registerEmployee() {
+
+        return "back-end/emp/register"; // 更新視圖名稱
+    }
+
+    @GetMapping("/reset-password")
+
+    public String resetPassword() {
+        return "back-end/emp/reset_password"; // 更新視圖名稱
+    }
+
+
 }
+
 
 
 

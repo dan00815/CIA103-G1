@@ -2,9 +2,11 @@ package com.event.cia103g1springboot.member.emp.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import com.event.cia103g1springboot.member.empjob.model.EmpJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,14 +44,17 @@ public class EmployeeController {
         EmployeeVO employee = employeeService.login(loginData.get("empAcct"), loginData.get("empPwd"));
         if (employee != null) {
             // 將用戶信息存儲在 session 中
+            Set<EmpJobVO> auths = employee.getEmpJobs();
             session.setAttribute("loginUser", employee);
-            return ResponseEntity.ok("/emp/show"); // 返回新創頁面的跳轉地址
+            session.setAttribute("auths", auths);
+            return ResponseEntity.ok(employee);
         }
         return ResponseEntity.badRequest().body("登錄失敗");
     }
 
     /**
      * 員工登出
+     *
      * @param session 用於清除登錄用戶信息
      * @return 登出成功信息
      */
@@ -61,6 +66,7 @@ public class EmployeeController {
 
     /**
      * 員工註冊
+     *
      * @param employee 包含員工信息
      * @return 註冊成功或失敗信息
      */
@@ -74,6 +80,7 @@ public class EmployeeController {
 
     /**
      * 獲取員工資料
+     *
      * @param empId 員工ID
      * @return 員工資料
      */
@@ -85,10 +92,11 @@ public class EmployeeController {
 
     /**
      * 更新員工資料
-     * @param empId 員工ID
-     * @param empName 員工姓名
+     *
+     * @param empId       員工ID
+     * @param empName     員工姓名
      * @param empJobTitle 員工職稱
-     * @param empImg 員工圖片（可選）
+     * @param empImg      員工圖片（可選）
      * @return 更新成功或失敗信息
      */
     @PutMapping("/profile")
@@ -96,8 +104,9 @@ public class EmployeeController {
             @RequestParam("empId") Integer empId,
             @RequestParam("empName") String empName,
             @RequestParam("empJobTitle") String empJobTitle,
-            @RequestParam(value = "empImg", required = false) MultipartFile empImg) {
-        
+            @RequestParam(value = "empImg", required = false) MultipartFile empImg,
+            HttpSession session) {  // 添加 HttpSession 參數
+
         try {
             EmployeeVO employee = new EmployeeVO();
             employee.setEmpId(empId);
@@ -108,6 +117,9 @@ public class EmployeeController {
             }
 
             if (employeeService.updateProfile(employee)) {
+                // 更新成功後，更新 session 中的用戶資訊
+                EmployeeVO updatedEmployee = employeeService.getEmployeeProfile(empId);
+                session.setAttribute("loginUser", updatedEmployee);
                 return ResponseEntity.ok("更新成功");
             }
             return ResponseEntity.badRequest().body("更新失敗");
@@ -118,6 +130,7 @@ public class EmployeeController {
 
     /**
      * 停用員工
+     *
      * @param empId 員工ID
      * @return 停用成功或失敗信息
      */
@@ -131,6 +144,7 @@ public class EmployeeController {
 
     /**
      * 重設密碼
+     *
      * @param passwordData 包含員工賬號和新密碼
      * @return 重設密碼成功或失敗信息
      */
@@ -144,6 +158,7 @@ public class EmployeeController {
 
     /**
      * 獲取所有員工列表
+     *
      * @return 員工列表
      */
     @GetMapping("/list")

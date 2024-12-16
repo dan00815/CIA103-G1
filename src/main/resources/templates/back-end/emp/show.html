@@ -23,7 +23,7 @@
     <div class="profile-container">
         <h1>歡迎, <span th:text="${employee.empName}"></span></h1>
      <img th:src="${base64Image != null ? 'data:image/jpeg;base64,' + base64Image : '/images/default-avatar.png'}"  
-            alt="員工頭像"> 
+            alt="員工頭像">
         <p>ID: <span th:text="${employee.empId}"></span></p>
         <p>職稱: <span th:text="${employee.empJobTitle}"></span></p>
         <a href="/emp/list">查看員工列表</a>

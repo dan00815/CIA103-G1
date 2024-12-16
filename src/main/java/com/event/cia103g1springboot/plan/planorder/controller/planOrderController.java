@@ -320,17 +320,17 @@ public class planOrderController {
                     throw new RuntimeException("房間數量不足");
                 }
                 planRoom.setRoomQty(planRoom.getRoomQty() - roomSelection.getQuantity());
-                planRoom.setReservedRoom(planRoom.getReservedRoom() + roomSelection.getQuantity());
-                planRoomService.save(planRoom);
-            }
-            // 設置訂單關聯和人數
-            planOrder.setPlanPrice(tripTotal);
-            planOrder.setRoomPrice(totalRoomPrice);
-            planOrder.setPlan(plan);
-            planOrder.setMemVO(memVO);
+            planRoom.setReservedRoom(planRoom.getReservedRoom() + roomSelection.getQuantity());
+            planRoomService.save(planRoom);
+        }
+        // 設置訂單關聯和人數
+        planOrder.setPlanPrice(tripTotal);
+        planOrder.setRoomPrice(totalRoomPrice);
+        planOrder.setPlan(plan);
+        planOrder.setMemVO(memVO);
 
-            // 保存訂單
-            PlanOrder savedOrder = planOrderService.addPlanOrder(planOrder);
+        // 保存訂單
+        PlanOrder savedOrder = planOrderService.addPlanOrder(planOrder);
 
             //通知=============================================
             MemberNotifyVO notification = new MemberNotifyVO();
