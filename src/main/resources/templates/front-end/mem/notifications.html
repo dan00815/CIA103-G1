@@ -11,8 +11,8 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
-
 <link rel="stylesheet" th:href="@{/css/new_elm.css}">
+<link rel="stylesheet" th:href="@{/css/profile.css}" />
 <style>
 .notification-item {
 	border-left: 4px solid #007bff;
@@ -72,78 +72,150 @@
 .expand-btn:hover {
 	color: #0056b3;
 }
+
+.container {
+	width: 80%;
+}
+
+.btn {
+	min-width: 150px;
+	margin: 0 15px;
+}
+
+.btn-group {
+	margin: 10px 0;
+}
+
+.btn .inner .blob:nth-child(1) {
+	left: 8%;
+	transition-delay: 0s;
+}
+
+.btn .inner .blob:nth-child(2) {
+	left: 40%;
+	transition-delay: 0.05s;
+}
+
+.btn .inner .blob:nth-child(3) {
+	left: 70%;
+	transition-delay: 0.08s;
+}
 </style>
 </head>
 <body>
 	<div th:replace="~{front-end/nav}"></div>
-	<div class="container mt-4">
-		<h2>
-			通知中心 <span class="badge bg-primary" id="unreadCount">0</span>
-		</h2>
 
-		<!-- 類型篩選 -->
-		<div class="btn-group mb-3" role="group">
-			<button type="button" class="btn btn-outline-primary" data-type="1">活動通知</button>
-			<button type="button" class="btn btn-outline-primary" data-type="2">活動訂單</button>
-			<button type="button" class="btn btn-outline-primary" data-type="3">商品訂單</button>
+	<main>
+		<div th:insert="~{/front-end/profile_sidebar :: profileSB}"></div>
 
-			<button type="button" class="btn btn-outline-primary" data-type="4">商品通知</button>
-			<button type="button" class="btn btn-outline-primary" data-type="5">佈告欄</button>
-			<button type="button" class="btn btn-outline-primary" data-type="6">行程訂單</button>
-		</div>
+		<div class="container mt-4">
+			<h2>
+				通知中心 <span class="badge bg-primary" id="unreadCount">0</span>
+			</h2>
 
-		<!-- 搜索框 -->
-		<div class="input-group mb-3">
-			<input type="text" class="form-control" id="searchInput"
-				placeholder="搜索通知...">
-			<button class="btn btn-outline-secondary" type="button"
-				id="searchBtn">
-				<i class="bi bi-search"></i>
+			<!-- 類型篩選 -->
+			<div class="btn-group mb-3" role="group">
+				<button type="button" class="btn " data-type="1">
+					活動通知<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+				<button type="button" class="btn " data-type="2">
+					活動訂單<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+				<button type="button" class="btn " data-type="3">
+					商品訂單<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+
+				<button type="button" class="btn " data-type="4">
+					商品通知<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+				<button type="button" class="btn " data-type="5">
+					佈告欄<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+				<button type="button" class="btn " data-type="6">
+					行程訂單<span class="inner"> <span class="blob"></span> <span
+						class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+			</div>
+
+			<!-- 搜索框 -->
+			<div class="input-group mb-3">
+				<input type="text" class="form-control cus_inp" id="searchInput"
+					placeholder="搜索通知...">
+				<button class="btn ms-3" type="button" id="searchBtn">
+					<i class="bi bi-search"></i><span class="inner"> <span
+						class="blob"></span> <span class="blob"></span> <span class="blob"></span>
+					</span>
+				</button>
+			</div>
+
+			<!-- 全部已讀按鈕 -->
+			<button class="btn mb-3" id="markAllReadBtn">
+				<i class="bi bi-check-all"></i> 全部標記為已讀<span class="inner"> <span
+					class="blob"></span> <span class="blob"></span> <span class="blob"></span>
+				</span>
 			</button>
-		</div>
 
-		<!-- 全部已讀按鈕 -->
-		<button class="btn btn-primary mb-3" id="markAllReadBtn">
-			<i class="bi bi-check-all"></i> 全部標記為已讀
-		</button>
-
-		<!-- 通知列表 -->
-		<div id="notificationList">
-			<div th:each="notify : ${notifications}"
-				th:class="${'notification-item ' + (notify.isRead ? 'read' : '')}"
-				th:data-id="${notify.notifyId}">
-				<div class="notification-header">
-					<div>
-						<span class="badge bg-info" th:text="${notify.notifyTypeText}">通知類型</span>
-						<span class="notification-time"
-							th:text="${#temporals.format(notify.notifyTime, 'yyyy-MM-dd HH:mm')}">時間</span>
-						<i class="bi bi-chevron-down expand-btn" title="展開歷史記錄"></i>
+			<!-- 通知列表 -->
+			<div id="notificationList">
+				<div th:each="notify : ${notifications}"
+					th:class="${'notification-item ' + (notify.isRead ? 'read' : '')}"
+					th:data-id="${notify.notifyId}">
+					<div class="notification-header">
+						<div>
+							<span class="badge bg-info" th:text="${notify.notifyTypeText}">通知類型</span>
+							<span class="notification-time"
+								th:text="${#temporals.format(notify.notifyTime, 'yyyy-MM-dd HH:mm')}">時間</span>
+							<i class="bi bi-chevron-down expand-btn" title="展開歷史記錄"></i>
+						</div>
+						<div class="notification-actions">
+							<button class="btn btn-sm btn-outline-primary mark-read-btn"
+								th:if="${!notify.isRead}">
+								<i class="bi bi-check"></i>
+							</button>
+							<button class="btn btn-sm btn-outline-danger delete-btn">
+								<i class="bi bi-trash"></i>
+							</button>
+						</div>
 					</div>
-					<div class="notification-actions">
-						<button class="btn btn-sm btn-outline-primary mark-read-btn"
-							th:if="${!notify.isRead}">
-							<i class="bi bi-check"></i>
-						</button>
-						<button class="btn btn-sm btn-outline-danger delete-btn">
-							<i class="bi bi-trash"></i>
-						</button>
+					<div class="notification-content" th:text="${notify.notifyCon}">
+						通知內容</div>
+					<div class="history-list">
+						<!-- 歷史記錄將通過JavaScript動態加載 -->
 					</div>
-				</div>
-				<div class="notification-content" th:text="${notify.notifyCon}">
-					通知內容</div>
-				<div class="history-list">
-					<!-- 歷史記錄將通過JavaScript動態加載 -->
 				</div>
 			</div>
 		</div>
-	</div>
+
+
+	</main>
+
 	<div th:replace="~{back-end/footer :: f}"></div>
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-			integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-			crossorigin="anonymous"></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-		<script th:src="@{/js/notifications.js}"></script>
-		<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:src="@{/js/notifications.js}"></script>
+	<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+	<script type="text/javascript">
+		const my_list = document.querySelector(".my_list");
+		const expand_list = document.querySelector(".expand_list");
+
+		$(".my_list").on("click", function() {
+			$(".expand_list").slideToggle(500);
+		});
+	</script>
 </body>
 </html>

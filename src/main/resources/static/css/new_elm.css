@@ -11,7 +11,7 @@ body {
 
 .btn {
   position: relative;
-  min-width: 200px;
+  min-width: 180px;
   background-color: transparent;
   border: none;
   color: #0080ff;
