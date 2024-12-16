@@ -25,7 +25,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/ordlistall/*",
                         "/event/*",
                         "/planord/listall",
-                        "/planord/view/*")
+                        "/planord/view/*",
+                        "/bb/*",
+                        "/product/*",
+                        "/pdtImg/*",
+                        "/productType/*",
+                        "/rImg/*",
+                        "/roomOrder/*",
+                        "/rt/*")
         .excludePathPatterns(
                 "/emp/login",        // 排除登入頁
                 "/emp/register",     // 排除註冊頁
