@@ -36,9 +36,9 @@ public class EmployeeViewController {
             if (empImg != null && empImg.length > 0) {  // 確保圖片數據存在且不為空
                 String base64Image = Base64.getEncoder().encodeToString(empImg);
                 model.addAttribute("base64Image", base64Image);
-                System.out.println("圖片已轉換為 base64，長度: " + base64Image.length()); // 除錯用
+//                System.out.println("圖片已轉換為 base64，長度: " + base64Image.length()); // 除錯用
             } else {
-                System.out.println("找不到員工圖片數據"); // 除錯用
+//                System.out.println("找不到員工圖片數據"); // 除錯用
             }
 
             return "back-end/emp/show";
