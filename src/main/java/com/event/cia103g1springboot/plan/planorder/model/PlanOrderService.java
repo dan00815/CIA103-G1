@@ -89,8 +89,6 @@ public class PlanOrderService {
         mailSender.send(message);
     }
 
-
-
     public void sendPlanOrdMail(PlanOrder order, List<planOrderController.RoomSelection> rooms) throws MessagingException {
         Integer totalRoomPrice = rooms.stream()
                 .mapToInt(room -> room.getRoomPrice() * room.getQuantity())
@@ -115,7 +113,7 @@ public class PlanOrderService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo("mm950490@gmail.com");
+        helper.setTo(order.getMemVO().getEmail());
         helper.setSubject("鄰星嗨嗨:行程訂單成立通知");
         helper.setText(mailContent, true);
 

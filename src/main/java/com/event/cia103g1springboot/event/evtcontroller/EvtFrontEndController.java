@@ -94,7 +94,7 @@ public class EvtFrontEndController {
         if (memVO != null) {
             List<PlanOrder> planOrders = planOrderService.findPlanOrdersByMemId(memVO.getMemId());
             boolean hasPlanOrder = !planOrders.isEmpty();
-
+        //拿第一張單就好行程不會時間相衝
             if (hasPlanOrder) {
                 model.addAttribute("planOrder", planOrders.get(0));
             }

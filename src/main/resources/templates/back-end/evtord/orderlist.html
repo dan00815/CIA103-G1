@@ -189,7 +189,6 @@
             </div>
         </form>
     </div>
-
     <div class="status-filter">
         <a class="filter-btn" th:href="@{/ordlistall}"
            th:classappend="${param.status == null} ? 'active'">全部</a>
@@ -244,7 +243,7 @@
     </table>
 
 
-<!--分頁-->
+    <!--分頁-->
     <div th:if="${ord.numberOfElements > 0}" class="mt-3">
         <nav>
             <ul class="pagination">

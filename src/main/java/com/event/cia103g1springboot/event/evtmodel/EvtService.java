@@ -53,17 +53,34 @@ public class EvtService {
         return optional.orElse(new EvtVO());
     }
 
-    @Transactional
-    public Page<EvtVO> getAllEvts(int page) {
+
+    //多設報名截止改狀態
+    public Page getAllEvts(int page) {
         PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("evtId").descending());
         Page<EvtVO> evtPage = evtRepository.findAll(pageRequest);
+        LocalDateTime now = LocalDateTime.now(); // 先抓目前時間
 
-        //報名人數如果大於等於上限 直接改狀態
         for (EvtVO event : evtPage.getContent()) {
-            event.getEvtMax().equals(event.getEvtAttend());
+            boolean needUpdate = false;
+
+            //報名人數如果大於等於上限 直接改狀態
             if (event.getEvtStat() == 1 &&
-                    event.getEvtMax() != null && event.getEvtMax().equals(event.getEvtAttend())) {
-                event.setEvtStat(3);
+                    event.getEvtMax() != null &&
+                    event.getEvtMax().equals(event.getEvtAttend())) {
+                event.setEvtStat(3); // 設置為額滿狀態
+                needUpdate = true;
+            }
+
+            // 報名截止也直接改
+            if (event.getEvtStat() == 1 &&
+                    event.getEvtDeadLine() != null &&
+                    event.getEvtDeadLine().isBefore(now)) {
+                event.setEvtStat(2);
+                needUpdate = true;
+            }
+
+            // 狀態有更新就存
+            if (needUpdate) {
                 evtRepository.save(event);
             }
         }

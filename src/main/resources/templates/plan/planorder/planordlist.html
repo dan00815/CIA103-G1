@@ -2,40 +2,181 @@
     <html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
     <head>
       <meta charset="UTF-8">
-      <title>Plan Order Management</title>
+      <title>行程訂單管理</title>
       <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"/>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="stylesheet" th:href="@{/css/elm.css}" />
+      <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
       <style>
-        .section-title {
-          text-align: center;
-          margin: 30px 0;
-        }
-        .section-title h2 {
-          font-size: 2rem;
-          color: #333;
-          margin-bottom: 10px;
-        }
-        .title-underline {
-          height: 3px;
-          width: 100px;
-          background: #0080ff;
-          margin: 10px auto;
-        }
-        #DataTables_Table_0_wrapper {
-          margin: 30px;
-        }
-        .action-buttons {
-          margin: 20px;
-          text-align: right;
-        }
+          body {
+              background-color: #f5f5f5;
+          }
+
+          .plan-list {
+              width: 90%;
+              margin: 30px auto;
+          }
+
+          .section-title {
+              text-align: center;
+              margin: 30px 0;
+          }
+
+          .section-title h1 {
+              font-size: 2rem;
+              color: #333;
+          }
+
+          .title-underline {
+              height: 3px;
+              width: 100px;
+              background: #0080ff;
+              margin: 10px auto;
+          }
+
+          /* 表格相關樣式 */
+          .myTable {
+              border-radius: 10px;
+              overflow: hidden;
+              box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+              width: 95% !important;
+          }
+
+          .dataTables_wrapper .myTable thead th {
+              background-color: rgb(30, 143, 255) !important;
+              color: white !important;
+              font-weight: 500;
+              padding: 15px !important;
+              text-align: center;
+              vertical-align: middle;
+              border-bottom: none !important;
+          }
+
+          .dataTables_wrapper .myTable tbody td {
+              padding: 15px !important;
+              vertical-align: middle;
+              text-align: center;
+              border: none !important;
+          }
+
+          .dataTables_wrapper .myTable tbody tr:nth-child(odd) {
+              background-color: rgba(135, 206, 250, 0.4) !important;
+          }
+
+          .dataTables_wrapper .myTable tbody tr:nth-child(even) {
+              background-color: rgba(173, 216, 230, 0.4) !important;
+          }
+
+          .dataTables_wrapper .myTable tbody tr:hover {
+              background-color: rgba(135, 206, 250, 0.6) !important;
+          }
+
+          .table-hover tbody tr:hover {
+              background-color: rgba(135, 206, 250, 0.6) !important;
+          }
+
+          /* DataTables 控制項樣式 */
+          .dataTables_wrapper {
+              padding: 0 15px;
+              margin-bottom: 20px;
+          }
+
+          .dataTables_length,
+          .dataTables_filter {
+              margin: 15px 0;
+          }
+
+          .dataTables_length select {
+              padding: 5px 10px;
+              border-radius: 5px;
+              margin: 0 5px;
+              border: 1px solid #ddd;
+          }
+
+          .dataTables_filter input {
+              padding: 5px 10px;
+              border-radius: 5px;
+              margin-left: 5px;
+              border: 1px solid #ddd;
+          }
+
+          .dataTables_info,
+          .dataTables_paginate {
+              margin: 15px 0;
+              padding: 0 !important;
+          }
+
+          .dataTables_wrapper .dataTables_paginate .paginate_button {
+              padding: 5px 10px !important;
+              margin: 0 2px;
+              border: 1px solid #ddd !important;
+              border-radius: 3px;
+              background: white !important;
+          }
+
+          .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+              background: #f0f0f0 !important;
+              border-color: #0080ff !important;
+              color: #0080ff !important;
+          }
+
+          .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+          .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+              background: #0080ff !important;
+              color: white !important;
+              border-color: #0080ff !important;
+          }
+
+          /* 狀態和按鈕樣式 */
+          .status-full {
+              color: #ff4444;
+              font-weight: bold;
+          }
+
+          .btn-detail {
+              position: relative;
+              padding: 8px 20px;
+              background-color: transparent;
+              border: 2px solid #0080ff;
+              border-radius: 25px;
+              color: #0080ff;
+              font-weight: bold;
+              transition: all 0.3s ease;
+              text-decoration: none;
+              display: inline-block;
+          }
+
+          .btn-detail:hover {
+              background-color: #0080ff;
+              color: white;
+              transform: translateY(-2px);
+              box-shadow: 0 5px 15px rgba(0, 128, 255, 0.3);
+          }
+
+          .btn-detail i {
+              margin-right: 5px;
+          }
+
+          /* 響應式調整 */
+          @media (max-width: 768px) {
+              .plan-list {
+                  width: 95%;
+              }
+
+              .dataTables_wrapper {
+                  padding: 0 5px;
+              }
+
+              .btn-detail {
+                  padding: 6px 15px;
+              }
+          }
       </style>
     </head>
     <body>
     <div class="section-title">
-      <h2>訂單管理</h2>
+      <h2>行程訂單管理</h2>
       <div class="title-underline"></div>
     </div>
 

@@ -66,7 +66,7 @@ public class planOrderController {
     public String planDetail(@PathVariable Integer id, Model model) {
         Plan plan = planService.findPlanById(id);
 
-
+        //拿上架、額滿
         List<EvtImgVO> allImages = evtImgService.findPublishevtImg(1, 3);
         List<EvtImgVO> randomImages;
 
@@ -82,9 +82,6 @@ public class planOrderController {
             model.addAttribute("evtImgVO", randomImages);
         }
 
-        if (plan == null) {
-            throw new RuntimeException("Plan not found with ID: " + id); // 防止空值問題
-        }
 
         // 拿房型
         List<Map<String, Object>> roomDataList = new ArrayList<>();
