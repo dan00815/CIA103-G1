@@ -74,10 +74,6 @@ public class EvtOrderController {
         MemVO memVO = (MemVO) session.getAttribute("auth");
         PlanOrder planOrder = planOrderService.findPlanOrderById(planOrderId);
 
-        if (event == null || memVO == null || planOrder == null) {
-            return "redirect:/error";
-        }
-
         String captchaKey = "captcha:" + event.getEvtId();
 
         model.addAttribute("event", event);
