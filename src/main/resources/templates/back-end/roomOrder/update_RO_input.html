@@ -24,18 +24,22 @@
 			</div>
         	
         	<div>
-                <label for="rtp-sel">房型編號:</label>
-                <select th:field="*{rtVO.roomTypeId}">
-                	<option th:each="rtVO : ${rtListData}" th:value="${rtVO.roomTypeId}" th:text="${rtVO.roomTypeId}+'['+${rtVO.roomTypeName}+']'"></option>
-                </select><br/>
-                <span th:if="${#fields.hasErrors('rtVO.roomTypeId')}" th:errors="*{rtVO.roomTypeId}" class="error" id="rtVO.roomTypeId.errors"></span>
-            </div>
-            
-            <div>
-                <label for="rtpname-text">房型名稱:</label>
-                <input class="form-control" id="rtpname-text" type="text" th:field="*{rtVO.roomTypeName}" onclick="hideContent('rtVO.roomTypeName.errors');" placeholder="請輸入房型名稱"/><br/>
-                <span th:if="${#fields.hasErrors('rtVO.roomTypeName')}" th:errors="*{rtVO.roomTypeName}" class="error" id="rtVO.roomTypeName.errors"></span>
-            </div>
+			    <label for="rtp-sel">房型編號:</label>
+			    <select id="rtp-sel" th:field="*{rtVO.roomTypeId}" onchange="updateRoomTypeName()">
+			        <option name="roomTypeId" th:each="rtVO : ${rtListData}" 
+			                th:value="${rtVO.roomTypeId}" 
+			                th:data-roomtypename="${rtVO.roomTypeName}" 
+			                th:text="${rtVO.roomTypeId}+'['+${rtVO.roomTypeName}+']'">
+			        </option>
+			    </select><br/>
+			    <span th:if="${#fields.hasErrors('rtVO.roomTypeId')}" th:errors="*{rtVO.roomTypeId}" class="error" id="rtVO.roomTypeId.errors"></span>
+			</div>
+			
+			<div>
+			    <label for="rtpname-text">房型名稱:</label>
+			    <input class="form-control" id="rtpname-text" type="text" th:field="*{rtVO.roomTypeName}" placeholder="請輸入房型名稱" readonly /><br/>
+			    <span th:if="${#fields.hasErrors('rtVO.roomTypeName')}" th:errors="*{rtVO.roomTypeName}" class="error" id="rtVO.roomTypeName.errors"></span>
+			</div>
             
             <div>
                 <label for="poid-text">行程訂單編號:</label>
@@ -106,6 +110,16 @@
 	<script type="text/javascript">
         function hideContent(d) {
             document.getElementById(d).style.display = "none";
+        }
+        
+        function updateRoomTypeName() {
+            // 獲取選中的 <select> 元素
+            const select = document.getElementById("rtp-sel");
+            // 獲取選中項目對應的 data-roomtypename 屬性值
+            const selectedOption = select.options[select.selectedIndex];
+            const roomTypeName = selectedOption.getAttribute("data-roomtypename");
+            // 設置房型名稱欄位的值
+            document.getElementById("rtpname-text").value = roomTypeName || "";
         }
    </script>
 </body>

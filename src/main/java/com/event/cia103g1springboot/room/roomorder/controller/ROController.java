@@ -145,8 +145,9 @@ public class ROController {
 	}
 	
 	@PostMapping("updateRO")
-	public String updateRO(@Valid ROVO roVO, ModelMap model, BindingResult result)throws IOException {
+	public String updateRO(@Valid ROVO roVO,BindingResult result, ModelMap model)throws IOException {
 		if(result.hasErrors()) {
+			model.addAttribute("errorMessage","請檢查錯誤");
 			return "back-end/roomOrder/update_RO_input";
 		}
 		roSvc.updateRO(roVO);
