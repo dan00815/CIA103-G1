@@ -31,7 +31,7 @@
     <th:block layout:fragment="scripts">
         <script>
             $(function() {
-                //顯示用戶信息
+                // 顯示使用者信息
                 var loginUser = JSON.parse(localStorage.getItem('loginUser'));
                 if (loginUser) {
                     $('#userInfo').text('歡迎, ' + loginUser.empName);
@@ -120,22 +120,7 @@
                     window.location.href = '/emp/edit/' + empId;
                 });
 
-                // 登出功能
-                $('#logoutBtn').on('click', function() {
-                    $.ajax({
-                        url: '/api/employee/logout',
-                        type: 'POST',
-                        success: function(response) {
-                            // 清除localStorage中的用户信息
-                            localStorage.removeItem('loginUser');
-                            alert('登出成功');
-                            window.location.href = '/emp/login';
-                        },
-                        error: function() {
-                            alert('登出失敗');
-                        }
-                    });
-                });
+
             });
         </script>
     </th:block>

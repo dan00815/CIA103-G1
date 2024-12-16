@@ -15,9 +15,13 @@
                   #httpServletRequest.requestURI != '/emp/register' and 
                   #httpServletRequest.requestURI != '/emp/reset-password'}">
         <a id="logo_area" href="">
-            <div class="img_con">
-                <img src="https://picsum.photos/100" alt="" />
-            </div>
+        <a id="logo_area" href="">
+                <div class="img_con">
+                    <img src="https://picsum.photos/100" alt="" />
+                </div>
+<!--             <div class="img_con"> -->
+<!--                 <img src="https://picsum.photos/100" alt="" /> -->
+<!--             </div> -->
             <div class="vertical-line"></div>
             <h3>員工管理系統</h3>
         </a>
@@ -31,7 +35,7 @@
                 <span class="hamburger-inner"></span>
             </span>
             <div class="ham_list showList">
-                <a th:href="@{/emp/login}">退出登錄</a>
+                <a id="logoutBtn">退出登錄</a>
             </div>
         </button>
     </nav>
@@ -75,10 +79,27 @@
                 nav.style.boxShadow = "none";
             }
         });
+
+        // 登出功能
+        $('#logoutBtn').on('click', function() {
+            $.ajax({
+                url: '/api/employee/logout',
+                type: 'POST',
+                success: function(response) {
+                    // 清除localStorage中的使用者信息
+                    localStorage.removeItem('loginUser');
+                    alert('登出成功');
+                    window.location.href = '/emp/login';
+                },
+                error: function() {
+                    alert('登出失敗');
+                }
+            });
+        });
     </script>
     
     <!-- 額外腳本區域 -->
     <th:block layout:fragment="scripts">
     </th:block>
 </body>
-</html> 
+</html>
