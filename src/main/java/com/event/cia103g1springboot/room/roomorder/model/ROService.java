@@ -32,8 +32,7 @@ public class ROService {
 	
 	 public ROVO getOneRO(Integer roomOderId) {
 		 Optional<ROVO> optional = repository.findById(roomOderId);
-		 ROVO roVO = new ROVO();
-		 return optional.orElse(roVO);
+		 return optional.orElse(null);
 	 }
 	 
 	 public List<ROVO> getAllRO(){

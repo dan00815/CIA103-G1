@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.event.cia103g1springboot.member.mem.model.MemService;
+import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import com.event.cia103g1springboot.room.roomorder.model.ROService;
@@ -41,6 +40,9 @@ public class ROController {
 	
 	@Autowired
 	PlanOrderService poSvc;
+	
+	@Autowired
+	MemService memSvc;
 	
 	@ModelAttribute("roListData")
 	protected List<ROVO> referenceListData_RO(){
@@ -117,8 +119,8 @@ public class ROController {
 	@PostMapping("insertRO")
 	public String insertRO (@ModelAttribute("roVO")@Valid ROVO roVO ,BindingResult result , ModelMap model)throws IOException{
 		try {
-			if(!result.hasErrors()) {
-				model.addAttribute("errorMessage","請檢察錯誤");
+			if(result.hasErrors()) {
+				model.addAttribute("errorMessage","請檢查錯誤");
 				return "back-end/roomOrder/addRO";
 			}
 			roSvc.addRO(roVO);
@@ -160,6 +162,38 @@ public class ROController {
 		List<ROVO> list = roSvc.getAllRO();
 		model.addAttribute("ROListData",list);
 		model.addAttribute("success", "- (刪除成功)");
+		return "back-end/roomOrder/listAllRO";
+	}
+	
+	@PostMapping("getByMemId")
+	public String getByMemId(@RequestParam("memId") String memId,ModelMap model) {
+		if(memId.isEmpty() || memId.trim().length() == 0 || memId == null) {
+			model.addAttribute("errorMessage3","會員編號:請勿空白");
+			return "back-end/roomOrder/select_page_RO";
+		}
+		
+		if (!memId.matches("\\d+")) {  // Regex to check if it's a numeric string
+	        model.addAttribute("errorMessage3", "會員編號:請輸入有效的數字");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+		MemVO mem = memSvc.getMem(Integer.valueOf(memId));
+		List<PlanOrder> historyPO = poSvc.findPlanOrdersByMemId(mem.getMemId());
+		model.addAttribute("planOrderList",historyPO);
+		List<ROVO> list = roSvc.getByMemId(mem.getMemId());
+		if(list.isEmpty() || list == null) {
+			model.addAttribute("errorMessage3","查無訂房明細");
+			return "back-end/roomOrder/select_page_RO";
+		}
+		
+		Integer memIdInt;
+	    try {
+	    	memIdInt = Integer.valueOf(memId);
+	    } catch (NumberFormatException e) {
+	        model.addAttribute("errorMessage3", "會員編號不正確");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+		
+		model.addAttribute("roListData",list);
 		return "back-end/roomOrder/listAllRO";
 	}
 	
