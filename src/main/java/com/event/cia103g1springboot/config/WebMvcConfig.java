@@ -21,11 +21,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-        .addPathPatterns("/back-end/**") // 攔截 back-end 資料夾下的所有路徑
+        .addPathPatterns("/emp/*") // 攔截 back-end 資料夾下的所有路徑
         .excludePathPatterns(
-            "/back-end/emp/register", // 僅排除註冊頁
-            "/back-end/emp/reset-password", // 僅排除重設密碼頁
-            "/back-end/emp/base" // 僅排除基本頁
+                "/emp/login",        // 排除登入頁
+                "/emp/register",     // 排除註冊頁
+                "/emp/reset-password", // 排除重設密碼頁
+                "/emp/base"   // 排除基本頁
         );
     }
 
