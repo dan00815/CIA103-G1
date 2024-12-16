@@ -7,6 +7,7 @@ const nav = document.querySelector("nav");
 
 //漢堡
 document.querySelector(".hamburger").addEventListener("click", function() {
+	console.log("點漢堡");
 	this.classList.toggle("is-active");
 });
 

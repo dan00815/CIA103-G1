@@ -39,7 +39,8 @@ ul.side_bar li.li_item:hover {
   background-color: #495057;
   border-radius: 8px;
 }
-ul.side_bar li.li_item a {
+ul.side_bar li.li_item a,
+ul.side_bar li.li_item button {
   display: block;
   color: #f8f9fa;
   text-decoration: none;
@@ -51,28 +52,11 @@ ul.side_bar li.li_item a {
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s;
 }
-ul.side_bar li.li_item a:hover {
+ul.side_bar li.li_item a:hover,
+ul.side_bar li.li_item button:hover {
   text-decoration: none;
   color: #fff;
   transform: scale(1.02);
-}
-ul.side_bar li.logo_li_item:hover {
-  background-color: transparent;
-  border-radius: 8px;
-}
-ul.side_bar div.logo_item {
-  cursor: pointer;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
-  border-radius: 50%;
-  overflow: hidden;
-}
-ul.side_bar div.logo_item img {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
 }
 
 main {

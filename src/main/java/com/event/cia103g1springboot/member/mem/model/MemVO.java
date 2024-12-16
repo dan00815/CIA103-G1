@@ -1,27 +1,36 @@
 package com.event.cia103g1springboot.member.mem.model;
 
-import com.event.cia103g1springboot.event.evtordermodel.EvtOrderVO;
-import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
-import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
-import com.event.cia103g1springboot.product.productorder.model.ProductOrderVO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
+import com.event.cia103g1springboot.event.evtordermodel.EvtOrderVO;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.product.productorder.model.ProductOrderVO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(of = "memId")
 @AllArgsConstructor
@@ -34,7 +43,8 @@ public class MemVO implements java.io.Serializable {
 
 	public interface LoginGroup {
 	}
-	public interface ModPwd{
+
+	public interface ModPwd {
 	}
 
 	@Id
@@ -55,15 +65,16 @@ public class MemVO implements java.io.Serializable {
 	private Integer sex;
 
 	@Column(name = "memacct", updatable = false)
-	@NotEmpty(message = "帳號不可空白", groups = LoginGroup.class)
+	@NotEmpty(message = "帳號不可空白", groups = { LoginGroup.class })
 	@Size(min = 3, max = 30, message = "帳號長度需在3-20字之間")
 	@Pattern(regexp = "^[a-zA-Z\\d]+$", message = "帳號僅能由大小寫英文字母、數字組成，不能含有特殊符號")
 	private String memAcct;
 
 	@Column(name = "mempwd")
-	@NotEmpty(message = "密碼不可空白", groups = LoginGroup.class)
-	@Size(min = 3, max = 20, message = "密碼長度需在3-30字之間" , groups = ModPwd.class)
-	@Pattern(regexp = "^(?=.*[A-Z])[A-Za-z\\d]+$", message = "密碼僅能由大小寫英文+數字組成且至少須有一個大寫字母", groups = ModPwd.class)
+	@NotEmpty(message = "密碼不可空白", groups = { LoginGroup.class })
+	@Size(min = 3, max = 20, message = "密碼長度需在3-30字之間", groups = { Default.class, ModPwd.class })
+	@Pattern(regexp = "^(?=.*[A-Z])[A-Za-z\\d]+$", message = "密碼僅能由大小寫英文+數字組成且至少須有一個大寫字母", groups = { Default.class,
+			ModPwd.class })
 	private String memPwd;
 
 	@Column(name = "email")
@@ -73,7 +84,7 @@ public class MemVO implements java.io.Serializable {
 
 	@Column(name = "tel")
 	@NotEmpty(message = "電話不可空白")
-	@Size(min = 8, max = 10, message = "電話長度僅能為8或10，不可包含「-」")
+	@Pattern(regexp = "^09\\d{8}$", message = "電話格式有誤，請重新確認")
 	private String tel;
 
 	@Column(name = "addr")
@@ -94,7 +105,6 @@ public class MemVO implements java.io.Serializable {
 	@Column(name = "memstat", insertable = false)
 	private Integer memStat = 1;
 
-
 	@Transient
 	Function<Integer, String> genderConvert = genderCode -> {
 		switch (genderCode) {
@@ -106,6 +116,7 @@ public class MemVO implements java.io.Serializable {
 			return "其他";
 		}
 	};
+
 	public String getGenderText() {
 		return genderConvert.apply(sex);
 	}
@@ -117,15 +128,15 @@ public class MemVO implements java.io.Serializable {
 				+ ", memType=" + memType + ", memImg=" + Arrays.toString(memImg) + ", memStat=" + memStat + "]";
 	}
 
-	@OneToMany(mappedBy="memVO",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	private Set<EvtOrderVO> evtOrders ;
+	@OneToMany(mappedBy = "memVO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<EvtOrderVO> evtOrders;
 
-	@OneToMany(mappedBy="memVO",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	private Set<PlanOrder> planOrder ;
+	@OneToMany(mappedBy = "memVO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<PlanOrder> planOrder;
 
-	@OneToMany(mappedBy="memVO",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	private Set<ProductOrderVO> productOrderVO ;
+	@OneToMany(mappedBy = "memVO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ProductOrderVO> productOrderVO;
 
-	@OneToMany(mappedBy="member",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	private Set<MemberNotifyVO> memberNotifyVO ;
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<MemberNotifyVO> memberNotifyVO;
 }

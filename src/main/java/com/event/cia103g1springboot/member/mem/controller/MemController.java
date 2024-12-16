@@ -51,8 +51,9 @@ public class MemController {
 	}
 
 	@PostMapping("/register")
-	public String registerNewMem(@Valid MemVO memVO, BindingResult result, @RequestParam Map<String, String> params,
-			@RequestParam("memImg") MultipartFile part, ModelMap model) throws IOException {
+	public String registerNewMem(@Valid @Validated(MemVO.ModPwd.class) MemVO memVO, BindingResult result,
+			@RequestParam Map<String, String> params, @RequestParam("memImg") MultipartFile part, ModelMap model)
+			throws IOException {
 		String city = params.get("city");
 		String area = params.get("area");
 		String road = params.get("road");
@@ -188,6 +189,7 @@ public class MemController {
 		memVO.setMemAcct(oneMem.getMemAcct());
 		memVO.setMemPwd(oneMem.getMemPwd());
 		memVO.setMemType(oneMem.getMemType());
+
 
 		if (!part.isEmpty()) {
 			byte[] buf = part.getBytes();

@@ -102,14 +102,14 @@ span.errorMsg {
 
 		<div class="form-group">
 			<label for="name">會員名稱</label> <input type="text"
-				class="form-control" th:field="*{name}" /> <span class="errorMsg"
-				th:if="${#fields.hasErrors('name')}" th:errors="*{name}"> </span>
+				class="form-control" th:field="*{name}" onclick="hideContent('name.errors');"/> <span class="errorMsg"
+				th:if="${#fields.hasErrors('name')}" th:errors="*{name}" id="name.errors"> </span>
 		</div>
 
 		<div class="form-group">
 			<label for="birth">生日</label> <input type="date" class="form-control"
-				th:field="*{birth}" /> <span class="errorMsg"
-				th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}"></span>
+				th:field="*{birth}" onclick="hideContent('birth.errors');"/> <span class="errorMsg"
+				th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" id="birth.errors"></span>
 		</div>
 
 		<div class="form-group radio_el">
@@ -136,24 +136,24 @@ span.errorMsg {
 
 		<div class="form-group">
 			<label for="memAcct">帳號</label> <input type="text"
-				class="form-control" th:field="*{memAcct}" /> <span
+				class="form-control" th:field="*{memAcct}" onclick="hideContent('acct.errors');"/> <span
 				class="errorMsg" th:if="${#fields.hasErrors('memAcct')}"
-				th:errors="*{memAcct}"></span>
+				th:errors="*{memAcct}" id="acct.errors"></span>
 		</div>
 
 		<div class="form-group">
 			<label for="memPwd">密碼</label> <input type="password"
-				class="form-control" th:field="*{memPwd}" /> <i
+				class="form-control" th:field="*{memPwd}" onclick="hideContent('pwd.errors');"/> <i
 				class="fa-solid fa-eye eye"></i> <i
 				class="fa-solid fa-eye-slash eye"></i> <span class="errorMsg"
-				th:if="${#fields.hasErrors('memPwd')}" th:errors="*{memPwd}"></span>
+				th:if="${#fields.hasErrors('memPwd')}" th:errors="*{memPwd}" id="pwd.errors"></span>
 		</div>
 
 		<div class="form-group">
 			<label for="email">Email (請填寫可正常收信之電子郵件)</label> <input type="email"
-				class="form-control email_field" th:field="*{email}" /> <span
+				class="form-control email_field" th:field="*{email}" onclick="hideContent('email.errors');"/> <span
 				class="errorMsg" th:if="${#fields.hasErrors('email')}"
-				th:errors="*{email}"></span>
+				th:errors="*{email}" id="email.errors"></span>
 		</div>
 
 		<div style="display: flex">
@@ -165,8 +165,8 @@ span.errorMsg {
 
 		<div class="form-group">
 			<label for="tel">電話</label> <input type="text" class="form-control"
-				th:field="*{tel}" /> <span class="errorMsg"
-				th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
+				th:field="*{tel}" onclick="hideContent('tel.errors');"/> <span class="errorMsg" 
+				th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}" id="tel.errors"></span>
 		</div>
 
 		<div class="form-group">
@@ -186,10 +186,10 @@ span.errorMsg {
 				<label for="road">路名:</label> <select id="road" class="form-select"
 					name="road">
 					<option value="">請選擇</option>
-				</select> <input type="text" class="form-control" th:field="*{addr}" />
+				</select> <input type="text" class="form-control" th:field="*{addr}" onclick="hideContent('addr.errors');"/>
 			</div>
 			<span class="errorMsg" th:if="${#fields.hasErrors('addr')}"
-				th:errors="*{addr}"></span>
+				th:errors="*{addr}" id="addr.errors"></span>
 		</div>
 
 		<div class="form-group radio_el">
@@ -332,6 +332,10 @@ span.errorMsg {
 			      }, 1000);
 			}
 		
+		
+		function hideContent(d) {
+		     document.getElementById(d).style.display = "none";
+		}
 		
 	</script>
 </body>
