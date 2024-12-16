@@ -17,7 +17,7 @@
     <a class="navbar-brand" href="#">行程管理系統</a>
   </div>
 </nav>
-
+<div th:replace="~{back-end/backend_sideBar}"></div>
 <div class="container mt-5">
   <h1 class="text-center mb-4">所有行程</h1>
 
@@ -26,15 +26,22 @@
     <form action="/plans/addplan" method="get">
       <button type="submit" class="btn btn-primary">行程建立</button>
     </form>
-    <!--    <form action="/plans/addplantype" method="get">-->
-    <!--      <button type="submit" class="btn btn-success">建立行程類別</button>-->
-    <!--    </form>-->
-    <!--    <form action="/planinfo/add" method="get">-->
-    <!--      <button type="submit" class="btn btn-info">建立行程資訊</button>-->
-    <!--    </form>-->
-    <form action="/" method="get">
-      <button type="submit" class="btn btn-home">回首頁</button>
+        <form action="/plans/addplantype" method="get">
+          <button type="submit" class="btn btn-success">建立行程類別</button>
+        </form>
+    <form action="/planroom/listall" method="get">
+      <button type="submit" class="btn btn-home">行程房型</button>
     </form>
+        <form action="/plans/plantype/query" method="get">
+          <button type="submit" class="btn btn-info">回行程類別</button>
+        </form>
+
+<!--    <form action="/" method="get">-->
+<!--      <button type="submit" class="btn btn-home">回首頁</button>-->
+<!--    </form>-->
+<!--    <form action="/" method="get">-->
+<!--      <button type="submit" class="btn btn-home">回首頁</button>-->
+<!--    </form>-->
   </div>
 
   <!-- Plans Table -->

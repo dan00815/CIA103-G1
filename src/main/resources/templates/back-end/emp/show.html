@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>員工資訊</title>
+    <style>
+        .profile-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .profile-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-container p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>歡迎, <span th:text="${employee.empName}"></span></h1>
+     <img th:src="${base64Image != null ? 'data:image/jpeg;base64,' + base64Image : '/images/default-avatar.png'}"  
+            alt="員工頭像">
+        <p>ID: <span th:text="${employee.empId}"></span></p>
+        <p>職稱: <span th:text="${employee.empJobTitle}"></span></p>
+        <a href="/emp/list">查看員工列表</a>
+    </div>
+</body>
+</html>

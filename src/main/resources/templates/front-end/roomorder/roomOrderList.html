@@ -2,18 +2,21 @@
     <title>訂房明細列表 - roomOrderList.html</title>
 
     <!-- 引入外部資源 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" />
-	<link rel="stylesheet" th:href="@{/css/bb.css}" />
-	<link rel="stylesheet" th:href="@{/css/elm.css}" />
-	<link
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"
+    />
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
     />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link rel="stylesheet" th:href="@{/css/bb.css}" />
 	<style>
-        #pdt th, #pdt td {
+        #ro th, #ro td {
             text-align: center;
             vertical-align: middle;
             color:black;
@@ -36,33 +39,23 @@
         .btn:hover {
             background-color: #0056b3;
         }
+        .roomimg {
+            width: 120px;
+            max-height:90px;
+            border-radius: 8px;
+        }
 	</style>
 </head>
 <body>
 	<div th:insert="~{/front-end/nav :: nav}"></div>
-    <div id="header" class="text-center py-3 bg-primary text-white">
-        <i class="fa-solid fa-box"></i> 房型訂單
+    <div id="header">
+        <i class="fa-solid fa-box"></i> 訂房歷史紀錄
     </div>
-    <div id="sub-header" class="text-center py-2 bg-light">
+    <div id="sub-header" >
         <i class="fa-solid fa-clipboard-list"></i> 訂房明細
     </div>
-	<form class="cus_form" method="post" th:action="@{roomOrderList}">
-			<div>
-	      		<label for="search-Id">輸入行程訂單編號 (如: 1):</label>
-		          <input class="form-control" id="search-Id" name="planOrderId" type="text" th:value="${param.planOrderId}">
-		          <button type="submit" class="btn">
-				        送出查詢
-				        <span class="inner">
-				          <span class="blob"></span>
-				          <span class="blob"></span>
-				          <span class="blob"></span>
-				          <span class="blob"></span>
-				        </span>
-			      </button>
-	      	</div>
-		</form>
-    <div class="container mt-4" th:fragment="roList-div">
-        <table id="pdt" class="table table-striped table-hover table-bordered text-center">
+    <div class="container mt-4">
+        <table id="ro" class="table table-striped table-hover table-bordered text-center">
             <thead class="table-primary">
                 <tr>
                     <th>序號</th>
@@ -75,16 +68,16 @@
                 </tr>
             </thead>
             <tbody>
-                <th:block th:each="roVO : ${roListByPOId}">
+                <th:block th:each="roVO : ${roByMemId}">
                     <tr>
                         <td th:text="${roVOStat.count}"></td>
-                        <td th:text="${planOrder.planOrderId}"></td>
+                        <td th:text="${roVO.planOrder.planOrderId}"></td>
                         <td th:text="${roVO.roomOrderId}"></td>
                         <td th:text="${roVO.rtVO.roomTypeName}"></td>
                         <td th:text="${roVO.orderQty}"></td>
                         <td th:text="${roVO.roomPrice}"></td>
                         <td>
-                            <img class="img-thumbnail" style="max-width: 100px;" th:src="@{/rt/DBGifReader_rtlist} + '?roomTypeId=' + ${roVO.rtVO.roomTypeId}" alt="房型圖片" />
+                            <img class="roomimg" style="max-width: 100px;" th:src="@{/rt/DBGifReader_rtlist} + '?roomTypeId=' + ${roVO.rtVO.roomTypeId}" alt="房型圖片" />
                         </td>
                     </tr>
                 </th:block>
@@ -97,12 +90,6 @@
     <!-- 引入外部資源 -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-	<script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <script type="text/javascript" th:src="@{/js/nav.js}"></script>
     <script type="text/javascript">

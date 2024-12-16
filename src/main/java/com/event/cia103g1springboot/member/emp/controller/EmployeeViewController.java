@@ -1,4 +1,5 @@
 package com.event.cia103g1springboot.member.emp.controller;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,47 +11,86 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.event.cia103g1springboot.member.emp.model.EmployeeService;
 import com.event.cia103g1springboot.member.emp.model.EmployeeVO;
 
+import java.util.Base64;
+
 @Controller
 @RequestMapping("/emp")
 public class EmployeeViewController {
 
-	@Autowired
-	private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
-	@GetMapping("/login")
-	public String login() {
-		return "backindexlogin"; // 正確的視圖名稱
-	}
+    @GetMapping("/login")
+    public String login() {
+        return "backindexlogin";
+    }
 
-	@GetMapping("/edit/{id}")
-	public String editEmployee(@PathVariable("id") Integer id, Model model) {
-		EmployeeVO employee = employeeService.getEmployeeProfile(id);
-		model.addAttribute("employee", employee);
-		return "back-end/emp/edit";
-	}
+    @GetMapping("/show")
+    public String showEmployeeInfo(HttpSession session, Model model) {
+        EmployeeVO loginUser = (EmployeeVO) session.getAttribute("loginUser");
+        if (loginUser != null) {
+            model.addAttribute("employee", loginUser);
 
-	// 添加其他視圖名稱的更新
-	@GetMapping("/list")
-	public String listEmployees(Model model) {
-		// 添加你的業務邏輯
-		return "back-end/emp/list"; // 更新視圖名稱
-	}
+            // 取得員工圖片
+            byte[] empImg = loginUser.getEmpImg();
+            if (empImg != null && empImg.length > 0) {  // 確保圖片數據存在且不為空
+                String base64Image = Base64.getEncoder().encodeToString(empImg);
+                model.addAttribute("base64Image", base64Image);
+                System.out.println("圖片已轉換為 base64，長度: " + base64Image.length()); // 除錯用
+            } else {
+                System.out.println("找不到員工圖片數據"); // 除錯用
+            }
 
-	@GetMapping("/register")
+            return "back-end/emp/show";
+        }
+        return "redirect:/emp/login";
+    }
 
-	public String registerEmployee() {
+    @GetMapping("/edit/{id}")
+    public String editEmployee(@PathVariable("id") Integer id, Model model) {
+        EmployeeVO employee = employeeService.getEmployeeProfile(id);
+        model.addAttribute("employee", employee);
+        return "back-end/emp/edit";
+    }
 
-		return "back-end/emp/register"; // 更新視圖名稱
-	}
+    @GetMapping("/list")
+    public String listEmployees(Model model) {
+        // 添加你的業務邏輯
+        return "back-end/emp/list"; // 更新視圖名稱
+    }
 
-	@GetMapping("/reset-password")
+    @GetMapping("/register")
 
-	public String resetPassword() {
-		return "back-end/emp/reset_password"; // 更新視圖名稱
-	}
+    public String registerEmployee() {
+
+        return "back-end/emp/register"; // 更新視圖名稱
+    }
+
+    @GetMapping("/reset-password")
+
+    public String resetPassword() {
+        return "back-end/emp/reset_password"; // 更新視圖名稱
+    }
+
 
 }
 
+
+
+
+
+//package com.example.controller;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//
+//import com.example.model.EmployeeService;
+//import com.example.model.EmployeeVO;
+//
 //@Controller
 //@RequestMapping("/emp")
 //public class EmployeeViewController {
@@ -60,7 +100,7 @@ public class EmployeeViewController {
 //
 //    @GetMapping("/login")
 //    public String login() {
-//        return "/backindexlogin";
+//        return "emp/login";
 //    }
 //
 //    @GetMapping("/edit/{id}")
