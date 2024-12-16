@@ -6,48 +6,27 @@
 	<title>我的訂單 listPdtOrder.html</title>
     
     <!-- 使用included-fragment.html網頁的全部 -->
-    <head th:insert="~{/included-fragment}"></head>
+<!--     <head th:insert="~{/included-fragment}"></head> -->
 	
-	<style>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+<link rel="stylesheet" href="../static/css/new_elm.css" />
+<link rel="stylesheet" th:href="@{/css/profile.css}" />
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
+
+<style type="text/css">
 		
 	</style>
 </head>
-	<!------------------------------- 導覽列 ------------------------------->
-    <nav>
-      <a id="logo_area" href="">
-        <div class="img_con">
-          <img src="https://picsum.photos/100" alt="" />
-        </div>
-        <div class="vertical-line"></div>
-        <h3>鄰星嗨嗨</h3>
-      </a>
 
-      <ul>
-        <li><a href="">行程預定</a></li>
-        <li><a href="">房型價格</a></li>
-        <li><a href="">活動預約</a></li>
-        <li><a href="">商城</a></li>
-        <li><a href="">討論區</a></li>
-        <li><a href="">公告</a></li>
-        <!-- <li style="color: chocolate; font-size: 1.75rem">小吳, 您好</li> -->
-        <!-- 平常隱藏，登入時才打開 -->
-      </ul>
+	<!-- 導覽列 -->
+	<div th:replace="~{front-end/nav}"></div>
 
-      <button class="hamburger hamburger--collapse" type="button">
-        <span class="hamburger-box">
-          <span class="hamburger-inner"></span>
-        </span>
-
-        <div class="ham_list showList">
-          <a href="https://www.yahoo.com.tw" target="_blank">註冊會員</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員登入</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員中心</a>
-          <!-- <a href="https://www.yahoo.com.tw" target="_blank">登出</a> -->
-        </div>
-      </button>
-    </nav>
-    
-    
 	<!------------------------------- content ------------------------------->
 	<div class="container-fluid mt-5" >
 	    <h1 class="text-center mb-4">我的訂單</h1>
@@ -105,7 +84,7 @@
 	</div>
 
 	<div class="text-center mb-4">
-        <a href="javascript:history.back()" class="btn">回到上一頁
+        <a th:href="@{/mem/profile}" class="btn">回會員中心
        		<span class="inner">
 	          <span class="blob"></span>
 	          <span class="blob"></span>
@@ -116,46 +95,42 @@
     </div>
     
 	<!------------------------------- footer ------------------------------->
-    <footer>
-      <sup>&copy;</sup>本網站僅供tibame專題展示用，並無進行任何商業行為
-    </footer>
-    
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    
+	<div th:replace="~{back-end/footer :: f}"></div>
+    	<script type="text/javascript"
+		src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+	
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
     <script>
-      const ham_list = document.querySelector(".ham_list");
-      const nav = document.querySelector("nav");
-
-      //漢堡選單控制
-      document
-        .querySelector(".hamburger")
-        .addEventListener("click", function () {
-          this.classList.toggle("is-active");
-        });
-
-      ham_list.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
-
-      $(".hamburger").on("click", function () {
-        $(".ham_list").toggleClass("showList");
-      });
-
-      // 監控滾輪事件，讓導覽列變透明
-      window.addEventListener("scroll", (e) => {
-        if (this.scrollY !== 0) {
-          nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
-          nav.style.boxShadow = "0px 8px 10px lightgray";
-        } else {
-          nav.style.backgroundColor = "lightblue";
-          nav.style.boxShadow = "none";
-        }
-      });
-
+     
+      // DataTable 初始化
+      try {
+          $(".myTable").DataTable({
+              paging: true,
+              ordering: true,
+              pageLength: 10,
+              lengthMenu: [10, 15, 20],
+              searching: true,
+              language: {
+                  info: "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+                  infoEmpty: "無資料可顯示",
+                  infoFiltered: "",
+                  zeroRecords: "請確認查詢條件",
+                  lengthMenu: "每頁顯示 _MENU_ 筆資料",
+                  paginate: {
+                      first: "第一頁",
+                      previous: "上一頁",
+                      next: "下一頁",
+                      last: "最後一頁"
+                  }
+              }
+          });
+      } catch (error) {
+          console.error("DataTable 初始化錯誤:", error);
+      };
     </script>
+
+
 </body>
 </html>
