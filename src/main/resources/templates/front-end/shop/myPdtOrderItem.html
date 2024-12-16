@@ -3,72 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title> 前台-訂單明細 MyPdtOrderItem.html </title>
-<!-- 使用included-fragment.html網頁的全部 -->
-<head th:insert="~{/included-fragment}"></head>
+<title> 前台-訂單明細 myPdtOrderItem.html </title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+<link rel="stylesheet" href="../static/css/new_elm.css" />
+<link rel="stylesheet" th:href="@{/css/profile.css}" />
+
+<style type="text/css"></style>
 
 <style>
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .order-actions button {
-            margin-left: 10px;
-        }
-        .order-info, .product-list {
-            margin-bottom: 20px;
-        }
-        .total-section {
-            text-align: right;
-            font-weight: bold;
-        }
-    </style>
+.order-header {
+	display: flex;
+	justify-content: space-between;
+/* 	align-items: center; */
+	margin-bottom: 20px;
+}
+/* 強調表格標題行 */
+.table-dark th {
+	background-color: #343a40; /* 深灰背景 */
+	color: #ffffff; /* 白色文字 */
+}
+
+.order-actions button {
+	margin-left: 10px;
+}
+
+.order-info, .product-list {
+	margin-bottom: 20px;
+}
+
+.total-section {
+	text-align: right;
+	font-weight: bold;
+}
+
+</style>
 </head>
 <body>
-	<!------------------------------- 導覽列 ------------------------------->
-    <nav>
-      <a id="logo_area" href="">
-        <div class="img_con">
-          <img src="https://picsum.photos/100" alt="" />
-        </div>
-        <div class="vertical-line"></div>
-        <h3>鄰星嗨嗨</h3>
-      </a>
-
-      <ul>
-        <li><a href="">行程預定</a></li>
-        <li><a href="">房型價格</a></li>
-        <li><a href="">活動預約</a></li>
-        <li><a href="">商城</a></li>
-        <li><a href="">討論區</a></li>
-        <li><a href="">公告</a></li>
-        <!-- <li style="color: chocolate; font-size: 1.75rem">小吳, 您好</li> -->
-        <!-- 平常隱藏，登入時才打開 -->
-      </ul>
-
-      <button class="hamburger hamburger--collapse" type="button">
-        <span class="hamburger-box">
-          <span class="hamburger-inner"></span>
-        </span>
-
-        <div class="ham_list showList">
-          <a href="https://www.yahoo.com.tw" target="_blank">註冊會員</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員登入</a>
-          <a href="https://www.yahoo.com.tw" target="_blank">會員中心</a>
-          <!-- <a href="https://www.yahoo.com.tw" target="_blank">登出</a> -->
-        </div>
-      </button>
-    </nav>
+	<!-- 導覽列 -->
+	<div th:replace="~{front-end/nav}"></div>
     
 	<!------------------------------- content ------------------------------->
     <div class="container mt-5">
-        <h1 class="text-center mb-4">訂單資訊</h1>
+        <h1 class="text-center mb-4 ">訂單明細</h1>
         <!-- 訂單資訊 Header -->
-        <div class="order-header">
+        <div class="order-header card p-4 mb-4 shadow-sm">
             <div>
-                <p><strong>訂單編號:</strong> <span th:text="${pdtOrderId}"></span></p>
+                <p><strong>訂單編號:</strong> <span th:text="${pdtOrderId}" id="pdtOrderId"></span></p>
 <!--                 <p><strong>訂單狀態:</strong> <span th:text="${orderStatName]}"></span></p> -->
 				<p><strong>訂單狀態:</strong> 
 				   <span th:switch="${orderStat}">
@@ -85,13 +70,11 @@
 				       <span th:case="*">未知狀態</span>
 				   </span>
 				</p>
-            </div>
-            
-            <div>
-                <p><strong>訂單日期:</strong> <span th:text="${orderDate}"></span></p>
+				<p><strong>訂單日期:</strong> <span th:text="${orderDate}"></span></p>
             </div>
 
         </div>
+       <br><br>
 
         <!-- 訂購清單 -->
         <h4>商品清單</h4>
@@ -106,7 +89,7 @@
             </thead>
             <tbody>
                 <tr th:each="item : ${pdtOrderItemListData}">
-                    <td><span th:text="${item.pdtId}"></span></td>
+                    <td><span th:text="${item.pdtId}" id="pdtId"></span></td>
                     <td><span th:text="${item.pdtName}"></span></td>
                     <td>$<span th:text="${item.pdtPrice}"></span></td>
                     <td><span th:text="${item.orderQty}"></span></td>
@@ -117,26 +100,23 @@
 		        	<td></td>
 		        	<td></td>
 		        	<td></td>
-		            <td>總計：<span th:text="${totalAmount}"></span></td>
+		            <td class="fw-bold">總計：<span th:text="${totalAmount}" id="totalAmount"></span></td>
 		        </tr>
 		    </tfoot>
         </table>
     </div>
     
-    <!-- 返回按鈕，跳轉到 allPdtOrder -->
-<!--     <div class="text-center mb-4"> -->
-<!--         <a th:href="@{/pdtOrder/allPdtOrder}" class="btn">返回訂單管理 -->
-<!--        		<span class="inner"> -->
-<!-- 	          <span class="blob"></span> -->
-<!-- 	          <span class="blob"></span> -->
-<!-- 	          <span class="blob"></span> -->
-<!-- 	          <span class="blob"></span> -->
-<!-- 	        </span> -->
-<!--         </a> -->
-<!--     </div> -->
+    <!-- 綠界格式的商品名稱 -->
+	<span th:text="${itemNames}" id="itemNames" style="display:none;"></span>
+	<!-- 隱藏的表單（用於存放數據，不會提交本表單） -->
+	<form id="checkoutForm" style="display:none;">
+	    <input type="hidden" name="totalAmount" id="totalAmountInput">
+	    <input type="hidden" name="itemNames" id="itemNamesInput">
+	    <input type="hidden" name="pdtOrderId" id="pdtOrderIdInput">
+	</form>
 
 	<div class="text-center mb-4">
-        <a href="javascript:history.back()" class="btn">回到上一頁
+        <a href="javascript:history.back()" class="btn">回上一頁
        		<span class="inner">
 	          <span class="blob"></span>
 	          <span class="blob"></span>
@@ -144,51 +124,63 @@
 	          <span class="blob"></span>
 	        </span>
         </a>
+        <button class="btn" id="submitOrder" th:if="${orderStat == 0}">結帳</button>
     </div>
-
-
-
-    <!------------------------------- footer ------------------------------->
-    <footer>
-      <sup>&copy;</sup>本網站僅供tibame專題展示用，並無進行任何商業行為
-    </footer>
     
-    
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
+	<!------------------------------- footer ------------------------------->
+	<div th:replace="~{back-end/footer :: f}"></div>
+	
+	
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+	
+	<script>
+    document.getElementById('submitOrder').addEventListener('click', function () {
+    	 // 阻止默認表單提交行為
+        event.preventDefault();
 
-    <script>
-      const ham_list = document.querySelector(".ham_list");
-      const nav = document.querySelector("nav");
+        // 獲取表單數據
+        const totalAmount = document.getElementById('totalAmount').innerText;
+        const itemNames = document.getElementById('itemNames').innerText;
+        const pdtOrderId = document.getElementById('pdtOrderId').innerText;
 
-      //漢堡選單控制
-      document
-        .querySelector(".hamburger")
-        .addEventListener("click", function () {
-          this.classList.toggle("is-active");
-        });
+        // 將數據包裝為 JSON
+        const formData = {
+            totalAmount: totalAmount,
+            itemNames: itemNames,
+            pdtOrderId: pdtOrderId
+        };
 
-      ham_list.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
+    	 // 使用 fetch 發送 POST 請求
+        fetch('http://localhost:8080/myPdtOrderItem_ecpayCheckout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.text())  // 獲取回應的 HTML 表單 form
+            .then(formHtml => {
+                // 構造一個隱藏表單並提交
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'https://payment-stage.ecPay.com.tw/Cashier/AioCheckOut/V5';  // 目標綠界付款頁面的 URL
 
-      $(".hamburger").on("click", function () {
-        $(".ham_list").toggleClass("showList");
-      });
+                // 將收到的表單內容插入到表單中
+                form.innerHTML = formHtml;
 
-      // 監控滾輪事件，讓導覽列變透明
-      window.addEventListener("scroll", (e) => {
-        if (this.scrollY !== 0) {
-          nav.style.backgroundColor = "rgba(173, 216, 230, 0.8)";
-          nav.style.boxShadow = "0px 8px 10px lightgray";
-        } else {
-          nav.style.backgroundColor = "lightblue";
-          nav.style.boxShadow = "none";
-        }
-      });
-    </script>
+                // 將表單添加到頁面並提交
+                document.body.appendChild(form);
+                form.submit();  // 提交表單
+
+            })
+            .catch(error => {
+                // 處理錯誤
+                console.error('錯誤:', error);
+            });
+        
+    });
+</script>
+
 </body>
 </html>

@@ -64,5 +64,11 @@ public class MemService {
 	public void update(MemVO memVO) {
 		memRepository.save(memVO);
 	}
+	
+	//聊天室取userName
+	public MemVO getuserName(String userName) {
+		Optional<MemVO> optional = memRepository.findMemByName(userName);
+		return optional.orElse(new MemVO());
+	}
 
 }

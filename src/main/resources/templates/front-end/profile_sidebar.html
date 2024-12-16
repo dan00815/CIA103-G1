@@ -16,12 +16,12 @@
 			<p>
 <!--		<a href="/planord/planorddetail">行程訂單詳情</a>-->
 				<a href="" th:href="@{/planord/memorder/{memId}(memId=${session.auth.memId})}">行程訂單詳情</a>
-
 			</p>
 			<p>
-				<a href="">商品訂單詳情</a>
+				<a href="" th:href="@{/shop/get_myPdtOrder}">商城訂單詳情</a>
 			</p>
 		</li>
+		<li class="list_item"><a th:href="@{/chatRoom}">連繫客服</a></li>
 
 	</ul>
 </body>

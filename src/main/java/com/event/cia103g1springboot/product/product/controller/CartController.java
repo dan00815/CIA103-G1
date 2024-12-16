@@ -1,11 +1,14 @@
 package com.event.cia103g1springboot.product.product.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.event.cia103g1springboot.example.ECPayDemo.OrderService;
 import com.event.cia103g1springboot.member.mem.model.MemVO;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
+import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemService;
 import com.event.cia103g1springboot.product.pdtorderitem.model.ProductOrderItemVO;
 import com.event.cia103g1springboot.product.product.model.CartVO;
@@ -48,8 +53,11 @@ public class CartController {
 	// 綠界
 	@Autowired
 	OrderService orderService;
+	
+	@Autowired
+	MemberNotifyService memberNotifyService;
 
-	// ========================== shoppingCart ==========================
+	// ============================================== shoppingCart ==============================================
 
 	@GetMapping("/shoppingCart")
 	public String shoppingCart(Model model, HttpSession session) {
@@ -66,7 +74,7 @@ public class CartController {
 		return cartList;
 	}
 
-	// shoppingPage.html加入購物車
+	//商品頁面加入購物車(+1)
 	@SuppressWarnings("unchecked")
 	@PostMapping("/addToCart")
 	@ResponseBody
@@ -179,7 +187,7 @@ public class CartController {
 
 	}
 
-//	//========================== checkOut ==========================
+	//============================================== checkOut ==============================================
 	@GetMapping("/checkOut")
 	public String checkOut(Model model, HttpSession session) {
 
@@ -204,10 +212,6 @@ public class CartController {
 		return "front-end/shop/checkOut";
 	}
 
-	@GetMapping("/orderSuccessPage")
-	public String orderSuccessPage(Model model) {
-		return "front-end/shop/orderSuccessPage";
-	}
 
 	@PostMapping("insert")
 	public String insert(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model,
@@ -224,7 +228,8 @@ public class CartController {
 		productOrderVO.setOrderStat(2); // 設定狀態:2訂單成立
 
 		// 新增訂單並獲得pdtOrderId!!!
-		Integer newPdtOrderId = pdtOrderSvc.addProductOrder(productOrderVO);
+		ProductOrderVO newProductOrderVO = pdtOrderSvc.addProductOrder(productOrderVO);
+		Integer newPdtOrderId = newProductOrderVO.getPdtOrderId();
 		session.setAttribute("newPdtOrderId", newPdtOrderId);
 		System.out.println("自增的訂單 ID: " + newPdtOrderId);
 		
@@ -239,10 +244,27 @@ public class CartController {
 				PdtOrderItem.setPdtName(item.getPdtName());
 				PdtOrderItem.setOrderQty(item.getOrderQty());
 				pdtOrderItemSvc.addProductOrderItem(PdtOrderItem);
-				System.out.println("訂單明細新增成功");
+				
 			}
+			System.out.println("訂單明細新增成功");
 		}
 		
+		session.removeAttribute("total");
+		session.removeAttribute("cart");
+		
+		return "redirect:orderSuccessPage";
+
+	}
+	
+	@GetMapping("/orderSuccessPage")
+	public String orderSuccessPage(ModelMap model, HttpSession session) {
+		
+		// 創通知
+		Integer newPdtOrderId = (Integer) session.getAttribute("newPdtOrderId");
+		ProductOrderVO productOrderVO= pdtOrderSvc.getOneProductOrder(newPdtOrderId);  //用訂單編號找memVO
+		MemVO memVO = productOrderVO.getMemVO();
+		
+		//寄送mail
 		if(productOrderVO.getOrderStat().equals(2)) {
 			try {
 				pdtOrderSvc.sendSuccessPdtOrdMail(productOrderVO);
@@ -252,11 +274,23 @@ public class CartController {
 			}
 		}
 		
-		return "redirect:orderSuccessPage";
-
+		MemberNotifyVO notification = new MemberNotifyVO();
+        notification.setMember(memVO);
+        notification.setNotifyType(3);  // 3商品訂單
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = LocalDateTime.now().format(formatter);
+        System.out.println("當前時間: " + formattedDate);
+        
+        notification.setNotifyCon("親愛的顧客您好，感謝您的訂購，您的訂單已成功成立！" + "您的訂單編號：" + newPdtOrderId +
+                "，訂購日期：" + formattedDate + "<br>" + "歡迎至會員中心查看您的訂單詳情，祝您購物愉快。");
+        notification.setBusinessKey("PRODUCT_ORDER_" + newPdtOrderId);
+        // 存通知
+        memberNotifyService.createNotification(notification);
+		return "front-end/shop/orderSuccessPage";
 	}
 
-	// ========================== 我的訂單 ==========================
+	// ============================================== 我的訂單 ==============================================
 	@GetMapping("/noThankPage")
 	public String noThankPage(Model model) {
 		return "front-end/shop/noThankPage";
@@ -268,7 +302,7 @@ public class CartController {
 	}
 
 
-	//綠界-訂單狀態修改
+	//綠界-訂單狀態修改(付款成功or失敗)
 	@PostMapping("/orderResult")
 	public String orderResult(@RequestParam Map<String, String> params, Model model, HttpSession session) {
 		// 1. 獲取所有回傳參數
@@ -284,10 +318,11 @@ public class CartController {
 			String tradeAmt = params.get("TradeAmt");
 			String paymentDate = params.get("PaymentDate");
 			System.out.printf("訂單 %s 支付成功，金額: %s, 支付時間: %s%n", merchantTradeNo, tradeAmt, paymentDate);
+			
 
 //			Integer newPdtOrderId = (Integer) session.getAttribute("newPdtOrderId"); 這個娶不到
 			
-			//取出用Remark儲存的newPdtOrderId
+			//取出用CustomField1儲存的newPdtOrderId
 			String CustomField1 = params.get("CustomField1");
 			Integer newPdtOrderId = Integer.valueOf(CustomField1);
 			if (newPdtOrderId == null) {
@@ -297,6 +332,23 @@ public class CartController {
 			// 修改訂單狀態:1已付款
 			pdtOrderSvc.getNewOrderStat(1, newPdtOrderId); 
 			
+			// 創通知
+			ProductOrderVO ProductOrderVO= pdtOrderSvc.getOneProductOrder(newPdtOrderId);  //用訂單編號找memVO
+			MemVO memVO = ProductOrderVO.getMemVO();
+			
+			MemberNotifyVO notification = new MemberNotifyVO();
+	        notification.setMember(memVO);
+	        notification.setNotifyType(3);  // 3商品訂單
+	        
+	        notification.setNotifyCon("親愛的顧客您好，感謝您的購買！我們已經成功收到您的信用卡付款。<br>" +
+	                "您的訂單編號：" + newPdtOrderId + "，付款日期：" + paymentDate + "，付款金額：" + tradeAmt + "。<br>" +
+	                "我們已經開始處理您的訂單，並會儘快為您發送商品。<br>" +
+	                "歡迎至會員中心查看您的訂單詳情，祝您購物愉快！");
+	        
+	        notification.setBusinessKey("PRODUCT_ORDER_" + newPdtOrderId);
+	        // 存通知
+	        memberNotifyService.createNotification(notification);
+			
 		} else {
 			// 交易失敗，記錄錯誤訊息
 			String rtnMsg = params.get("RtnMsg");
@@ -305,13 +357,29 @@ public class CartController {
 			//取出用Remark儲存的newPdtOrderId
 			String CustomField1 = params.get("CustomField1");
 			Integer newPdtOrderId = Integer.valueOf(CustomField1);
+			
 			if (newPdtOrderId == null) {
 				System.out.println("newPdtOrderId還是找不到阿TT");
 				return "redirect:product/productlist";
 			}
+			
 			// 修改訂單狀態:0未付款
 			pdtOrderSvc.getNewOrderStat(0, newPdtOrderId); 
-			return "redirect:noThankPage"; // 訂購失敗頁面
+			
+			// 創通知
+			ProductOrderVO ProductOrderVO= pdtOrderSvc.getOneProductOrder(newPdtOrderId);  //用訂單編號找memVO
+			MemVO memVO = ProductOrderVO.getMemVO();
+			
+			MemberNotifyVO notification = new MemberNotifyVO();
+	        notification.setMember(memVO);
+	        notification.setNotifyType(3);  // 3商品訂單
+	        
+	        notification.setNotifyCon("親愛的顧客您好，您於訂單編號："+ newPdtOrderId + " 的支付未成功。<br>"+
+	        				"如需重新支付，請前往會員中心查看訂單並重新操作。如有疑問，請聯繫客服，謝謝！敬祝順安。");
+	        notification.setBusinessKey("PRODUCT_ORDER_" + newPdtOrderId);
+	        // 存通知
+	        memberNotifyService.createNotification(notification);
+	        return "redirect:noThankPage"; // 訂購失敗頁面
 		}
 
 		return "redirect:thankPage";
@@ -332,6 +400,27 @@ public class CartController {
 		List<ProductOrderVO> list = pdtOrderSvc.getProductOrderByMemId(memId);
 		model.addAttribute("orderListData", list);
 		return "front-end/shop/myPdtOrder";
+	}
+	
+	@ModelAttribute("pdtOrderListData")
+	protected List<ProductOrderVO> referenceListData(HttpSession session) {
+
+		List<ProductOrderVO> list = pdtOrderSvc.getAll();
+
+		// 定義狀態對應關係
+		Map<Integer, String> orderStatMap = Map.of(0, "未付款", 1, "已付款", 2, "訂單成立", 3, "配送中", 4, "商品已到達", 5, "訂單完成", 6,
+				"訂單取消", 7, "未出貨", 8, "退款中", 9, "退款完成");
+
+		Map<Integer, String> payMethodMap = Map.of(0, "轉帳", 1, "信用卡", 2, "貨到付款");
+
+		Map<Integer, String> delMethodMap = Map.of(0, "宅配", 1, "船上取貨");
+
+		// 將 Map 存入 Session
+		session.setAttribute("orderStatMap", orderStatMap);
+		session.setAttribute("payMethodMap", payMethodMap);
+		session.setAttribute("delMethodMap", delMethodMap);
+
+		return list;
 	}
 
 	@GetMapping("/get_myPdtOrderItem")
@@ -369,6 +458,11 @@ public class CartController {
 	    model.addAttribute("pdtOrderItemListData", list); // 傳遞訂單項目列表
 	    model.addAttribute("totalAmount", totalAmount); // 傳遞總金額
 	    
+	    // 拼接商品名稱，符合綠界規則
+        String itemNames = list.stream()
+                .map(ProductOrderItemVO::getPdtName) // 取得商品名稱
+                .collect(Collectors.joining("#")); // 用 # 分隔
+        model.addAttribute("itemNames", itemNames);
 	    
 		// 返回訂單明細頁面
 		return "front-end/shop/myPdtOrderItem";

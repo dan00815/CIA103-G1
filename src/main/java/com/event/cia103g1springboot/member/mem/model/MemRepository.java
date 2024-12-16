@@ -18,4 +18,9 @@ public interface MemRepository extends JpaRepository<MemVO, Integer> {
 
 	@Override
 	Optional<MemVO> findById(Integer integer);
+	
+	
+	//聊天室用
+	@Query("from MemVO where name=?1")
+	public Optional<MemVO> findMemByName(String userName);
 }

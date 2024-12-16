@@ -41,9 +41,9 @@ public class ProductOrderService {
 	@Autowired
 	ProductOrderItemService pdtItemSvc;
 	
-	public Integer addProductOrder(ProductOrderVO productOrderVO) {
-		ProductOrderVO savedOrder = repository.save(productOrderVO);
-		return savedOrder.getPdtOrderId(); //為了回傳自增訂單ID
+	public ProductOrderVO addProductOrder(ProductOrderVO productOrderVO) {
+		ProductOrderVO newProductOrderVO = repository.save(productOrderVO);
+		return newProductOrderVO; //回傳商品取ID
 	}
 	
 	public void updateProductOrder(ProductOrderVO productOrderVO) {
