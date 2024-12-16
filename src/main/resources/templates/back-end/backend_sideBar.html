@@ -21,19 +21,19 @@
 				<a th:text="${auth.systemFunctionVO.funName}"></a> <!-- 活動 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 103}">
-				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 商城權限管理 -->
+				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/product/select_page_pdt}"></a>   <!-- 商城權限管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 104}">
 				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 商品訂單管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 105}">
-				<a th:text="${auth.systemFunctionVO.funName}"></a>  <!-- 房型管理 -->
+				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/rt/select_page_RT}"></a>  <!-- 房型管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 106}">
 				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 行程管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 107}">
-				<a th:text="${auth.systemFunctionVO.funName}"></a>     <!-- 消息管理 -->
+				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/bb/select_page_bb}"></a>     <!-- 消息管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 108}">
 				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 訊息回復 -->

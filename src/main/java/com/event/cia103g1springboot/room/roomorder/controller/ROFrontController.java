@@ -60,7 +60,7 @@ public class ROFrontController {
 		}
 		
 		model.addAttribute("roByMemId",historyRO);
-		return "front-end/roomOrder/roomOrderList";
+		return "front-end/roomorder/roomOrderList";
 		
 	}
 	
