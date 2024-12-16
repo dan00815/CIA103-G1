@@ -15,7 +15,7 @@
 				<a href="/frontOrderDetail">活動訂單詳情</a>
 			</p>
 			<p>
-<!--				<a href="/planord/planorddetail">行程訂單詳情</a>-->
+<!--		<a href="/planord/planorddetail">行程訂單詳情</a>-->
 				<a href="" th:href="@{/planord/memorder/{memId}(memId=${session.auth.memId})}">行程訂單詳情</a>
 
 			</p>
@@ -24,8 +24,6 @@
 			</p>
 		</li>
 
-		<!--這行我之後刪，有需要直接往下加 -->
-		<li class="list_item"><a href="">要放在會員中心的功能自己加</a></li>
 	</ul>
 </body>
 </html>
