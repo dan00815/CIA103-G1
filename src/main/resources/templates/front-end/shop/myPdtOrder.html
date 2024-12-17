@@ -5,9 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>我的訂單 listPdtOrder.html</title>
     
-    <!-- 使用included-fragment.html網頁的全部 -->
-<!--     <head th:insert="~{/included-fragment}"></head> -->
-	
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -15,84 +12,97 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
 <link rel="stylesheet" href="../static/css/new_elm.css" />
-<link rel="stylesheet" th:href="@{/css/profile.css}" />
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css"/>
 
 <style type="text/css">
-		
-	</style>
+/* 基本樣式 */
+html, body {
+	margin: 0;
+	height: 100%;
+}
+
+/* 使用 Flexbox */
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh; /* 滿視窗高度 */
+}
+</style>
 </head>
 
 	<!-- 導覽列 -->
 	<div th:replace="~{front-end/nav}"></div>
-
-	<!------------------------------- content ------------------------------->
-	<div class="container-fluid mt-5" >
-	    <h1 class="text-center mb-4">我的訂單</h1>
+	<div class="wrapper">
+			<main>
+		<!------------------------------- content ------------------------------->
+		<div class="container-fluid mt-5" >
+		    <h1 class="text-center mb-4">我的訂單</h1>
+		
+		    <!-- 訂單列表 -->
+		    <table class="table myTable" >
+		        <thead>
+		        <tr>
+		        	<th>訂單編號</th>
+					<th>會員編號</th>
+					<th style="width: 120px;">訂單成立時間</th>
+					<th>訂單總金額</th>
+		            <th>訂單狀態</th>
+		            <th>付款方式</th>
+					<th>取貨方式</th>
+					<th>收件人姓名</th>
+					<th style="width: 150px;">收件人地址</th>
+					<th>收件人電話</th>
+					<th>操作</th>
+					
+		        </tr>
+		        </thead>
+		        <tbody>
+		        
+		        <!-- Thymeleaf 會員編號搜尋多筆 -->
+		        <tr th:each="order : ${orderListData}">
+		            <td th:text="${order.pdtOrderId}"></td>
+		            <td th:text="${order.memVO.memId}"></td>
+		            <td style="width: 120px;" th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+		            <td th:text="${order.orderAmt}"></td>
+		            <td>
+		    		    <!-- 使用orderStatusMap來顯示對應的名稱 -->
+		       			 <span th:text="${session.orderStatMap[order.orderStat]}"></span>
+		   			</td>
+		            <td>
+		            	<!-- 使用payMethodMap來顯示對應的名稱 -->
+		       			 <span th:text="${session.payMethodMap[order.payMethod]}"></span>
+		            </td>
+		            <td>
+		            	<!-- 使用delMethodMap來顯示對應的名稱 -->
+		       			 <span th:text="${session.delMethodMap[order.delMethod]}"></span>
+		            </td>
+		            <td th:text="${order.recName}"></td>
+		            <td style="width: 150px;" th:text="${order.recAddr}"></td>
+		            <td th:text="${order.recTel}"></td>
+					<td>
+		                <a th:href="@{/shop/get_myPdtOrderItem(pdtOrderId=${order.pdtOrderId}, orderStat=${order.orderStat}, orderDate=${order.orderDate})}" class="btn-sm" title="檢視訂單明細">
+		                   <i class="fas fa-search"></i>
+		                </a>
+		            </td>
+		        </tr>
+		        
+		        </tbody>
+		    </table>
+		</div>
 	
-	    <!-- 訂單列表 -->
-	    <table class="table myTable" >
-	        <thead>
-	        <tr>
-	        	<th>訂單編號</th>
-				<th>會員編號</th>
-				<th style="width: 120px;">訂單成立時間</th>
-				<th>訂單總金額</th>
-	            <th>訂單狀態</th>
-	            <th>付款方式</th>
-				<th>取貨方式</th>
-				<th>收件人姓名</th>
-				<th style="width: 150px;">收件人地址</th>
-				<th>收件人電話</th>
-				<th>操作</th>
-				
-	        </tr>
-	        </thead>
-	        <tbody>
-	        
-	        <!-- Thymeleaf 會員編號搜尋多筆 -->
-	        <tr th:each="order : ${orderListData}">
-	            <td th:text="${order.pdtOrderId}"></td>
-	            <td th:text="${order.memVO.memId}"></td>
-	            <td style="width: 120px;" th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-	            <td th:text="${order.orderAmt}"></td>
-	            <td>
-	    		    <!-- 使用orderStatusMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.orderStatMap[order.orderStat]}"></span>
-	   			</td>
-	            <td>
-	            	<!-- 使用payMethodMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.payMethodMap[order.payMethod]}"></span>
-	            </td>
-	            <td>
-	            	<!-- 使用delMethodMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.delMethodMap[order.delMethod]}"></span>
-	            </td>
-	            <td th:text="${order.recName}"></td>
-	            <td style="width: 150px;" th:text="${order.recAddr}"></td>
-	            <td th:text="${order.recTel}"></td>
-				<td>
-	                <a th:href="@{/shop/get_myPdtOrderItem(pdtOrderId=${order.pdtOrderId}, orderStat=${order.orderStat}, orderDate=${order.orderDate})}" class="btn-sm" title="檢視訂單明細">
-	                   <i class="fas fa-search"></i>
-	                </a>
-	            </td>
-	        </tr>
-	        
-	        </tbody>
-	    </table>
+		<div class="text-center mb-4">
+	        <a th:href="@{/mem/profile}" class="btn">回會員中心
+	       		<span class="inner">
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		        </span>
+	        </a>
+	    </div>
+	    </main>
 	</div>
-
-	<div class="text-center mb-4">
-        <a th:href="@{/mem/profile}" class="btn">回會員中心
-       		<span class="inner">
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	        </span>
-        </a>
-    </div>
     
 	<!------------------------------- footer ------------------------------->
 	<div th:replace="~{back-end/footer :: f}"></div>
