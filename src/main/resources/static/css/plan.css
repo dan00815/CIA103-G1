@@ -45,6 +45,10 @@ footer {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+.filter-button-container a{
+    margin:5px 15px;
+}
+
 
 /* 按鈕樣式 */
 .filter-btn {
