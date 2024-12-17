@@ -21,6 +21,25 @@
         border-collapse: collapse;
         width: 100%;
     }
+    .management-btn {
+        display: block;
+        width: fit-content;
+        margin: 20px auto;
+        padding: 10px 25px;
+        background-color: #0080ff;
+        color: white;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 2px solid #0080ff;
+    }
+    .management-btn:hover {
+        background-color: white;
+        color: #0080ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 128, 255, 0.2);
+    }
 
     .table-container {
         margin: 20px;
@@ -173,7 +192,9 @@
         color: white;
     }
 </style>
+<div th:replace="~{back-end/backend_sideBar}"></div>
 <h2>活動訂單列表</h2>
+<a href="/event/listall" class="management-btn">活動管理頁面</a>
 <div class="filter-section">
     <div class="search-box">
         <form th:action="@{/ordlistall}" method="get" class="d-flex">
