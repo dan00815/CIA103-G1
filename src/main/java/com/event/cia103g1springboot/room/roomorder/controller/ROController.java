@@ -1,3 +1,4 @@
+
 package com.event.cia103g1springboot.room.roomorder.controller;
 
 import java.io.IOException;
@@ -5,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -180,7 +180,6 @@ public class ROController {
 				model.addAttribute("errorMessage", "請檢查錯誤");
 				return "back-end/roomOrder/update_RO_input";
 			}
-
 			//要set回去
 			RTVO rtvo = rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId());
 			if (rtvo == null) {
@@ -201,7 +200,7 @@ public class ROController {
 			System.out.println("RoomPrice: " + roVO.getRoomPrice());
 			System.out.println("PlanOrderId: " +
 					(roVO.getPlanOrder() != null ? roVO.getPlanOrder().getPlanOrderId() : "null"));
-			System.out.println("RoomTypeId: " + 
+			System.out.println("RoomTypeId: " +
 					(roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeId() : "null"));
 			System.out.println("RoomTypeName: " +
 					(roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeName() : "null"));
@@ -240,8 +239,7 @@ public class ROController {
 	}
 	
 	@PostMapping("getByMemId")
-	public String getByMemId(
-	@RequestParam(value = "memId", required = false)String memId,ModelMap model) {
+	public String getByMemId(@RequestParam("memId") String memId,ModelMap model) {
 		if(memId.isEmpty() || memId.trim().length() == 0 || memId == null) {
 			model.addAttribute("errorMessage3","會員編號:請勿空白");
 			return "back-end/roomOrder/select_page_RO";
@@ -251,28 +249,25 @@ public class ROController {
 	        model.addAttribute("errorMessage3", "會員編號:請輸入有效的數字");
 	        return "back-end/roomOrder/select_page_RO";
 	    }
-		
-		try {
-			MemVO mem = memSvc.getMem(Integer.valueOf(memId));
-			if(mem == null) {
-				model.addAttribute("errorMessage3", "無法查詢到對應的房型資訊");
-		        return "back-end/roomOrder/select_page_RO";
-			}
-			List<PlanOrder> historyPO = poSvc.findPlanOrdersByMemId(mem.getMemId());
-			model.addAttribute("planOrderList",historyPO);
-			List<ROVO> list = roSvc.getByMemId(mem.getMemId());
-			if(list.isEmpty() || list == null) {
+		MemVO mem = memSvc.getMem(Integer.valueOf(memId));
+		List<PlanOrder> historyPO = poSvc.findPlanOrdersByMemId(mem.getMemId());
+		model.addAttribute("planOrderList",historyPO);
+		List<ROVO> list = roSvc.getByMemId(mem.getMemId());
+		if(list.isEmpty() || list == null) {
 			model.addAttribute("errorMessage3","查無訂房明細");
-				return "back-end/roomOrder/select_page_RO";
-			}
-			Integer memIdInt;
+			return "back-end/roomOrder/select_page_RO";
+		}
+		
+		Integer memIdInt;
+	    try {
 	    	memIdInt = Integer.valueOf(memId);
-			model.addAttribute("roListData",list);
-			return "back-end/roomOrder/listAllRO";
-		 } catch (Exception e) {
+	    } catch (NumberFormatException e) {
 	        model.addAttribute("errorMessage3", "會員編號不正確");
-	         return "back-end/roomOrder/select_page_RO";
-		 }
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+		
+		model.addAttribute("roListData",list);
+		return "back-end/roomOrder/listAllRO";
 	}
 	
 	@ModelAttribute("rtListData")
