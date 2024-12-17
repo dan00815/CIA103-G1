@@ -2,236 +2,254 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>後台客服 backChatRoom.html</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>後台客服 backChatRoom.html</title>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f1f1f1;
-        }
+body {
+	font-family: Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #f1f1f1;
+	flex-direction: column;
+}
+.chat-title {
+	width: 100%;
+	padding: 15px;
+	color: black;
+	text-align: center;
+	font-size: 36px;
+	margin-bottom: 20px; /* Adds space between the title and the chat container */
+}
 
-        .outside-chat-container {
-            display: flex;
-            width: 80%;
-            height: 80%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+.outside-chat-container {
+	display: flex;
+	width: 80%;
+	height: 80%;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 
-        .chat-sidebar {
-            width: 30%;
-            background-color: #f7f7f7;
-            border-right: 1px solid #ddd;
-            padding: 10px;
-        }
+.chat-sidebar {
+	width: 30%;
+	background-color: #f7f7f7;
+	border-right: 1px solid #ddd;
+	padding: 10px;
+}
 
-        .side-user-list {
-            display: flex;
-            flex-direction: column;
-        }
+.side-user-list {
+	display: flex;
+	flex-direction: column;
+}
 
-        .side-user {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+.side-user {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+}
 
-        .side-user img {
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+.side-user img {
+	border-radius: 50%;
+	margin-right: 10px;
+}
 
-        .userName {
-            font-weight: bold;
-        }
+.userName {
+	font-weight: bold;
+}
 
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            
-            height: 100%;
-    		max-height: 100vh; /* 使其最大高度不超過視窗 */
-    		overflow: hidden; /* 防止溢出 */
-        }
+.chat-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-height: 100vh; /* 使其最大高度不超過視窗 */
+	overflow: hidden; /* 防止溢出 */
+}
 
-        .chat-header {
-            padding: 10px;
-            background-color: #f7f7f7;
-            border-bottom: 1px solid #ddd;
-            
-        }
+.chat-header {
+	padding: 10px;
+	background-color: #f7f7f7;
+	border-bottom: 1px solid #ddd;
+}
 
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+.chat-messages {
+	flex: 1;
+	padding: 15px;
+	overflow-y: auto;
+	background-color: #f9f9f9;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
 
-        .chat-message {
-            max-width: 75%;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
+.chat-message {
+	max-width: 75%;
+	padding: 10px 15px;
+	border-radius: 20px;
+	font-size: 14px;
+	line-height: 1.4;
+}
 
-        .chat-message.user {
-            align-self: flex-end;
-            background-color: #0e60a3;
-            color: #fff;
-        }
+.chat-message.user {
+	align-self: flex-end;
+	background-color: #0e60a3;
+	color: #fff;
+}
 
-        .chat-message.bot {
-            align-self: flex-start;
-            background-color: #e0e0e0;
-            color: #333;
-        }
+.chat-message.bot {
+	align-self: flex-start;
+	background-color: #e0e0e0;
+	color: #333;
+}
 
-        .chat-input {
-            display: flex;
-            border-top: 1px solid #ddd;
-            padding: 10px;
-        }
+.chat-input {
+	display: flex;
+	border-top: 1px solid #ddd;
+	padding: 10px;
+}
 
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            outline: none;
-            font-size: 14px;
-        }
+.chat-input input {
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	outline: none;
+	font-size: 14px;
+}
 
-        .chat-input button {
-            margin-left: 10px;
-            padding: 10px 20px;
-            background-color: #0e60a3;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            outline: none;
-            transition: background-color 0.3s;
-        }
+.chat-input button {
+	margin-left: 10px;
+	padding: 10px 20px;
+	background-color: #0e60a3;
+	color: #fff;
+	border: none;
+	border-radius: 20px;
+	font-size: 14px;
+	cursor: pointer;
+	outline: none;
+	transition: background-color 0.3s;
+}
 
-        .chat-input button:hover {
-            background-color: #45a049;
-        }
+.chat-input button:hover {
+	background-color: #45a049;
+}
 
-        .msg-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            margin: 10px;
-        }
+.msg-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	margin: 10px;
+}
 
-        .msg-bubble {
-            min-width: 40%;
-            max-width: 60%;
-            padding: 8px 12px;
-            border-radius: 15px;
-            margin: 5px 0;
-            font-size: 12px;
-            line-height: 1.5;
-            position: relative;
-            word-wrap: break-word;
-            background-color: #e0f7fa;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+.msg-bubble {
+	min-width: 40%;
+	max-width: 60%;
+	padding: 8px 12px;
+	border-radius: 15px;
+	margin: 5px 0;
+	font-size: 12px;
+	line-height: 1.5;
+	position: relative;
+	word-wrap: break-word;
+	background-color: #e0f7fa;
+	color: #333;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .msg-time {
-            font-size: 12px;
-            color: #888;
-            position: absolute;
-            bottom: -20px;
-            right: 10px;
-        }
+.msg-time {
+	font-size: 12px;
+	color: #888;
+	position: absolute;
+	bottom: -20px;
+	right: 10px;
+}
 
-        .msg-left {
-            background-color: #f1f1f1;
-            align-self: flex-start;
-        }
+.msg-left {
+	background-color: #f1f1f1;
+	align-self: flex-start;
+}
 
-        .msg-right {
-            background-color: #cfe9fc;
-            align-self: flex-end;
-        }
-        /* 限制訊息文字的顯示長度，並在超出範圍時顯示省略號 */
-		.userMessage {
-		    white-space: nowrap; /* 禁止換行 */
-		    overflow: hidden; /* 隱藏超出範圍的文字 */
-		    text-overflow: ellipsis; /* 顯示省略號 */
-		    max-width: 200px; /* 可以根據需要調整最大寬度 */
-		}
-		a {
-		    text-decoration: none;
-		}
-    </style>
+.msg-right {
+	background-color: #cfe9fc;
+	align-self: flex-end;
+}
+/* 限制訊息文字的顯示長度，並在超出範圍時顯示省略號 */
+.userMessage {
+	white-space: nowrap; /* 禁止換行 */
+	overflow: hidden; /* 隱藏超出範圍的文字 */
+	text-overflow: ellipsis; /* 顯示省略號 */
+	max-width: 200px; /* 可以根據需要調整最大寬度 */
+}
+
+.side-user-list a {
+	text-decoration: none;
+}
+
+
+</style>
 </head>
 
 <body onunload="connect();">
-    <div class="outside-chat-container">
-        <!-- Sidebar -->
-        <div class="chat-sidebar">
-            <div class="side-user-list">
-            
-<!--                  <div class="side-user" id="side-userName"> -->
-<!--                     <div id="userId" style="display: none"></div> -->
-<!--                     <img src="https://via.placeholder.com/40" alt="User1" class="flex-shrink-0" id="userImg">  -->
-<!--                     <span class="userName">Evelyn</span> -->
-<!--                     <div id="userId" style="display: none"></div> -->
-<!--                 </div>  -->
-                
-                <!-- Add more users here -->
-                <div class="chat-list" id="online-list"></div>
-            </div>
-        </div>
-
-        <!-- Chat Box -->
-        <div class="chat-container" id="chat-container">
-            <div class="chat-header">
-                <!-- 會員姓名 -->
-                <h3 id="userName"></h3>
-                <div id="userId" style="display: none"></div>
-            </div>
-
-            <!-- chat-body -->
-            <div class="chat-messages" id="chat-messages">
-                <!-- Chat messages will appear here -->
-                <div id="message-list">
-
-                </div>
-            </div>
-
-            <!-- chat-input -->
-            <div class="chat-input">
-                <input type="text" id="btn-input" placeholder="輸入訊息...">
-                <button id="btn-chat" onclick="sendMessage();">發送</button>
-            </div>
-        </div>
+ 	<div th:replace="~{back-end/backend_sideBar}"></div>
+ 	
+ 	<!-- Title Bar -->
+    <div class="chat-title">
+        客服聊天室
     </div>
-    <script src="./js/backChatRoom.js"></script>
+    
+		<div class="outside-chat-container">
+			<!-- Sidebar -->
+			<div class="chat-sidebar">
+				<div class="side-user-list">
+	
+					<!--                  <div class="side-user" id="side-userName"> -->
+					<!--                     <div id="userId" style="display: none"></div> -->
+					<!--                     <img src="https://via.placeholder.com/40" alt="User1" class="flex-shrink-0" id="userImg">  -->
+					<!--                     <span class="userName">Evelyn</span> -->
+					<!--                     <div id="userId" style="display: none"></div> -->
+					<!--                 </div>  -->
+	
+					<!-- Add more users here -->
+					<div class="chat-list" id="online-list"></div>
+				</div>
+			</div>
+	
+			<!-- Chat Box -->
+			<div class="chat-container" id="chat-container">
+				<div class="chat-header">
+					<!-- 會員姓名 -->
+					<h3 id="userName"></h3>
+					<div id="userId" style="display: none"></div>
+				</div>
+	
+				<!-- chat-body -->
+				<div class="chat-messages" id="chat-messages">
+					<!-- Chat messages will appear here -->
+					<div id="message-list"></div>
+				</div>
+	
+				<!-- chat-input -->
+				<div class="chat-input">
+					<input type="text" id="btn-input" placeholder="輸入訊息...">
+					<button id="btn-chat" onclick="sendMessage();">發送</button>
+				</div>
+			</div>
+		</div>
+		
+		
+	<script src="./js/backChatRoom.js"></script>
 
 </body>
 

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MemRepository extends JpaRepository<MemVO, Integer> {
 	@Query("select memAcct from MemVO")
@@ -21,6 +22,9 @@ public interface MemRepository extends JpaRepository<MemVO, Integer> {
 	
 	
 	//聊天室用
-	@Query("from MemVO where name=?1")
-	public Optional<MemVO> findMemByName(String userName);
+//	@Query("from MemVO where name=?1")
+//	public Optional<MemVO> findMemByName(String userName);
+	
+	@Query("from MemVO where name = :userName")
+	Optional<MemVO> findMemByName(@Param("userName") String userName);
 }
