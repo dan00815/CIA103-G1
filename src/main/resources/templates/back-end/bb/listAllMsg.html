@@ -26,6 +26,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+    <link rel="stylesheet" href="../static/css/backend_sideBar.css" />
     <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
     <style>
@@ -88,6 +89,8 @@
 </head>
 
 <body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
+	
     <div id="header"><i class="fa-solid fa-bullhorn"></i> 公告管理</div>
     <div id="sub-header"><i class="fa-solid fa-clipboard-list"></i> 公告列表</div>
 
