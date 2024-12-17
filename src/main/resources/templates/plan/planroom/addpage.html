@@ -1,8 +1,12 @@
 
+
+
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+
+
     <title>新增行程房型</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
@@ -86,8 +90,17 @@
     </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" th:href="@{/plans/query}">行程管理系統</a>
+    </div>
+</nav>
 <div class="container mt-5">
-    <h2>新增行程房型</h2>
+    <!-- 標題區域 -->
+    <div class="text-center my-4">
+        <h2 class="fw-bold text-primary">新增行程房型</h2>
+        <hr class="border-2 border-primary opacity-75 w-25 mx-auto">
+    </div>
     <form id="planRoomForm" th:action="@{/planroom/add}" method="post">
         <!-- 行程選擇 -->
         <div class="form-group mb-4">
@@ -122,13 +135,27 @@
 
         </div>
         <div class="center-button">
-            <button type="button" id="addRoomButton" class="btn btn-primary">新增房型</button>
+            <button type="button" id="addRoomButton" class="btn">新增房型
+                <div class="inner">
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+            </div>
+            </button>
         </div>
 
         <!-- 已選房型列表 -->
         <div id="selectedRooms"></div>
 
-        <button type="submit" class="btn btn-success mt-4">提交</button>
+        <button type="submit" class="btn">提交
+            <div class="inner">
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+            </div>
+        </button>
     </form>
 </div>
 

@@ -7,10 +7,8 @@
   <title>所有行程</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/new_elm.css" /> <!-- 修改為您的 CSS 檔案 -->
-<style>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/new_elm.css}" />
 
-</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -83,6 +81,7 @@
         <td th:text="${plan.attEnd}"></td>
         <td>
           <a th:href="@{/plans/editplan/{planId}(planId=${plan.planId})}" class="btn">
+
             修改
             <div class="inner">
               <div class="blob"></div>
