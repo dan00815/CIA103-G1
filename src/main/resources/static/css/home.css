@@ -148,7 +148,6 @@ body {
 	position: relative;
 	height: 1000px;
 	background-color: rgba(128, 128, 128, 0.4);
-	background-image: url("../../images/home/map.png");
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -268,15 +267,30 @@ body {
 
 /* 活動分界 */
 #menu {
-	text-align: center;
-	padding: 100px;
+  text-align: center;
+  padding: 100px;
+  position: relative;
+  height: 120vh;
+}
+#menu div.evt_bg {
+  height: 100%;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
 }
 
 #menu img {
-	width: 100%;
-	max-width: 300px;
-	border-radius: 10px;
-	background-size: center;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 10px;
+  background-size: center;
+}
+
+#menu div.evt_bg img {
+  max-width: 100%;
+  height: 100%;
 }
 
 .menu-container {
@@ -284,12 +298,12 @@ body {
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 30px;
-	margin-top: 50px;
+	margin-top: 100px;
 }
 
 .menu-item {
 	background-color: #fff;
-	border: 3px solid #6cf7c6;
+	border: 3px solid #A8D9E8;
 	border-radius: 50px;
 	width: 100px;
 	text-align: center;
@@ -299,10 +313,25 @@ body {
 }
 
 .menu-item:hover {
-	transform: scale(1.05);
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-	background: linear-gradient(135deg, rgba(148, 255, 218, 0.9) 0%,
-		rgba(122, 240, 188, 0.95) 50%, rgba(90, 200, 160, 1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(224, 245, 255, 1) 0%, 
+    rgba(176, 227, 240, 1) 50%, 
+    rgba(200, 240, 245, 1) 100% 
+  );
+  transform: scale(1.05);
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15), -3px -3px 8px rgba(255, 255, 255, 0.9); 
+}
+
+.menu-item:active {
+  background: linear-gradient(
+    135deg,
+    rgba(168, 210, 225, 1) 0%, 
+    rgba(145, 200, 220, 1) 50%, 
+    rgba(120, 185, 210, 1) 100%
+  );
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.5); 
+  transform: scale(0.97); 
 }
 
 .icon {
@@ -314,21 +343,21 @@ body {
 }
 
 .btn-circle {
-	margin-top: 10px;
-	padding: 5px 10px;
-	background-color: #4caf50;
-	color: white;
-	border: none;
-	border-radius: 50%;
-	cursor: pointer;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color:rgb(188, 230, 244) ;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .btn-circle:hover {
-	background-color: #45a049;
+  background-color:rgb(99, 163, 189) ;
 }
 
 .menu_text {
-	margin-top: 20px;
+	margin-top: 10px;
 	color: #777;
 	font-size: 14px;
 }
