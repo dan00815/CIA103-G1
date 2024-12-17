@@ -24,7 +24,7 @@ import com.event.cia103g1springboot.room.roomtype.model.RTService;
 import com.event.cia103g1springboot.room.roomtype.model.RTVO;
 
 @Controller
-@RequestMapping("/roomOrder")
+@RequestMapping("/roomorder")
 public class ROFrontController {
 
 	@Autowired

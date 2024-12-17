@@ -33,7 +33,7 @@ import com.event.cia103g1springboot.product.producttype.model.PdtTypeVO;
 
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/pdt")
 public class PdtFrontController {
 
 	@Autowired

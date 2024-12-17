@@ -25,7 +25,7 @@ import com.event.cia103g1springboot.room.roomImg.model.RImgService;
 import com.event.cia103g1springboot.room.roomImg.model.RImgVO;
 
 @Controller
-@RequestMapping({ "/pdtImg", "rImg", "/product", "/rt", "/mem" })
+@RequestMapping({ "/pdtImg", "/rImg", "/product", "/rt", "/mem","/pdt","/roomtype","/roomorder" })
 public class DBGifReaderController {
 
 	@Autowired

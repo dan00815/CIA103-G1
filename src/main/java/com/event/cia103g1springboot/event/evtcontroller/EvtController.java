@@ -40,10 +40,6 @@ public class EvtController {
     @Autowired
     EvtImgService evtImgService;
 
-    @Autowired
-    private PlanService planService;
-    @Autowired
-    private PlanOrderService planOrderService;
 
 
     @GetMapping("/listall")

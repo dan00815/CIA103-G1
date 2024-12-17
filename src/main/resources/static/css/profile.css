@@ -131,18 +131,14 @@ button {
 	border: none;
 	color: white;
 	font-size: 14px;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/dan00815/CIA103-G1.git
 	cursor: pointer;
 	transition: background-color 0.3s;
 }
 
 .pro_btn {
 	border-radius: 8px;
-=======
-	border-radius: 8px;
 	cursor: pointer;
 	transition: background-color 0.3s;
->>>>>>> 6feb3e9 roomtype bb finish
 }
 
 main .content .top_info button {

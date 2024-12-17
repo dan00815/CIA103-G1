@@ -14,7 +14,7 @@ public interface RORepository extends JpaRepository<ROVO,Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "delete RoomOder WHERE roomOrderId =?1", nativeQuery = true)
+	@Query(value = "delete roomorder from hihidatabase.roomorder where roomOrderId =?1", nativeQuery = true)
 	void deleteByROId(int roomOrderId);
 	
 	@Transactional
@@ -26,5 +26,10 @@ public interface RORepository extends JpaRepository<ROVO,Integer> {
 	@Modifying
 	@Query(value = "SELECT * FROM roomorder ro JOIN planOrder po ON ro.planOrderId = po.planOrderId WHERE po.memId =?1", nativeQuery = true)
 	List<ROVO> getByMemId(int memId);
+	
+//	@Transactional
+//	@Modifying
+//	@Query(value = "update roomorder set roomTypeId=?2,roomTypeName=?3,planOrderId=?4, roomPrice=?5, roomQty=?6  FROM hihidatabase.roomorder WHERE roomOrderId =?1", nativeQuery = true)
+//	void updateRO(int roomOrderId,int roomTypeId, String roomTypeName, int planOrderId , int roomPrice, int roomQty);
 	
 }
