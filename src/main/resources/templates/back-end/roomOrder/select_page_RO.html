@@ -4,88 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>查詢訂房明細-select_page_RO.html</title>
-	<link rel="stylesheet" th:href="@{/css/bb.css}" />
-	<link rel="stylesheet" th:href="@{/css/new_elm.css}" />
-	<link
+    <link rel="stylesheet" th:href="@{/css/bb.css}" />
+    <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
     />
-</head>	
+    <style>
+        /* 顯示所有表單在同一排 */
+        .form-container {
+            display: flex;
+            justify-content: space-between; /* 在一行中分散表單 */
+            gap: 20px; /* 表單間的間距 */
+            flex-wrap: wrap; /* 當空間不足時，自動換行 */
+            margin:20px;
+        }
+
+        /* 調整每個表單的寬度 */
+        .cus_form {
+            flex: 1 1 30%; /* 每個表單佔 30% 的寬度，並且自動調整 */
+            min-width: 250px; /* 最小寬度 */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cus_form label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .cus_form input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* 防止表單被擠壓 */
+        @media (max-width: 768px) {
+            .cus_form {
+                flex: 1 1 100%; /* 在小螢幕下，表單佔據 100% 寬度 */
+            }
+        }
+    </style>
+</head>  
 <body>
-	<div id="header"><i class="fa-solid fa-hotel"></i> 房型管理</div>
+    <div id="header"><i class="fa-solid fa-hotel"></i> 房型管理</div>
     <div id="sub-header"><i class="fa fa-search"></i> 訂房明細查詢</div>
-    <div>
-    	<div th:if="${validationErrors}" class="error-block">
-		    <ul>
-		        <li th:each="error : ${validationErrors}" th:text="${error.defaultMessage}"></li>
-		    </ul>
-		</div>
-		<ul>
-			<li>
-				<form class="cus_form" method="post" th:action="@{getRO_For_Display}">
-					<div>
-			      		<label for="search-Id">輸入訂房明細編號 (如: 2001):</label>
-				          <input class="form-control" id="search-Id" name="roomOrderId" type="text" th:value="${param.roomOrderId}">
-				          <span th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></span>
-				          <br><button type="submit" class="btn">
-						        <i class="fa fa-search"></i> 送出查詢
-						        <span class="inner">
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						        </span>
-					      </button>
-			      	</div>
-				</form>
-				
-				<form class="cus_form" method="post" th:action="@{roomOrderListBack}">
-					<div>
-			      		<label for="search-Id">輸入行程訂單編號 (如: 1):</label>
-				          <input class="form-control" id="search-Id" name="planOrderId" type="text" th:value="${param.planOrderId}">
-				          <span th:if="${errorMessage2}" th:text="${errorMessage2}" class="text-danger"></span>
-				          <br><button type="submit" class="btn">
-						        <i class="fa fa-search"></i> 送出查詢
-						        <span class="inner">
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						          <span class="blob"></span>
-						        </span>
-					      </button>
-			      	</div>
-				</form>
-			</li>
-		</ul>
+    <div class="form-container">
+        <form class="cus_form" method="post" th:action="@{getRO_For_Display}">
+            <label for="search-Id">輸入訂房明細編號 (如: 2001):</label>
+            <input class="form-control" id="search-Id" name="roomOrderId" type="text" th:value="${param.roomOrderId}">
+            <span th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></span>
+            <button type="submit" class="btn">
+			        <i class="fa fa-search"></i> 送出查詢
+			        <span class="inner">
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			        </span>
+		      </button>
+        </form>
+
+        <form class="cus_form" method="post" th:action="@{roomOrderListBack}">
+            <label for="search-Id">輸入行程訂單編號 (如: 1):</label>
+            <input class="form-control" id="search-Id" name="planOrderId" type="text" th:value="${param.planOrderId}">
+            <span th:if="${errorMessage2}" th:text="${errorMessage2}" class="text-danger"></span>
+            <button type="submit" class="btn">
+			        <i class="fa fa-search"></i> 送出查詢
+			        <span class="inner">
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			          <span class="blob"></span>
+			        </span>
+		      </button>
+        </form>
+
+        <form class="cus_form" method="post" th:action="@{getByMemId}">
+            <label for="search-Id">輸入會員編號 (如: 1):</label>
+            <input class="form-control" id="search-Id" name="memId" type="text" th:value="${param.memId}">
+            <span th:if="${errorMessage3}" th:text="${errorMessage3}" class="text-danger"></span>
+            <button type="submit" class="btn">
+		        <i class="fa fa-search"></i> 送出查詢
+		        <span class="inner">
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		        </span>
+	      </button>
+        </form>
     </div>
+
     <div class="result" th:if="${roVO}">
-		<div th:insert="~{/back-end/roomOrder/listOneRO :: ListOneRO-div}"></div>
-	</div>
+        <div th:insert="~{/back-end/roomOrder/listOneRO :: ListOneRO-div}"></div>
+    </div>
 
     <div class="button-container">
-    	<div>
-    		<a th:href=@{/roomOrder/listAllRO} class="btn">
-    			<span class="inner">
-		        <span class="blob"></span>
-		        <span class="blob"></span>
-		        <span class="blob"></span>
-		        <span class="blob"></span>
-		      </span>
-		      <i class="fa-solid fa-clipboard-list"></i> 訂房明細列表
-    		</a>
-   		</div>
         <div>
-    		<a th:href="@{/roomOrder/addRO}" class="btn">
-	    		<span class="inner">
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			        <span class="blob"></span>
-			      </span>
-	    		<i class="fa fa-plus"></i> 新增訂單明細
-    		</a>
-    	</div>
+            <a th:href="@{/roomOrder/listAllRO}" class="btn">
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+                <i class="fa-solid fa-clipboard-list"></i> 訂房明細列表
+            </a>
+        </div>
+        <div>
+            <a th:href="@{/roomOrder/addRO}" class="btn">
+                <span class="inner">
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                    <span class="blob"></span>
+                </span>
+                <i class="fa fa-plus"></i> 新增訂單明細
+            </a>
+        </div>
     </div>
+
     <div th:insert="~{/back-end/footer :: footer}"></div>
     <script type="text/javascript" th:src="@{/js/nav.js}"></script>
 </body>

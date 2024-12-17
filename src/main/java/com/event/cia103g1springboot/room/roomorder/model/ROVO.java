@@ -37,8 +37,8 @@ public class ROVO {
 
 	@ManyToOne
 	@JoinColumns({
-	    @JoinColumn(name = "roomTypeId", referencedColumnName = "roomTypeId"),
-	    @JoinColumn(name = "roomTypeName", referencedColumnName = "roomTypeName")
+			@JoinColumn(name = "roomTypeId", referencedColumnName = "roomTypeId", nullable = false),
+			@JoinColumn(name = "roomTypeName", referencedColumnName = "roomTypeName", nullable = false)
 	})
 	public RTVO rtVO;
 

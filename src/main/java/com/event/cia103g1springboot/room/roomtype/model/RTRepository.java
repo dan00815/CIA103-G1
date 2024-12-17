@@ -26,6 +26,8 @@ public interface RTRepository extends JpaRepository<RTVO,Integer>{
 	 @Modifying
 	 @Query("UPDATE RTVO rt SET rt.roomQty = :qty WHERE rt.roomTypeId = :roomTypeId")
 	 void updateRoomQty(@Param("roomTypeId") Integer roomTypeId, @Param("qty") Integer qty);
-	
+
+
+	 RTVO findByRoomTypeId(Integer roomTypeId);
 }
 

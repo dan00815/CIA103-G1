@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,21 +49,7 @@ public class EmployeeController {
 	public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpSession session) {
 		EmployeeVO employee = employeeService.login(loginData.get("empAcct"), loginData.get("empPwd"));
 		if (employee != null) {
-			
-			if (employee.getEmpJobTitle().equals("超級管理員")) {
-				System.out.println(employee.getEmpId());
-				System.out.println("直接加權限");
-				EmpJobVO empJob = new EmpJobVO();
-				empJob.setEmpId(employee.getEmpId());
-				empJob.setFunId(101);
-				empJobSvc.addAuth(empJob);
-			}
-			System.out.println("存session");
-			// 將用戶信息存儲在 session 中
 			Set<EmpJobVO> auths = employee.getEmpJobs();
-			auths.stream().forEach(System.out::println);
-			System.out.println("印完");
-			
 			session.setAttribute("loginUser", employee);
 			session.setAttribute("auths", auths);
 			return ResponseEntity.ok(employee);

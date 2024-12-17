@@ -77,7 +77,7 @@
                         <td th:text="${roVO.orderQty}"></td>
                         <td th:text="${roVO.roomPrice}"></td>
                         <td>
-                            <img class="roomimg" style="max-width: 100px;" th:src="@{/rt/DBGifReader_rtlist} + '?roomTypeId=' + ${roVO.rtVO.roomTypeId}" alt="房型圖片" />
+                            <img class="roomimg" style="max-width: 100px;" th:src="@{/roomorder/DBGifReader_rtlist} + '?roomTypeId=' + ${roVO.rtVO.roomTypeId}" alt="房型圖片" />
                         </td>
                     </tr>
                 </th:block>

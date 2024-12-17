@@ -27,14 +27,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/slick/slick.css}"/>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/slick/slick-theme.css}"/>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-
+        
         .main_block {
             display: flex;
             gap: 20px;
@@ -213,9 +206,9 @@
         <main class="main">
             <div class="product-list">
                 <div th:each="pdtVO : ${salePdtList}" class="product-item">
-                	<a class="product-item" th:href="@{/product/productDetail}+'?pdtId='+${pdtVO.pdtId}">
+                	<a class="product-item" th:href="@{/pdt/productDetail}+'?pdtId='+${pdtVO.pdtId}">
                 		<h1 class="title1" th:text="${pdtVO.pdtName}"></h1>
-	                    <img th:src="@{/product/DBGifReader_pdtlist} + '?pdtId=' + ${pdtVO.pdtId}" alt="商品圖片" />
+	                    <img th:src="@{/pdt/DBGifReader_pdtlist} + '?pdtId=' + ${pdtVO.pdtId}" alt="商品圖片" />
 	                    <div class="product-price" th:text="'NT$ ' + ${pdtVO.pdtPrice}"></div>
 	                    <div class="product-buttons">
 	                    

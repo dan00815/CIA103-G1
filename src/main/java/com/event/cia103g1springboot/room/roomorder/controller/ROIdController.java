@@ -49,6 +49,7 @@ public class ROIdController {
 			@NotEmpty(message="房型訂單編號:請勿空白")
 			@Digits(integer = 4, fraction = 0, message = "房型訂單編號: 請填數字-請勿超過{integer}位數")
 			@Min(value = 2001, message = "房型訂單編號: 不能小於{value}")
+			@Max(value = 9999, message = "房型訂單編號: 不能大於{value}")
 			@RequestParam("roomOrderId")String roomOrderId,ModelMap model) {
 		
 		ROVO roVO = roSvc.getOneRO(Integer.valueOf(roomOrderId));
@@ -65,6 +66,11 @@ public class ROIdController {
 			model.addAttribute("errorMessage","查無資料");
 			return "back-end/roomOrder/select_page_RO";
 		}
+		
+		if (roVO != null && roVO.getPlanOrder() == null) {
+		    roVO.setPlanOrder(new PlanOrder()); // Initialize as an empty PlanOrder object
+		}
+		
 		model.addAttribute("roVO",roVO);
 		List<ROVO> list4 = new ArrayList<>();
 		list4.add(roVO);
