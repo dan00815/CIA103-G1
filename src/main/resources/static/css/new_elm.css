@@ -307,6 +307,7 @@ nav ul {
 }
 nav ul li {
   list-style: none;
+  font-weight:bold;
 }
 nav ul li a {
   display: inline-block;
