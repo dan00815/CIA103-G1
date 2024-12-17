@@ -20,20 +20,23 @@ public class ROService {
 		repository.save(roVO);
 	}
 	
+//	public void updateROsql (String roomOrderId,String roomTypeId, String roomTypeName, String planOrderId , String roomPrice, String roomQty) {
+//		repository.updateRO(Integer.valueOf(roomOrderId), Integer.valueOf(roomTypeId), roomTypeName, Integer.valueOf(planOrderId), Integer.valueOf(roomPrice), Integer.valueOf(roomQty));
+//	}
+	
 	public void updateRO (ROVO roVO) {
 		repository.save(roVO);
 	}
 	
-	public void deleteRO(Integer roomOderId) {
-		if( repository.existsById(roomOderId)) {
-			repository.deleteByROId(roomOderId);;
+	public void deleteRO(Integer roomOrderId) {
+		if( repository.existsById(roomOrderId)) {
+			repository.deleteByROId(roomOrderId);;
 		}
 	}
 	
-	 public ROVO getOneRO(Integer roomOderId) {
-		 Optional<ROVO> optional = repository.findById(roomOderId);
-		 ROVO roVO = new ROVO();
-		 return optional.orElse(roVO);
+	 public ROVO getOneRO(Integer roomOrderId) {
+		 Optional<ROVO> optional = repository.findById(roomOrderId);
+		 return optional.orElse(null);
 	 }
 	 
 	 public List<ROVO> getAllRO(){

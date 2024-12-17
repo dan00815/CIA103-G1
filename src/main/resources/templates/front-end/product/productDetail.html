@@ -103,7 +103,7 @@
 					<div class="d-flex justify-content-center mt-3 product-thumbnails slick-box"
 						th:each="pdtImgVO : ${pdtImgList}">
 						<img class="myImg"
-							th:src="@{/product/DBGifReader} + '?pdtImgId=' + ${pdtImgVO.pdtImgId}"
+							th:src="@{/pdt/DBGifReader} + '?pdtImgId=' + ${pdtImgVO.pdtImgId}"
 							alt="商品附加圖片">
 					</div>
 				</div>

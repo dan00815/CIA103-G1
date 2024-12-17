@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.event.cia103g1springboot.member.mem.model.MemService;
+import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import com.event.cia103g1springboot.room.roomorder.model.ROService;
@@ -41,6 +40,9 @@ public class ROController {
 	
 	@Autowired
 	PlanOrderService poSvc;
+	
+	@Autowired
+	MemService memSvc;
 	
 	@ModelAttribute("roListData")
 	protected List<ROVO> referenceListData_RO(){
@@ -117,8 +119,8 @@ public class ROController {
 	@PostMapping("insertRO")
 	public String insertRO (@ModelAttribute("roVO")@Valid ROVO roVO ,BindingResult result , ModelMap model)throws IOException{
 		try {
-			if(!result.hasErrors()) {
-				model.addAttribute("errorMessage","請檢察錯誤");
+			if(result.hasErrors()) {
+				model.addAttribute("errorMessage","請檢查錯誤");
 				return "back-end/roomOrder/addRO";
 			}
 			roSvc.addRO(roVO);
@@ -129,11 +131,46 @@ public class ROController {
 		}catch(Exception e) {
 			 System.out.println("處理失敗：" + e.getMessage());
 			   e.printStackTrace();
-			   model.addAttribute("errorMessage", "新增失敗:欄位不可空白!");
+			   model.addAttribute("errorMessage", "新增失敗:請檢查錯誤!");
 			   return "back-end/roomOrder/addRO";
 		}
 	}
 	
+	@PostMapping("updateRO")
+	public String updateRO(@ModelAttribute("roVO")@Valid ROVO roVO,BindingResult result, ModelMap model)throws IOException {
+		try {
+			if(result.hasErrors()) {
+				model.addAttribute("errorMessage","請檢查錯誤");
+				return "back-end/roomOrder/update_RO_input";
+			}
+			
+//			roVO.setPlanOrder(poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId()));
+//			roVO.setRtVO(rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId()));
+//			roVO.setOrderQty(roVO.getOrderQty());
+//			roVO.setRoomPrice(roVO.getRoomPrice());
+			
+			System.out.println("RoomOrderId"+roVO.getRoomOrderId());
+			System.out.println("OrderQty"+roVO.getOrderQty());
+			System.out.println("RoomPrice"+roVO.getRoomPrice());
+			System.out.println("PlanOrderId"+roVO.getPlanOrder().getPlanOrderId());
+			System.out.println("RoomTypeId"+roVO.getRtVO().getRoomTypeId());
+			System.out.println("RoomTypeId"+roVO.getRtVO().getRoomTypeName());
+			
+			roSvc.updateRO(roVO);
+			model.addAttribute("success", "- (修改成功)");
+			System.out.println("22222222222222222");
+			roVO = roSvc.getOneRO(Integer.valueOf(roVO.getRoomOrderId()));
+			model.addAttribute("roVO",roVO);
+			
+			return "back-end/roomOrder/listOneRO";
+		}catch(Exception e) {
+			System.out.println("處理失敗：" + e.getMessage());
+			   e.printStackTrace();
+			   model.addAttribute("errorMessage", "編輯失敗:欄位不可空白!");
+			   return "back-end/roomOrder/update_RO_input";
+		}
+		
+	}
 	
 	@PostMapping("getRO_For_Update")
 	public String getRO_For_Update (@RequestParam("roomOrderId")String roomOrderId,ModelMap model) {
@@ -142,17 +179,7 @@ public class ROController {
 		return "back-end/roomOrder/update_RO_input";
 	}
 	
-	@PostMapping("updateRO")
-	public String updateRO(@Valid ROVO roVO, ModelMap model, BindingResult result)throws IOException {
-		if(result.hasErrors()) {
-			return "back-end/roomOrder/update_RO_input";
-		}
-		roSvc.updateRO(roVO);
-		model.addAttribute("success", "- (修改成功)");
-		roVO = roSvc.getOneRO(Integer.valueOf(roVO.getRoomOrderId()));
-		model.addAttribute("roVO",roVO);
-		return "back-end/roomOrder/listOneRO";
-	}
+	
 	
 	@PostMapping("deleteRO")
 	public String deleteRO(@RequestParam("roomOrderId") String roomOrderId,ModelMap model) {
@@ -160,6 +187,38 @@ public class ROController {
 		List<ROVO> list = roSvc.getAllRO();
 		model.addAttribute("ROListData",list);
 		model.addAttribute("success", "- (刪除成功)");
+		return "back-end/roomOrder/listAllRO";
+	}
+	
+	@PostMapping("getByMemId")
+	public String getByMemId(@RequestParam("memId") String memId,ModelMap model) {
+		if(memId.isEmpty() || memId.trim().length() == 0 || memId == null) {
+			model.addAttribute("errorMessage3","會員編號:請勿空白");
+			return "back-end/roomOrder/select_page_RO";
+		}
+		
+		if (!memId.matches("\\d+")) {  // Regex to check if it's a numeric string
+	        model.addAttribute("errorMessage3", "會員編號:請輸入有效的數字");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+		MemVO mem = memSvc.getMem(Integer.valueOf(memId));
+		List<PlanOrder> historyPO = poSvc.findPlanOrdersByMemId(mem.getMemId());
+		model.addAttribute("planOrderList",historyPO);
+		List<ROVO> list = roSvc.getByMemId(mem.getMemId());
+		if(list.isEmpty() || list == null) {
+			model.addAttribute("errorMessage3","查無訂房明細");
+			return "back-end/roomOrder/select_page_RO";
+		}
+		
+		Integer memIdInt;
+	    try {
+	    	memIdInt = Integer.valueOf(memId);
+	    } catch (NumberFormatException e) {
+	        model.addAttribute("errorMessage3", "會員編號不正確");
+	        return "back-end/roomOrder/select_page_RO";
+	    }
+		
+		model.addAttribute("roListData",list);
 		return "back-end/roomOrder/listAllRO";
 	}
 	
