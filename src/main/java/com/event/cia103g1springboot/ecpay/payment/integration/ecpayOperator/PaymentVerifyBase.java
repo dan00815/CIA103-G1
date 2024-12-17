@@ -15,10 +15,16 @@ import com.event.cia103g1springboot.ecpay.payment.integration.exception.EcpayExc
 
 
 public class PaymentVerifyBase{
-	protected String confPath = "/com/event/cia103g1springboot/ecpay/payment/integration/config/EcpayPayment.xml";
+	protected String confPath = "/EcpayPayment.xml";
 	protected Document doc;
 	public PaymentVerifyBase(){
 		URL fileURL = this.getClass().getResource(confPath);
+
+		if (fileURL == null) {
+			throw new RuntimeException("Resource file not found at path: " + confPath);
+		}
+		System.out.println("File URL: " + fileURL.toString());
+
 		doc = EcpayFunction.xmlParser(fileURL.toString());
 		doc.getDocumentElement().normalize();
 	}
