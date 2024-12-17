@@ -50,28 +50,25 @@
 	<!-- 	貼主要內容 -->
 	<section id="carousel">
 		<div>
-			<a href=""><img src="images/home/travel2.jpg" /></a>
+			<a th:href="@{/api/plan/planfront}"><img src="images/home/carou1.png" /></a>
 		</div>
 		<div>
-			<a href=""><img src="https://picsum.photos/id/239/1400/600" /></a>
+			<a th:href="@{/api/plan/planfront}"><img src="images/home/carou2.png" /></a>
 		</div>
 		<div>
-			<a href=""><img src="https://picsum.photos/id/240/1400/600" /></a>
+			<a th:href="@{/api/plan/planfront}"><img src="images/home/carou3.png" /></a>
 		</div>
 		<div>
-			<a href=""><img src="https://picsum.photos/id/241/1400/600" /></a>
+			<a th:href="@{/api/plan/planfront}"><img src="images/home/carou4.jpg" /></a>
 		</div>
 		<div>
-			<a href=""><img src="https://picsum.photos/id/242/1400/600" /></a>
+			<a th:href="@{/api/plan/planfront}"><img src="images/home/carou5.png" /></a>
 		</div>
 	</section>
 
 	<main>
-		<div id="tour_area">
-			<h2>行程推薦</h2>
-			<div class="fun_container">
-				<a href="" class="tour_aTag">預定行程</a>
-			</div>
+		<div id="tour_area"
+			style="background-image: url('../../images/home/map2.png')">
 
 			<p class="tour_area_intro">
 				<span>從日出到日落，與你相伴！ <span class="bg_color_bar"></span>
@@ -81,8 +78,9 @@
 			<div class="intro">
 				<div class="intro_cont">
 					<p>
-						<span>日本</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
-						<br /> <a href="" style="padding-left: 45%" th:href="@{/api/plan/planfront}">報名連結</a>
+						<span>日本</span> <br />5天4夜行程僅需57000《灌籃高手》重溫熱血場景，隨後登上壯麗富士山感受震撼自然與文化之美！<br />
+						<br /> <a href="" style="padding-left: 45%"
+							th:href="@{/api/plan/planfront}">報名連結</a>
 					</p>
 					<div class="two_img_con">
 						<div>
@@ -96,8 +94,9 @@
 
 				<div class="intro_cont" style="margin-top: 70px">
 					<p>
-						<span>北歐</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
-						<br /> <a href="" style="padding-left: 45%" th:href="@{/api/plan/planfront}">報名連結</a>
+						<span>北歐</span> <br />《北歐極光之旅》120000能親眼目睹極光舞動如夢幻光芒,雄偉冰山和自然原始、最壯光的奇蹟。<br />
+						<br /> <a href="" style="padding-left: 45%"
+							th:href="@{/api/plan/planfront}">報名連結</a>
 					</p>
 					<div class="two_img_con">
 						<div>
@@ -110,8 +109,9 @@
 				</div>
 				<div class="intro_cont">
 					<p>
-						<span>愛情海</span> <br />嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨嗨 <br />
-						<br /> <a href="" style="padding-left: 45%" th:href="@{/api/plan/planfront}" >報名連結</a>
+						<span>愛情海</span> <br />《愛情海之旅》99999元無邊蔚藍的愛情海,踏上如詩如畫的建築般的美景,將永恆雕刻成愛的印記！
+						<br /> <br /> <a href="" style="padding-left: 45%"
+							th:href="@{/api/plan/planfront}">報名連結</a>
 					</p>
 					<div class="two_img_con">
 						<div>
@@ -127,11 +127,10 @@
 
 		<!-- 活動預約 -->
 		<div id="menu">
-			<div>
-				<img src="images/home/t01.jpg" alt="" />
+			<div class="evt_bg">
+				<img src="images/home/hihi02-活動預約.png" alt="" class="evt_bg_img" />
 			</div>
 
-			<h2>活動預約</h2>
 			<div class="menu-container">
 				<div class="menu-item" onclick="showSlider('indoor')">
 					<div class="icon">
@@ -283,8 +282,8 @@
 			</div>
 		</div>
 	</section>
-	
-		<!-- 登出動畫 -->
+
+	<!-- 登出動畫 -->
 	<div th:insert="~{/front-end/mem/progressbar :: progress}"
 		th:if="${msg}"></div>
 	<div th:replace="~{back-end/footer :: f}"></div>
