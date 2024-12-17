@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,91 +7,215 @@
   <title>所有行程</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/elm.css" />
-  <link rel="stylesheet" href="/css/plan.css" />
+  <link rel="stylesheet" href="/css/new_elm.css" /> <!-- 修改為您的 CSS 檔案 -->
+<style>
 
-
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">行程管理系統</a>
+    <a class="navbar-brand" href="#" th:href="@{/plans/query}">行程管理系統</a>
   </div>
 </nav>
 <div th:replace="~{back-end/backend_sideBar}"></div>
 <div class="container mt-5">
-  <h1 class="text-center mb-4">所有行程</h1>
+  <!-- 標題樣式美化 -->
+  <h1 class="text-center mb-4" style="color: #0080ff; font-weight: bold;">所有行程</h1>
 
-  <!-- Action Buttons -->
+  <!-- 行動按鈕區塊 -->
   <div class="d-flex justify-content-between mb-3">
     <form action="/plans/addplan" method="get">
-      <button type="submit" class="btn btn-primary">行程建立</button>
+      <button type="submit" class="btn">行程建立
+        <div class="inner">
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+        </div>
+      </button>
     </form>
-        <form action="/plans/addplantype" method="get">
-          <button type="submit" class="btn btn-success">建立行程類別</button>
-        </form>
+    <form action="/plans/plantype/query" method="get">
+      <button type="submit" class="btn">行程類別管理
+        <div class="inner">
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+        </div>
+      </button>
+    </form>
     <form action="/planroom/listall" method="get">
-      <button type="submit" class="btn btn-home">行程房型</button>
+      <button type="submit" class="btn">行程房型管理
+        <div class="inner">
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+        </div>
+      </button>
     </form>
-        <form action="/plans/plantype/query" method="get">
-          <button type="submit" class="btn btn-info">回行程類別</button>
-        </form>
-
-<!--    <form action="/" method="get">-->
-<!--      <button type="submit" class="btn btn-home">回首頁</button>-->
-<!--    </form>-->
-<!--    <form action="/" method="get">-->
-<!--      <button type="submit" class="btn btn-home">回首頁</button>-->
-<!--    </form>-->
   </div>
 
-  <!-- Plans Table -->
+  <!-- 表格 -->
   <div class="table-responsive">
-    <table class="table table-striped table-bordered">
-      <thead class="table-dark">
+    <table class="myTable">
+      <thead>
       <tr>
-        <th scope="col" class="text-center">行程編號</th>
-        <th scope="col" class="text-center">行程類別</th>
-        <th scope="col" class="text-center">行程開始時間</th>
-        <th scope="col" class="text-center">行程結束時間</th>
-        <th scope="col" class="text-center">行程價格</th>
-        <th scope="col" class="text-center">行程最大人數</th>
-        <th scope="col" class="text-center">目前人數</th>
-        <th scope="col" class="text-center">修改</th>
-        <!--        <th scope="col" class="text-center">刪除</th>-->
+        <th scope="col">行程編號</th>
+        <th scope="col">行程類別</th>
+        <th scope="col">開始時間</th>
+        <th scope="col">結束時間</th>
+        <th scope="col">價格</th>
+        <th scope="col">最大人數</th>
+        <th scope="col">目前人數</th>
+        <th scope="col">修改</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="plan : ${plans}">
-        <td class="text-center" th:text="${plan.planId}"></td>
-        <td class="text-center" th:text="${plan.planType.planTypeId}"></td>
-        <td class="text-center" th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"></td>
-        <td class="text-center" th:text="${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
-        <td class="text-center" th:text="${plan.planPrice}"></td>
-        <td class="text-center" th:text="${plan.attMax}"></td>
-        <td class="text-center" th:text="${plan.attEnd}"></td>
-        <td class="text-center">
-          <a th:href="@{/plans/editplan/{planId}(planId=${plan.planId})}" class="btn btn-warning btn-sm">修改</a>
+        <td th:text="${plan.planId}"></td>
+        <td th:text="${plan.planType.planTypeId}"></td>
+        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${plan.planPrice}"></td>
+        <td th:text="${plan.attMax}"></td>
+        <td th:text="${plan.attEnd}"></td>
+        <td>
+          <a th:href="@{/plans/editplan/{planId}(planId=${plan.planId})}" class="btn">
+            修改
+            <div class="inner">
+              <div class="blob"></div>
+              <div class="blob"></div>
+              <div class="blob"></div>
+              <div class="blob"></div>
+            </div>
+          </a>
         </td>
-        <!--        <td class="text-center">-->
-        <!--          <a th:href="@{'/plans/delete/' + ${plan.planId}}" class="btn btn-danger btn-sm">刪除</a>-->
-        <!--        </td>-->
       </tr>
       </tbody>
     </table>
   </div>
-
-  <!-- Error Message -->
-  <div th:if="${error != null}" class="alert alert-danger mt-4" role="alert">
-    <p th:text="${error}"></p>
-  </div>
 </div>
 
-<footer class="mt-5 text-center">
-  <sup>&copy;</sup> 2024 本網站僅供 tibame 專題展示用，並無進行任何商業行為
+<!-- Footer -->
+<footer>
+  &copy; 2024 本網站僅供 tibame 專題展示用，並無進行任何商業行為
 </footer>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <!--///  原始-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>所有行程</title>-->
+<!--  &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">-->
+<!--  <link rel="stylesheet" href="/css/elm.css" />-->
+<!--  <link rel="stylesheet" href="/css/plan.css" />-->
+
+
+<!--</head>-->
+<!--<body>-->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--  <div class="container-fluid">-->
+<!--    <a class="navbar-brand" href="#">行程管理系統</a>-->
+<!--  </div>-->
+<!--</nav>-->
+<!--<div th:replace="~{back-end/backend_sideBar}"></div>-->
+<!--<div class="container mt-5">-->
+<!--  <h1 class="text-center mb-4">所有行程</h1>-->
+
+<!--  &lt;!&ndash; Action Buttons &ndash;&gt;-->
+<!--  <div class="d-flex justify-content-between mb-3">-->
+<!--    <form action="/plans/addplan" method="get">-->
+<!--      <button type="submit" class="btn btn-primary">行程建立</button>-->
+<!--    </form>-->
+<!--        <form action="/plans/addplantype" method="get">-->
+<!--          <button type="submit" class="btn btn-success">建立行程類別</button>-->
+<!--        </form>-->
+<!--    <form action="/planroom/listall" method="get">-->
+<!--      <button type="submit" class="btn btn-home">行程房型</button>-->
+<!--    </form>-->
+<!--        <form action="/plans/plantype/query" method="get">-->
+<!--          <button type="submit" class="btn btn-info">回行程類別</button>-->
+<!--        </form>-->
+
+<!--&lt;!&ndash;    <form action="/" method="get">&ndash;&gt;-->
+<!--&lt;!&ndash;      <button type="submit" class="btn btn-home">回首頁</button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </form>&ndash;&gt;-->
+<!--&lt;!&ndash;    <form action="/" method="get">&ndash;&gt;-->
+<!--&lt;!&ndash;      <button type="submit" class="btn btn-home">回首頁</button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </form>&ndash;&gt;-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Plans Table &ndash;&gt;-->
+<!--  <div class="table-responsive">-->
+<!--    <table class="table table-striped table-bordered">-->
+<!--      <thead class="table-dark">-->
+<!--      <tr>-->
+<!--        <th scope="col" class="text-center">行程編號</th>-->
+<!--        <th scope="col" class="text-center">行程類別</th>-->
+<!--        <th scope="col" class="text-center">行程開始時間</th>-->
+<!--        <th scope="col" class="text-center">行程結束時間</th>-->
+<!--        <th scope="col" class="text-center">行程價格</th>-->
+<!--        <th scope="col" class="text-center">行程最大人數</th>-->
+<!--        <th scope="col" class="text-center">目前人數</th>-->
+<!--        <th scope="col" class="text-center">修改</th>-->
+<!--        &lt;!&ndash;        <th scope="col" class="text-center">刪除</th>&ndash;&gt;-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr th:each="plan : ${plans}">-->
+<!--        <td class="text-center" th:text="${plan.planId}"></td>-->
+<!--        <td class="text-center" th:text="${plan.planType.planTypeId}"></td>-->
+<!--        <td class="text-center" th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')}"></td>-->
+<!--        <td class="text-center" th:text="${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>-->
+<!--        <td class="text-center" th:text="${plan.planPrice}"></td>-->
+<!--        <td class="text-center" th:text="${plan.attMax}"></td>-->
+<!--        <td class="text-center" th:text="${plan.attEnd}"></td>-->
+<!--        <td class="text-center">-->
+<!--          <a th:href="@{/plans/editplan/{planId}(planId=${plan.planId})}" class="btn btn-warning btn-sm">修改</a>-->
+<!--        </td>-->
+<!--        &lt;!&ndash;        <td class="text-center">&ndash;&gt;-->
+<!--        &lt;!&ndash;          <a th:href="@{'/plans/delete/' + ${plan.planId}}" class="btn btn-danger btn-sm">刪除</a>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </td>&ndash;&gt;-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Error Message &ndash;&gt;-->
+<!--  <div th:if="${error != null}" class="alert alert-danger mt-4" role="alert">-->
+<!--    <p th:text="${error}"></p>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<footer class="mt-5 text-center">-->
+<!--  <sup>&copy;</sup> 2024 本網站僅供 tibame 專題展示用，並無進行任何商業行為-->
+<!--</footer>-->
+
+<!--&lt;!&ndash; Bootstrap JS &ndash;&gt;-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->

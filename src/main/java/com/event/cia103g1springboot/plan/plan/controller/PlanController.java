@@ -1,8 +1,11 @@
 package com.event.cia103g1springboot.plan.plan.controller;
 
 
+import com.event.cia103g1springboot.member.mem.model.MemVO;
 import com.event.cia103g1springboot.plan.plan.model.Plan;
 import com.event.cia103g1springboot.plan.plan.model.PlanService;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderService;
 import com.event.cia103g1springboot.plan.plantype.model.PlanType;
 import com.event.cia103g1springboot.plan.plantype.model.PlanTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +16,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
 @Controller
-    @RequestMapping("/api/plan")
+@RequestMapping("/api/plan")
 public class PlanController {
 
     @Autowired
@@ -33,8 +39,8 @@ public class PlanController {
 
     @Autowired
     private PlanTypeService planTypeService;
-
-
+    @Autowired
+    private PlanOrderService planOrderService;
 
 
     @PostMapping("/add")
@@ -79,16 +85,37 @@ public class PlanController {
         return ResponseEntity.ok(endDate);
     }
 
-    //前端端面
+//    //前端端面
+//    @GetMapping("/planfront")
+//    public String frontlistall(Model model) {
+//        List<Plan> plans = planService.getAllPlans();
+//        List<Plan> filterPlans = plans.stream()
+//                .filter(plan -> plan.getAttMax()>0)
+//                .collect(Collectors.toList());
+//        model.addAttribute("plans", filterPlans);
+//        return "plan/planfront/planfrontlist";
+//    }
+
+
     @GetMapping("/planfront")
-    public String frontlistall(Model model) {
+    public String frontlistall(HttpSession session, Model model) {
         List<Plan> plans = planService.getAllPlans();
-        List<Plan> filterPlans = plans.stream()
-                .filter(plan -> plan.getAttMax()>0)
-                .collect(Collectors.toList());
-        model.addAttribute("plans", filterPlans);
+        MemVO memVO = (MemVO) session.getAttribute("auth");
+
+        Set<Long> joinedPlanIds = new HashSet<>();
+        if (memVO != null) {
+            // 從會員訂單中提取行程 ID，並確保轉換為 Long
+            List<PlanOrder> memberPlanOrders = planOrderService.findPlanOrdersByMemId(memVO.getMemId());
+            joinedPlanIds = memberPlanOrders.stream()
+                    .map(planOrder -> Long.valueOf(planOrder.getPlan().getPlanId())) // 強制轉換
+                    .collect(Collectors.toSet());
+        }
+
+        model.addAttribute("plans", plans);
+        model.addAttribute("joinedPlanIds", joinedPlanIds); // 正確的 Set<Long>
         return "plan/planfront/planfrontlist";
     }
+
 
 //
 
@@ -128,8 +155,6 @@ public class PlanController {
     }
 
 
-
-
     @PostMapping
     public void createPlan(@RequestBody Plan plan) {
         planService.savePlan(plan);
@@ -141,10 +166,7 @@ public class PlanController {
     }
 
 
-
 //
-
-
 
 
     @InitBinder
