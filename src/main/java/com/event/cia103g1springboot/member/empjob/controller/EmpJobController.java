@@ -39,7 +39,6 @@ public class EmpJobController {
 	@Autowired
 	SystemFunctionService sysFunSvc;
 
-
 	@GetMapping("listAllAuth")
 	public String listAllAuth(HttpSession session, ModelMap model) {
 		// 判斷訪問的人他的session中有沒有包含超管的權限編號
