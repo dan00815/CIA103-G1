@@ -96,7 +96,7 @@ public class PlanController {
 //        return "plan/planfront/planfrontlist";
 //    }
 
-
+//
     @GetMapping("/planfront")
     public String frontlistall(HttpSession session, Model model) {
         List<Plan> plans = planService.getAllPlans();

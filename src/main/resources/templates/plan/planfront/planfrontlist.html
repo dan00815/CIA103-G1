@@ -219,35 +219,35 @@
                     <span th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}" class="status-full">已額滿</span>
                     <span th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}">可報名</span>
                 </td>
-<!--                <td>-->
+                <td>
 <!--                    <a th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"-->
 <!--                       href="javascript:void(0)"-->
 <!--                       onclick="showFullMessage()"-->
 <!--                       class="btn-detail">-->
 <!--                        <i class="fas fa-info-circle"></i>查看行程-->
 <!--                    </a>-->
-<!--                    <a th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"-->
-<!--                       th:href="@{~/planord/detail/{id}(id=*{planId})}"-->
-<!--                       class="btn-detail">-->
-<!--                        <i class="fas fa-info-circle"></i>查看行程-->
-<!--                    </a>-->
-
-<!--                </td>-->
-                <td>
-                    <!-- 已參加的行程，按鈕鎖定 -->
-                    <a th:if="${joinedPlanIds.contains(plan.planId + 0L)}"
-                       href="javascript:void(0)"
-                       class="btn-detail disabled"
-                       style="pointer-events: none; opacity: 0.6; cursor: not-allowed;">
-                        <i class="fas fa-lock"></i> 已參加
-                    </a>
-                    <!-- 未參加的行程，顯示正常按鈕 -->
-                    <a th:unless="${joinedPlanIds.contains(plan.planId + 0L)}"
+                    <a th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"
                        th:href="@{~/planord/detail/{id}(id=*{planId})}"
                        class="btn-detail">
-                        <i class="fas fa-info-circle"></i> 查看詳情
+                        <i class="fas fa-info-circle"></i>查看行程
                     </a>
+
                 </td>
+<!--                <td>-->
+<!--                    &lt;!&ndash; 已參加的行程，按鈕鎖定 &ndash;&gt;-->
+<!--                    <a th:if="${joinedPlanIds.contains(plan.planId + 0L)}"-->
+<!--                       href="javascript:void(0)"-->
+<!--                       class="btn-detail disabled"-->
+<!--                       style="pointer-events: none; opacity: 0.6; cursor: not-allowed;">-->
+<!--                        <i class="fas fa-lock"></i> 已參加-->
+<!--                    </a>-->
+<!--                    &lt;!&ndash; 未參加的行程，顯示正常按鈕 &ndash;&gt;-->
+<!--                    <a th:unless="${joinedPlanIds.contains(plan.planId + 0L)}"-->
+<!--                       th:href="@{~/planord/detail/{id}(id=*{planId})}"-->
+<!--                       class="btn-detail">-->
+<!--                        <i class="fas fa-info-circle"></i> 查看詳情-->
+<!--                    </a>-->
+<!--                </td>-->
 
 
                 <!--                th:href="@{~/planord/detail/{id}(id=*{planId})}"-->
