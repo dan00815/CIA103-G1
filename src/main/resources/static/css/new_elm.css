@@ -274,7 +274,7 @@ nav #logo_area {
   left: 3%;
   gap: 20px;
   text-decoration: none;
-  color: #66b2b2 0, 0, 0;
+  color: #00aeae;
   letter-spacing: 0.2cm;
 }
 nav #logo_area .img_con {
@@ -312,13 +312,13 @@ nav ul li a {
   display: inline-block;
   font-weight: bold;
   font-size: 1.25rem;
-  color: rgba(0, 0, 0, 0.7);
+  color: #00caca;
   text-decoration: none;
   transition: all 0.3s;
 }
 nav ul li a:hover {
   transform: scale(1.1);
-  color: rgba(0, 0, 255, 0.7);
+  color: rgba(73, 170, 225, 0.7);
 }
 nav .hamburger.is-active:hover {
   opacity: 1;
