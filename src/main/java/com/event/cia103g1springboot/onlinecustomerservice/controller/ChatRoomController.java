@@ -32,6 +32,13 @@ public class ChatRoomController {
 	
 	@GetMapping("/backChatRoom")
 	public String backChatRoom(Model mode) {
+//		MemVO memVO = (MemVO) session.getAttribute("auths");
+//		String userName = memVO.getMemAcct(); 
+//		if (userName != null) {
+//			model.addAttribute("userName", userName);
+//		} else {
+//		    throw new IllegalStateException("Session attribute 'auth' is null.");
+//		}
 		return "back-end/onlinecustomerservice/backChatRoom";
 	}
 	

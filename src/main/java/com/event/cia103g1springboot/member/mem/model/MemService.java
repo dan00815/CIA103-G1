@@ -69,6 +69,9 @@ public class MemService {
 	public MemVO getuserName(String userName) {
 		Optional<MemVO> optional = memRepository.findMemByName(userName);
 		return optional.orElse(new MemVO());
+		
 	}
+	
+	
 
 }

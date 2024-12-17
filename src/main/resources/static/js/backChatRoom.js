@@ -63,32 +63,71 @@ function connect() {
 			buildHisMessage(data.data);
 		}
 	}
+
+	
 }
 
 // 建立聊天室清單
+//function buildChatRoomList(data) {
+//	let userList = data;
+//	let chatRoomList = document.getElementById("online-list");
+//	chatRoomList.innerHTML = "";
+//	
+//	for (let user of userList) {
+//		let userRow = "";
+//		userRow =
+//			`<a href="#" class="d-flex align-items-center a target-member" id="user${user.userName}" onclick="showUserChatBox(event);">
+//					<div class="side-user">
+//	                    <img id="avatar-${user.userName}" alt="User Avatar" width="40" height="40">
+//						<div class="flex-grow-1 ms-3">
+//	                    <span class="userName">${user.userName}</span>
+//						<p class="userMessage">${user.lastMessage.message}</p>
+//						</div>
+//	                </div>
+//                </a>`;
+//		chatRoomList.innerHTML += userRow;
+//		if (user.lastMessage.status === "read") {
+//			console.log(user.lastMessage.status);
+////			document.querySelector(`#alert${user.userName}`).classList.toggle("hide");
+//		}
+//	}
+//}
+
 function buildChatRoomList(data) {
-	let userList = data;
-	let chatRoomList = document.getElementById("online-list");
-	chatRoomList.innerHTML = "";
+    let userList = data;
+    let chatRoomList = document.getElementById("online-list");
+    chatRoomList.innerHTML = "";
+
+	// 假設每個用戶都有 userName
 	for (let user of userList) {
-		let userRow = "";
-		userRow =
-			`<a href="#" class="d-flex align-items-center a target-member" id="user${user.userName}" onclick="showUserChatBox(event);">
-					<div class="side-user">
-	                    <img src="https://via.placeholder.com/40" alt="User2"> 
-						<div class="flex-grow-1 ms-3">
+	    let userRow = "";
+	    userRow = 
+	        `<a href="#" class="d-flex align-items-center a target-member" id="user${user.userName}" onclick="showUserChatBox(event);">
+	            <div class="side-user">
+	                <img id="avatar-${user.userName}" alt="User Avatar" width="40" height="40">
+	                <div class="flex-grow-1 ms-3">
 	                    <span class="userName">${user.userName}</span>
-						<p class="userMessage">${user.lastMessage.message}</p>
-						</div>
+	                    <p class="userMessage">${user.lastMessage.message}</p>
 	                </div>
-                </a>`;
-		chatRoomList.innerHTML += userRow;
-		if (user.lastMessage.status === "read") {
-			console.log(user.lastMessage.status);
-//			document.querySelector(`#alert${user.userName}`).classList.toggle("hide");
-		}
+	            </div>
+	        </a>`;
+	    chatRoomList.innerHTML += userRow;
+
+	    // 圖片加載
+	    const avatarEndpoint = `/member/${user.userName}/avatar`;
+
+	    fetch(avatarEndpoint)
+	        .then(response => response.text()) // 直接返回圖片的 URL 字符串
+	        .then(imageUrl => {
+	            const avatarImage = document.getElementById(`avatar-${user.userName}`);
+	            avatarImage.src = imageUrl;  // 設置圖片 URL
+	        })
+	        .catch(error => {
+	            console.error("Error fetching avatar:", error);
+	        });
 	}
 }
+
 
 let currentMember = "";
 function showUserChatBox(e) {
