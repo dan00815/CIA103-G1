@@ -249,8 +249,8 @@ public class CartController {
 			System.out.println("訂單明細新增成功");
 		}
 		
-		session.removeAttribute("total");
-		session.removeAttribute("cart");
+//		session.removeAttribute("total");
+//		session.removeAttribute("cart");
 		
 		return "redirect:orderSuccessPage";
 
