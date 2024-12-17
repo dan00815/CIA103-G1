@@ -1,97 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>訂單搜尋結果 listPdtOrder.html</title>
-    
-    <!-- 使用included-fragment.html網頁的全部 -->
-    <head th:insert="~{/included-fragment}"></head>
-	
-	<style>
-		a.btn-sm, i.fas { 
-	        text-decoration: none; 
-	    }
-		
-	</style>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>訂單搜尋結果 listPdtOrder.html</title>
+
+<!-- 使用included-fragment.html網頁的全部 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
+
+<link rel="stylesheet" href="../static/css/backend_sideBar.css" />
+<link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+
+<style>
+a.btn-sm, i.fas {
+	text-decoration: none;
+}
+</style>
 </head>
 <body>
-
+	<div th:replace="~{back-end/backend_sideBar}"></div>
+	<main>
 	<!------------------------------- content ------------------------------->
-	<div class="container-fluid mt-5" >
-	    <h1 class="text-center mb-4">訂單編號搜尋</h1>
-	
-	    <!-- 訂單列表 -->
-	    <table class="table myTable" >
-	        <thead>
-	        <tr>
-	        	<th>訂單編號</th>
-				<th>會員編號</th>
-				<th style="width: 120px;">訂單成立時間</th>
-				<th>訂單總金額</th>
-	            <th>訂單狀態</th>
-	            <th>付款方式</th>
-				<th>取貨方式</th>
-				<th>收件人姓名</th>
-				<th style="width: 150px;">收件人地址</th>
-				<th>收件人電話</th>
-				<th>操作</th>
-				
-	        </tr>
-	        </thead>
-	        <tbody>
-	        
-	        <!-- Thymeleaf 訂單編號搜尋 -->
-	        <tr>
-	            <td th:text="${productOrderVO.pdtOrderId}"></td>
-	            <td th:text="${productOrderVO.memVO.memId}"></td>
-	            <td style="width: 120px;" th:text="${#dates.format(productOrderVO.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-	            <td th:text="${productOrderVO.orderAmt}"></td>
-	            <td>
-	    		    <!-- 使用orderStatusMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.orderStatMap[productOrderVO.orderStat]}"></span>
-	   			</td>
-	            <td>
-	            	<!-- 使用payMethodMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.payMethodMap[productOrderVO.payMethod]}"></span>
-	            </td>
-	            <td>
-	            	<!-- 使用delMethodMap來顯示對應的名稱 -->
-	       			 <span th:text="${session.delMethodMap[productOrderVO.delMethod]}"></span>
-	            </td>
-	            <td th:text="${productOrderVO.recName}"></td>
-	            <td style="width: 150px;" th:text="${productOrderVO.recAddr}"></td>
-	            <td th:text="${productOrderVO.recTel}"></td>
-				<td>
-	                <a th:href="@{/pdtorderitem/getOrderItemDetails(pdtOrderId=${productOrderVO.pdtOrderId}, orderStat=${productOrderVO.orderStat}, orderDate=${productOrderVO.orderDate})}" class="btn-sm" title="檢視訂單明細">
-	                   <i class="fas fa-search"></i>
-	                </a>
-	                <a th:href="@{/pdtorder/getOne_For_Update(pdtOrderId=${productOrderVO.pdtOrderId})}"
-							class="btn-sm" title="修改訂單明細">  
-                            <i class="fas fa-edit"></i>
-                    </a>
-	                <a href="#" class="btn-sm" title="刪除">
-	                   <i class="fas fa-trash"></i>
-	                </a>
-	            </td>
-	        </tr>
-	        
-	        </tbody>
-	    </table>
+	<div class="container-fluid mt-5">
+		<h1 class="text-center mb-4">訂單編號搜尋</h1>
+
+		<!-- 訂單列表 -->
+		<table class="table myTable">
+			<thead>
+				<tr>
+					<th>訂單編號</th>
+					<th>會員編號</th>
+					<th style="width: 120px;">訂單成立時間</th>
+					<th>訂單總金額</th>
+					<th>訂單狀態</th>
+					<th>付款方式</th>
+					<th>取貨方式</th>
+					<th>收件人姓名</th>
+					<th style="width: 150px;">收件人地址</th>
+					<th>收件人電話</th>
+					<th>操作</th>
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<!-- Thymeleaf 訂單編號搜尋 -->
+				<tr>
+					<td th:text="${productOrderVO.pdtOrderId}"></td>
+					<td th:text="${productOrderVO.memVO.memId}"></td>
+					<td style="width: 120px;"
+						th:text="${#dates.format(productOrderVO.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td th:text="${productOrderVO.orderAmt}"></td>
+					<td>
+						<!-- 使用orderStatusMap來顯示對應的名稱 --> <span
+						th:text="${session.orderStatMap[productOrderVO.orderStat]}"></span>
+					</td>
+					<td>
+						<!-- 使用payMethodMap來顯示對應的名稱 --> <span
+						th:text="${session.payMethodMap[productOrderVO.payMethod]}"></span>
+					</td>
+					<td>
+						<!-- 使用delMethodMap來顯示對應的名稱 --> <span
+						th:text="${session.delMethodMap[productOrderVO.delMethod]}"></span>
+					</td>
+					<td th:text="${productOrderVO.recName}"></td>
+					<td style="width: 150px;" th:text="${productOrderVO.recAddr}"></td>
+					<td th:text="${productOrderVO.recTel}"></td>
+					<td><a
+						th:href="@{/pdtorderitem/getOrderItemDetails(pdtOrderId=${productOrderVO.pdtOrderId}, orderStat=${productOrderVO.orderStat}, orderDate=${productOrderVO.orderDate})}"
+						class="btn-sm" title="檢視訂單明細"> <i class="fas fa-search"></i>
+					</a> <a
+						th:href="@{/pdtorder/getOne_For_Update(pdtOrderId=${productOrderVO.pdtOrderId})}"
+						class="btn-sm" title="修改訂單明細"> <i class="fas fa-edit"></i>
+					</a> </td>
+				</tr>
+
+			</tbody>
+		</table>
 	</div>
-	
-	
+
+
+
 	<!-- 返回按鈕，跳轉到 allPdtOrder -->
-    <div class="text-center mb-4">
-        <a th:href="@{/pdtorder/allPdtOrder}" class="btn">回到訂單管理
-       		<span class="inner">
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	          <span class="blob"></span>
-	        </span>
-        </a>
-    </div>
-    
+	    <div class="text-center mb-4">
+	        <a th:href="@{/pdtorder/allPdtOrder}" class="btn">回到訂單管理
+	       		<span class="inner">
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		          <span class="blob"></span>
+		        </span>
+	        </a>
+	    </div>
+</main>
+	
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
+	<script>
+		// DataTable 初始化
+		try {
+			$(".myTable").DataTable({
+				paging : true,
+				ordering : true,
+				pageLength : 10,
+				lengthMenu : [ 10, 15, 20 ],
+				searching : true,
+				language : {
+					info : "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+					infoEmpty : "無資料可顯示",
+					infoFiltered : "",
+					zeroRecords : "請確認查詢條件",
+					lengthMenu : "每頁顯示 _MENU_ 筆資料",
+					paginate : {
+						first : "第一頁",
+						previous : "上一頁",
+						next : "下一頁",
+						last : "最後一頁"
+					}
+				}
+			});
+		} catch (error) {
+			console.error("DataTable 初始化錯誤:", error);
+		};
+	</script>
+
 </body>
 </html>
