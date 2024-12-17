@@ -197,5 +197,8 @@
             查看員工列表
         </a>
     </div>
+	<script th:if=${not_allow}>
+		alert("僅有超級管理員才能查看")
+	</script>
 </body>
 </html>
