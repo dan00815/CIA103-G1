@@ -5,54 +5,124 @@
 <title>List All Auths</title>
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-<link rel="stylesheet" href="../static/css/elm.css" />
+<link rel="stylesheet" href="../static/css/new_elm.css" />
 <style type="text/css">
 .btn {
 	z-index: 5;
 }
 
+/* 基礎設置 */
 form {
-	border-radius: 15px;
-	width: none;
-	margin: 0;
-	padding: 0;
-	display: block;
-	background: transparent;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 0;
+    background: #f8f9fa; /* 淺灰背景增加區塊對比 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 加陰影提升立體感 */
 }
 
 form .check_item {
-	width: 45%;
-	border: 1px solid red;
-	margin: 16px;
-	padding: 5px;
+    width: 45%;
+    border: 1px solid #ced4da; /* 使用淺灰色邊框 */
+    margin: 12px 8px;
+    padding: 10px;
+    border-radius: 8px; /* 圓角邊框 */
+    background-color: #fff; /* 白色背景 */
+    transition: all 0.3s ease; /* 增加 hover 效果 */
+}
+
+form .check_item:hover {
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    border-color: #6c757d; /* hover 時邊框顏色變深 */
 }
 
 form .check_item label {
-	margin-left: 8px;
+    margin-left: 10px;
+    font-weight: 500; /* 增加文字粗細 */
+    color: #495057; /* 深灰色字體 */
 }
 
 .checkbox_container {
-	display: flex;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 元素左右分散排列 */
+    gap: 10px; /* 增加元素之間的間距 */
 }
 
 .modal-body {
-	margin-top: 15px;
+    margin-top: 15px;
+    padding: 20px; /* 增加內邊距 */
+    background-color: #fff; /* 保持乾淨背景 */
+    border-radius: 8px; /* 圓角 */
 }
 
 .modal-dialog {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+    max-width: 650px; /* 控制彈窗寬度 */
 }
 
 .modal-content {
-	width: 150%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: #007bff; /* 藍色背景 */
+    color: #fff; /* 白色字體 */
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn-close {
+    filter: invert(1); /* 讓關閉按鈕變白色 */
 }
 
 .modal-footer {
-	margin: 0;
+    margin: 0;
+    padding: 10px 20px;
+    border-top: none;
+    display: flex;
+    justify-content: flex-end;
+    background-color: #f8f9fa; /* 淺灰背景 */
+}
+
+.modal-footer .btn {
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .btn:hover {
+    transform: translateY(-2px);
+}
+.modal-dialog {
+    max-width: 600px;
+    margin: 1.75rem auto; 
+}
+
+.list_all {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #007bff;
+    color: black; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; 
+}
+
+.list_all:hover {
+    background-color: #0056b3;
+    color: #e2e6ea; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
 }
 </style>
 </head>
@@ -77,7 +147,8 @@ form .check_item label {
 					<td th:text="${emp.empId}"></td>
 					<td th:text="${emp.empName}"></td>
 
-					<td><span th:each="empJob,stat: ${emp.empJobs}"> <span
+					<td style="text-align: start"><span
+						th:each="empJob,stat: ${emp.empJobs}"> <span
 							th:text="${empJob.systemFunctionVO.funName} + (${!stat.last} ? ' , ' : '')"></span>
 					</span></td>
 
@@ -104,11 +175,11 @@ form .check_item label {
 		data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog">
-			<div class="modal-content">
+			<div class="modal-content" style="width: 120%;">
 				<!-- 標頭 -->
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="staticBackdropLabel">
-						在這修改特定管理者權限</h1>
+						修改權限</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -120,10 +191,14 @@ form .check_item label {
 						</div>
 						<br />
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn" data-bs-dismiss="modal">
+								Close <span class="inner"> <span class="blob"></span> <span
+									class="blob"></span> <span class="blob"></span> <span
+									class="blob"></span>
+								</span>
+							</button>
 
-							<button type="submit" class="btn btn-primary">
+							<button type="submit" class="btn ">
 								更新權限 <span class="inner"> <span class="blob"></span> <span
 									class="blob"></span> <span class="blob"></span> <span
 									class="blob"></span>
@@ -132,22 +207,11 @@ form .check_item label {
 						</div>
 					</form>
 				</div>
-
-				<!-- footer -->
-				<!-- 				<div class="modal-footer"> -->
-				<!-- 					<button type="button" class="btn btn-secondary" -->
-				<!-- 						data-bs-dismiss="modal">Close</button> -->
-
-				<!-- 					<button type="submit" class="btn btn-primary"> -->
-				<!-- 						更新權限 <span class="inner"> <span class="blob"></span> <span -->
-				<!-- 							class="blob"></span> <span class="blob"></span> <span -->
-				<!-- 							class="blob"></span> -->
-				<!-- 						</span> -->
-				<!-- 					</button> -->
-				<!-- 				</div> -->
 			</div>
 		</div>
 	</div>
+
+	<a th:href="@{/sysFun/listAll}" class="list_all">查看所有權限</a>
 
 
 
