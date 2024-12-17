@@ -173,6 +173,53 @@ public class ROController {
 //
 //	}
 
+//	@PostMapping("updateRO")
+//	public String updateRO(@ModelAttribute("roVO") @Valid ROVO roVO, BindingResult result, ModelMap model) {
+//		try {
+//			if (result.hasErrors()) {
+//				model.addAttribute("errorMessage", "請檢查錯誤");
+//				return "back-end/roomOrder/update_RO_input";
+//			}
+//			//要set回去
+//			RTVO rtvo = rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId());
+//			if (rtvo == null) {
+//				model.addAttribute("errorMessage", "找不到對應的房型");
+//				return "back-end/roomOrder/update_RO_input";
+//			}
+//			roVO.setRtVO(rtvo);
+//			//一樣要set回去
+//			if (roVO.getPlanOrder() != null && roVO.getPlanOrder().getPlanOrderId() != null) {
+//				PlanOrder planOrder = poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId());
+//				roVO.setPlanOrder(planOrder);
+//			}
+//
+//			// 加入更多日誌來追蹤問題
+//			System.out.println("更新前的完整數據：");
+//			System.out.println("RoomOrderId: " + roVO.getRoomOrderId());
+//			System.out.println("OrderQty: " + roVO.getOrderQty());
+//			System.out.println("RoomPrice: " + roVO.getRoomPrice());
+//			System.out.println("PlanOrderId: " +
+//					(roVO.getPlanOrder() != null ? roVO.getPlanOrder().getPlanOrderId() : "null"));
+//			System.out.println("RoomTypeId: " +
+//					(roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeId() : "null"));
+//			System.out.println("RoomTypeName: " +
+//					(roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeName() : "null"));
+//
+//			roSvc.updateRO(roVO);
+//
+//			model.addAttribute("success", "- (修改成功)");
+//			roVO = roSvc.getOneRO(roVO.getRoomOrderId());
+//			model.addAttribute("roVO", roVO);
+//
+//			return "back-end/roomOrder/listOneRO";
+//		} catch (Exception e) {
+//			System.out.println("處理失敗：" + e.getMessage());
+//			e.printStackTrace();
+//			model.addAttribute("errorMessage", "編輯失敗: " + e.getMessage());
+//			return "back-end/roomOrder/update_RO_input";
+//		}
+//	}
+
 	@PostMapping("updateRO")
 	public String updateRO(@ModelAttribute("roVO") @Valid ROVO roVO, BindingResult result, ModelMap model) {
 		try {
@@ -180,20 +227,22 @@ public class ROController {
 				model.addAttribute("errorMessage", "請檢查錯誤");
 				return "back-end/roomOrder/update_RO_input";
 			}
-			//要set回去
+
+			// 房型關聯處理
 			RTVO rtvo = rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId());
 			if (rtvo == null) {
 				model.addAttribute("errorMessage", "找不到對應的房型");
 				return "back-end/roomOrder/update_RO_input";
 			}
 			roVO.setRtVO(rtvo);
-			//一樣要set回去
+
+			// 行程訂單關聯處理
 			if (roVO.getPlanOrder() != null && roVO.getPlanOrder().getPlanOrderId() != null) {
 				PlanOrder planOrder = poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId());
 				roVO.setPlanOrder(planOrder);
 			}
 
-			// 加入更多日誌來追蹤問題
+			// 打印更新前的數據
 			System.out.println("更新前的完整數據：");
 			System.out.println("RoomOrderId: " + roVO.getRoomOrderId());
 			System.out.println("OrderQty: " + roVO.getOrderQty());
@@ -205,15 +254,18 @@ public class ROController {
 			System.out.println("RoomTypeName: " +
 					(roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeName() : "null"));
 
+			// 執行更新 - 注意這裡不再接收返回值
 			roSvc.updateRO(roVO);
 
-			model.addAttribute("success", "- (修改成功)");
+			// 更新成功後重新查詢
 			roVO = roSvc.getOneRO(roVO.getRoomOrderId());
 			model.addAttribute("roVO", roVO);
+			model.addAttribute("success", "- (修改成功)");
 
 			return "back-end/roomOrder/listOneRO";
+
 		} catch (Exception e) {
-			System.out.println("處理失敗：" + e.getMessage());
+			System.out.println("更新處理失敗：");
 			e.printStackTrace();
 			model.addAttribute("errorMessage", "編輯失敗: " + e.getMessage());
 			return "back-end/roomOrder/update_RO_input";

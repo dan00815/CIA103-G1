@@ -1,6 +1,7 @@
 package com.event.cia103g1springboot.room.roomtype.model;
 
 import com.event.cia103g1springboot.plan.planroom.model.PlanRoom;
+import com.event.cia103g1springboot.room.roomorder.model.ROVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,6 +65,9 @@ public class RTVO implements java.io.Serializable{
 
     @OneToMany(mappedBy = "rtvo",cascade = CascadeType.ALL)
     private Set<PlanRoom> planRoom;
+
+    @OneToMany(mappedBy = "rtVO")
+    private Set<ROVO> roomOrders;
 
     @Override
     public String toString() {

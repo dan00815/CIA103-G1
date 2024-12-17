@@ -23,9 +23,29 @@ public class ROService {
 //	public void updateROsql (String roomOrderId,String roomTypeId, String roomTypeName, String planOrderId , String roomPrice, String roomQty) {
 //		repository.updateRO(Integer.valueOf(roomOrderId), Integer.valueOf(roomTypeId), roomTypeName, Integer.valueOf(planOrderId), Integer.valueOf(roomPrice), Integer.valueOf(roomQty));
 //	}
-	
-	public void updateRO (ROVO roVO) {
-		repository.save(roVO);
+
+	public void updateRO(ROVO roVO) {
+		try {
+			System.out.println("====開始更新訂單====");
+			System.out.println("訂單ID: " + roVO.getRoomOrderId());
+			System.out.println("房型ID: " + (roVO.getRtVO() != null ? roVO.getRtVO().getRoomTypeId() : "null"));
+			System.out.println("訂單數量: " + roVO.getOrderQty());
+			System.out.println("訂單價格: " + roVO.getRoomPrice());
+
+			if (!repository.existsById(roVO.getRoomOrderId())) {
+				throw new RuntimeException("找不到訂單ID: " + roVO.getRoomOrderId());
+			}
+
+			ROVO saved = repository.save(roVO);
+
+			System.out.println("====更新完成====");
+			System.out.println("更新後ID: " + saved.getRoomOrderId());
+
+		} catch (Exception e) {
+			System.out.println("更新訂單失敗: " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException("更新訂單失敗: " + e.getMessage());
+		}
 	}
 	
 	public void deleteRO(Integer roomOrderId) {
