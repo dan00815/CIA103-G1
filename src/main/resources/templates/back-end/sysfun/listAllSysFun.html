@@ -10,16 +10,24 @@
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-<!-- <link rel="stylesheet" th:href="@{/css/style.css}" /> -->
+<link rel="stylesheet" th:href="@{/css/new_elm.css}" />
 
 <style type="text/css">
 h2 {
 	text-align: center;
+	margin-top: 50px;
+}
+
+.myTable {
+	width: 80%;
+	margin: 30px auto;
 }
 </style>
 
 <body>
-	<h2 class="aa">這裡要秀所有系統功能</h2>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
+
+	<h2 class="aa">系統權限</h2>
 	<table class="myTable">
 		<thead>
 			<tr style="background-color: #CCCCFF">
@@ -34,15 +42,7 @@ h2 {
 				<tr>
 					<td th:text="${systemFunctionVO.funId}"></td>
 					<td th:text="${systemFunctionVO.funName}"></td>
-					<td th:text="${systemFunctionVO.funDesc}" class="bb" th:data-aaa="${systemFunctionVO.funId}"></td>
-					<td>
-						<form  method="POST" th:action="@{/sysFun/delFun}">
-							<input type="hidden" name="funId"
-								th:value="${systemFunctionVO.funId}">
-							<button class="del_btn" >刪除權限</button>
-						</form>
-					</td>
-
+					<td th:text="${systemFunctionVO.funDesc}" style="text-align: start"></td>
 				</tr>
 			</th:block>
 		</tbody>

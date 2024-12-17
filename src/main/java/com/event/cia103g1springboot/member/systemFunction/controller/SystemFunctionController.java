@@ -25,11 +25,11 @@ public class SystemFunctionController {
 	@Autowired
 	SystemFunctionService sysFunSvc;
 
-//	@GetMapping("/listAll")
-//	public String listAllSysFun(ModelMap model) {
-//
-//		return "back-end/sysFun/listAllSysFun";
-//	}
+	@GetMapping("/listAll")
+	public String listAllSysFun(ModelMap model) {
+
+		return "back-end/sysFun/listAllSysFun";
+	}
 
 //	@GetMapping("/addSysFun")
 //	public String addSysFun(ModelMap model) {
@@ -53,10 +53,10 @@ public class SystemFunctionController {
 //		return "redirect:/sysFun/listAll";
 //	}
 
-//	@ModelAttribute("sysFunListData")
-//	protected List<SystemFunctionVO> referenceListData(Model model) {
-//		List<SystemFunctionVO> list = sysFunSvc.getAll();
-//		return list;
-//	}
+	@ModelAttribute("sysFunListData")
+	protected List<SystemFunctionVO> referenceListData(Model model) {
+		List<SystemFunctionVO> list = sysFunSvc.getAll();
+		return list;
+	}
 
 }

@@ -39,11 +39,6 @@ public class EmpJobController {
 	@Autowired
 	SystemFunctionService sysFunSvc;
 
-//	auth首頁
-	@GetMapping("")
-	public String authIndex(HttpSession session, ModelMap model) {
-		return "back-end/auth/backHome";
-	}
 
 	@GetMapping("listAllAuth")
 	public String listAllAuth(HttpSession session, ModelMap model) {
