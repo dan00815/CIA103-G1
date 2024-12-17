@@ -26,7 +26,7 @@
         	<div>
 			    <label for="rtp-sel">房型編號:</label>
 			    <select id="rtp-sel" th:field="*{rtVO.roomTypeId}" onchange="updateRoomTypeName()">
-			        <option name="roomTypeId" th:each="rtVO : ${rtListData}" 
+			        <option th:each="rtVO : ${rtListData}" 
 			                th:value="${rtVO.roomTypeId}" 
 			                th:data-roomtypename="${rtVO.roomTypeName}" 
 			                th:text="${rtVO.roomTypeId}+'['+${rtVO.roomTypeName}+']'">
@@ -58,7 +58,9 @@
                 <input class="form-control" id="oq-text" type="text" th:field="*{orderQty}" onclick="hideContent('orderQty.errors');" placeholder="請輸入訂房數量"/><br/>
                 <span th:if="${#fields.hasErrors('orderQty')}" th:errors="*{orderQty}" class="error" id="orderQty.errors"></span>
             </div>
-        	
+        	<div>
+            	<span th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></span>
+            </div>
 		      <button type="submit" class="btn">
 		        <i class="fa-solid fa-pen"></i> 送出修改
 		        <span class="inner">
@@ -106,21 +108,20 @@
     	</div>
     </div>
 	<div th:insert="~{/back-end/footer :: footer}"></div>
-	<script type="text/javascript" th:src="@{/js/nav.js}"></script>
 	<script type="text/javascript">
-        function hideContent(d) {
-            document.getElementById(d).style.display = "none";
-        }
-        
-        function updateRoomTypeName() {
-            // 獲取選中的 <select> 元素
-            const select = document.getElementById("rtp-sel");
-            // 獲取選中項目對應的 data-roomtypename 屬性值
-            const selectedOption = select.options[select.selectedIndex];
-            const roomTypeName = selectedOption.getAttribute("data-roomtypename");
-            // 設置房型名稱欄位的值
-            document.getElementById("rtpname-text").value = roomTypeName || "";
-        }
+	 function hideContent(d) {
+         document.getElementById(d).style.display = "none";
+     }
+     
+     function updateRoomTypeName() {
+         // 獲取選中的 <select> 元素
+         const select = document.getElementById("rtp-sel");
+         // 獲取選中項目對應的 data-roomtypename 屬性值
+         const selectedOption = select.options[select.selectedIndex];
+         const roomTypeName = selectedOption.getAttribute("data-roomtypename");
+         // 設置房型名稱欄位的值
+         document.getElementById("rtpname-text").value = roomTypeName;
+     }
    </script>
 </body>
 </html>

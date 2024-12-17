@@ -131,11 +131,40 @@ public class ROController {
 		}catch(Exception e) {
 			 System.out.println("處理失敗：" + e.getMessage());
 			   e.printStackTrace();
-			   model.addAttribute("errorMessage", "新增失敗:欄位不可空白!");
+			   model.addAttribute("errorMessage", "新增失敗:請檢查錯誤!");
 			   return "back-end/roomOrder/addRO";
 		}
 	}
 	
+	@PostMapping("updateRO")
+	public String updateRO(@ModelAttribute("roVO")@Valid ROVO roVO,BindingResult result, ModelMap model)throws IOException {
+		try {
+			if(result.hasErrors()) {
+				model.addAttribute("errorMessage","請檢查錯誤");
+				return "back-end/roomOrder/update_RO_input";
+			}
+			
+			System.out.println("0000000000000000000");
+			roVO.setPlanOrder(poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId()));
+			roVO.setRtVO(rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId()));
+			roVO.setOrderQty(roVO.getOrderQty());
+			roVO.setRoomPrice(roVO.getRoomPrice());
+			System.out.println("111111111111111111");
+			roSvc.updateRO(roVO);
+			model.addAttribute("success", "- (修改成功)");
+			System.out.println("22222222222222222");
+			roVO = roSvc.getOneRO(Integer.valueOf(roVO.getRoomOrderId()));
+			model.addAttribute("roVO",roVO);
+			
+			return "back-end/roomOrder/listOneRO";
+		}catch(Exception e) {
+			System.out.println("處理失敗：" + e.getMessage());
+			   e.printStackTrace();
+			   model.addAttribute("errorMessage", "編輯失敗:欄位不可空白!");
+			   return "back-end/roomOrder/update_RO_input";
+		}
+		
+	}
 	
 	@PostMapping("getRO_For_Update")
 	public String getRO_For_Update (@RequestParam("roomOrderId")String roomOrderId,ModelMap model) {
@@ -144,18 +173,7 @@ public class ROController {
 		return "back-end/roomOrder/update_RO_input";
 	}
 	
-	@PostMapping("updateRO")
-	public String updateRO(@Valid ROVO roVO,BindingResult result, ModelMap model)throws IOException {
-		if(result.hasErrors()) {
-			model.addAttribute("errorMessage","請檢查錯誤");
-			return "back-end/roomOrder/update_RO_input";
-		}
-		roSvc.updateRO(roVO);
-		model.addAttribute("success", "- (修改成功)");
-		roVO = roSvc.getOneRO(Integer.valueOf(roVO.getRoomOrderId()));
-		model.addAttribute("roVO",roVO);
-		return "back-end/roomOrder/listOneRO";
-	}
+	
 	
 	@PostMapping("deleteRO")
 	public String deleteRO(@RequestParam("roomOrderId") String roomOrderId,ModelMap model) {

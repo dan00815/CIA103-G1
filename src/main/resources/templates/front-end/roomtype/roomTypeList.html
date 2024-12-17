@@ -164,10 +164,13 @@
         border-radius: 30px;
         cursor: pointer;
         display: flex;
-        align-items: center;
         justify-content: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s, box-shadow 0.2s;
+        position: fixed;
+        bottom: 20px; /* 距離底部 20px */
+        right: 20px;  /* 距離右側 20px */
+        z-index: 1000;
     }
 
     form#historyRO button:hover {
@@ -218,7 +221,7 @@
                 </div>
             </div>
             <form id="historyRO" method="get" th:action="@{/roomorder/historyRO}">
-                <button type="submit" class="btn-info btn-sm" id="edit">
+                <button type="submit" id="edit">
                     <i class="fa-solid fa-clipboard"></i> 訂房紀錄
                 </button>
             </form>
