@@ -4,7 +4,11 @@ import com.event.cia103g1springboot.event.evtimgmodel.EvtImgVO;
 import com.event.cia103g1springboot.member.notify.model.MemberNotifyService;
 import com.event.cia103g1springboot.member.notify.model.MemberNotifyVO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrder;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderDTO;
+import com.event.cia103g1springboot.plan.planorder.model.PlanOrderDTOService;
 import com.event.cia103g1springboot.plan.planroom.model.PlanRoom;
+import com.event.cia103g1springboot.room.roomorder.model.ROVO;
+import com.event.cia103g1springboot.room.roomtype.model.RTVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -27,7 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import com.event.cia103g1springboot.plan.planorder.model.RoomSelectionDTO;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -35,6 +39,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RequestMapping("/planord")
 @Controller
@@ -60,6 +65,11 @@ public class planOrderController {
 
     @Autowired
     EvtImgService evtImgService;
+
+    @Autowired
+    PlanOrderDTOService planOrderDTOService;
+
+
 
 
     @GetMapping("/detail/{id}")
@@ -280,6 +290,23 @@ public class planOrderController {
             String cartKey = "plan:cart:" + id;
             Map<Object, Object> cartData = redisTemplate.opsForHash().entries(cartKey);
 
+            Set<ROVO> roomOrders = selectedRooms.stream().map(room -> {
+                ROVO rovo = new ROVO();
+                rovo.setOrderQty(room.getQuantity());       // 訂房數量
+                rovo.setRoomPrice(room.getRoomPrice());     // 房價
+
+                // 設置關聯的 RTVO（房型）
+                RTVO rtvo = new RTVO();
+                rtvo.setRoomTypeId(room.getRoomTypeId());
+                rtvo.setRoomTypeName(room.getRoomTypeName());
+                rovo.setRtVO(rtvo);
+
+                // 關聯 PlanOrder（稍後設置）
+                rovo.setPlanOrder(planOrder);
+                return rovo;
+            }).collect(Collectors.toSet());
+
+
             // 報名人數，預設1
             int attendeeCount = 1;
             if (cartData.containsKey("attendeeCount") && cartData.get("attendeeCount") != null) {
@@ -320,6 +347,7 @@ public class planOrderController {
             planRoom.setReservedRoom(planRoom.getReservedRoom() + roomSelection.getQuantity());
             planRoomService.save(planRoom);
         }
+            planOrder.setRoomOrders(roomOrders);
         // 設置訂單關聯和人數
         planOrder.setPlanPrice(tripTotal);
         planOrder.setRoomPrice(totalRoomPrice);
@@ -366,6 +394,108 @@ public class planOrderController {
             return "redirect:/planord/detail/" + id;
         }
     }
+
+//    @Transactional
+//    @PostMapping("/confirm/{id}")
+//    public String confirm(@PathVariable Integer id, @Valid PlanOrder planOrder,
+//                          @RequestParam("rooms") String roomsJson, Model model, HttpSession session) {
+//        try {
+//
+//            ObjectMapper mapper = new ObjectMapper();
+//            List<RoomSelectionDTO> selectedRooms = mapper.readValue(roomsJson,
+//                    new TypeReference<List<RoomSelectionDTO>>() {});
+//
+//            MemVO memVO = (MemVO) session.getAttribute("auth");
+//            Plan plan = planService.findPlanById(id);
+//
+//            // 拿報名人數
+//            String cartKey = "plan:cart:" + id;
+//            Map<Object, Object> cartData = redisTemplate.opsForHash().entries(cartKey);
+//
+//            // 報名人數，預設1
+//            int attendeeCount = 1;
+//            if (cartData.containsKey("attendeeCount") && cartData.get("attendeeCount") != null) {
+//                attendeeCount = Integer.parseInt(cartData.get("attendeeCount").toString());
+//            }
+//            // 更新行程報名人數
+//            plan.setAttEnd(plan.getAttEnd() + attendeeCount);
+//
+//            // 處理付款
+//            if (planOrder.getPayMethod() == 0) {
+//                planOrder.setRemAcct(null);
+//            } else if (planOrder.getPayMethod() == 1) {
+//                planOrder.setCardLast4(null);
+//            }
+//
+//            // 計算房間總價
+//            int totalRoomPrice = selectedRooms.stream()
+//                    .mapToInt(room -> room.getRoomPrice() * room.getQuantity())
+//                    .sum();
+//
+//            planOrder.setRoomPrice(totalRoomPrice);
+//
+//            // 計算行程總價（人數 × 單價）
+//            int tripTotal = plan.getPlanPrice() * attendeeCount;
+//
+//            // 計算總價（行程總價 + 房間總價）
+//            int totalPrice = tripTotal + totalRoomPrice;
+//
+//            // 更新每個房型的庫存
+//            for (RoomSelectionDTO roomSelection : selectedRooms) {
+//                PlanRoom planRoom = planRoomService.findByRmTypeIdAndPlanId(
+//                        roomSelection.getRoomTypeId(), plan.getPlanId());
+//
+//                if (planRoom.getRoomQty() < roomSelection.getQuantity()) {
+//                    throw new RuntimeException("房間數量不足");
+//                }
+//                planRoom.setRoomQty(planRoom.getRoomQty() - roomSelection.getQuantity());
+//                planRoom.setReservedRoom(planRoom.getReservedRoom() + roomSelection.getQuantity());
+//                planRoomService.save(planRoom);
+//            }
+//            // 設置訂單關聯和人數
+//            planOrder.setPlanPrice(tripTotal);
+//            planOrder.setRoomPrice(totalRoomPrice);
+//            planOrder.setPlan(plan);
+//            planOrder.setMemVO(memVO);
+//
+//            // 保存訂單
+//            PlanOrder savedOrder = planOrderService.addPlanOrder(planOrder,selectedRooms);
+//
+//            // 轉換為 DTO
+//            PlanOrderDTO orderDTO = planOrderDTOService.convertToDTO(savedOrder,selectedRooms, attendeeCount);
+//            model.addAttribute("orderDTO", orderDTO);            // ... 通知和郵件邏輯 ...
+//            //通知=============================================
+//            MemberNotifyVO notification = new MemberNotifyVO();
+//            notification.setMember(memVO);
+//            notification.setNotifyType(6);  // 行程
+//            notification.setNotifyCon("您已報名行程：" + plan.getPlanType().getPlanName() +
+//                    "，行程訂單編號：" + planOrder.getPlanOrderId()+"，行程報名成功!");
+//            notification.setBusinessKey("Plan_ORDER_" + planOrder.getPlanOrderId());
+//            memberNotifyService.createNotification(notification);
+//            //====================================================
+//            // 發mail
+////            try {
+////                planOrderService.sendPlanOrdMail(savedOrder,selectedRooms);
+////            } catch (MessagingException e) {
+////                e.printStackTrace();
+////                model.addAttribute("error", "郵件發送失敗");
+////            }
+//
+//            // 清車
+//            redisTemplate.delete(cartKey);
+//
+//            model.addAttribute("orderDTO", orderDTO);
+//            return "plan/planfront/attendsucess";
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            model.addAttribute("error", "訂單提交失敗：" + e.getMessage());
+//            return "redirect:/planord/detail/" + id;
+//        }
+//        }
+
+
+
 
     @GetMapping("/planorddetail")
     @Transactional

@@ -3,6 +3,12 @@ package com.event.cia103g1springboot.plan.planorder.model;
 import com.event.cia103g1springboot.plan.plan.model.PlanService;
 
 import com.event.cia103g1springboot.plan.planorder.controller.planOrderController;
+import com.event.cia103g1springboot.room.roomorder.model.RORepository;
+import com.event.cia103g1springboot.room.roomorder.model.ROService;
+import com.event.cia103g1springboot.room.roomorder.model.ROVO;
+import com.event.cia103g1springboot.room.roomtype.model.RTRepository;
+import com.event.cia103g1springboot.room.roomtype.model.RTService;
+import com.event.cia103g1springboot.room.roomtype.model.RTVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +22,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,14 +30,27 @@ import java.util.Optional;
 @Service
 public class PlanOrderService {
     @Autowired
-    private PlanOrderRepository planOrderRepository;
-
-    @Autowired
     PlanService planService;
     @Autowired
     JavaMailSender mailSender;
     @Autowired
     TemplateEngine templateEngine;
+
+    private final PlanOrderDTOService dtoService;
+    private final PlanOrderRepository planOrderRepository;
+    private final RORepository roRepository;
+    private final RTRepository rtRepository;
+
+    @Autowired
+    public PlanOrderService(PlanOrderDTOService dtoService,
+                            PlanOrderRepository planOrderRepository,
+                            RORepository roRepository,
+                            RTRepository rtRepository) {
+        this.dtoService = dtoService;
+        this.planOrderRepository = planOrderRepository;
+        this.roRepository = roRepository;
+        this.rtRepository = rtRepository;
+    }
 
         @Transactional
         public PlanOrder addPlanOrder(PlanOrder planOrder) {
@@ -126,5 +146,95 @@ public class PlanOrderService {
     public PlanOrder findByMemIdAndPlanOrderId(Integer memId, Integer planOrderId) {
         return planOrderRepository.findByMemVO_MemIdAndPlanOrderId(memId, planOrderId);
     }
+    @Transactional(rollbackFor = Exception.class)
+    public PlanOrder addPlanOrder(PlanOrder planOrder, List<RoomSelectionDTO> selectedRooms) {
+        try {
+            // 1. 儲存訂單
+            PlanOrder savedOrder = planOrderRepository.save(planOrder);
+
+            // 2. 處理房型訂單
+            if (selectedRooms != null && !selectedRooms.isEmpty()) {
+                for (RoomSelectionDTO roomSelections : selectedRooms) {
+                    try {
+                        // 使用 DTOService 轉換和儲存房型訂單
+                        ROVO roomOrder = dtoService.convertToROVO(roomSelections, savedOrder);
+                        roRepository.save(roomOrder);
+                    } catch (Exception e) {
+                        throw new RuntimeException("處理房型訂單時發生錯誤: " + e.getMessage());
+                    }
+                }
+            }
+            return savedOrder;
+        } catch (Exception e) {
+            // 記錄詳細錯誤
+            e.printStackTrace();
+            throw new RuntimeException("新增訂單失敗: " + e.getMessage());
+        }
+    }
+
+
+    public ROVO convertToROVO(RoomSelectionDTO roomSelection, PlanOrder planOrder) {
+        ROVO roomOrder = new ROVO();
+        roomOrder.setRoomPrice(roomSelection.getRoomPrice());
+        roomOrder.setOrderQty(roomSelection.getQuantity());
+        roomOrder.setPlanOrder(planOrder);
+
+        RTVO roomType = rtRepository.findByRoomTypeId(roomSelection.getRoomTypeId());
+        if (roomType == null) {
+            throw new RuntimeException("找不到房型ID: " + roomSelection.getRoomTypeId());
+        }
+        roomOrder.setRtVO(roomType);
+
+        return roomOrder;
+    }
 }
+
+
+
+
+
+
+
+//    public PlanOrderDTO findPlanOrderDTOById(Integer id) {
+//        PlanOrder planOrder = planOrderRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Order not found"));
+//
+//        // 轉換為 DTO
+//        PlanOrderDTO dto = new PlanOrderDTO();
+//        dto.setPlanOrderId(planOrder.getPlanOrderId());
+//        dto.setPlanPrice(planOrder.getPlanPrice());
+//        dto.setRoomPrice(planOrder.getRoomPrice());
+//        dto.setTotalPrice(planOrder.getTotalPrice());
+//        dto.setOrderDate(planOrder.getOrderDate());
+//        dto.setOrderStat(planOrder.getOrderStat());
+//        dto.setPayMethod(planOrder.getPayMethod());
+//        dto.setRemAcct(planOrder.getRemAcct());
+//        dto.setCardLast4(planOrder.getCardLast4());
+//
+//        // 設置會員名稱
+//        if (planOrder.getMemVO() != null) {
+//            dto.setMemberName(planOrder.getMemVO().getName());
+//        }
+//
+//        // 設置行程名稱
+//        if (planOrder.getPlan() != null) {
+//            dto.setPlanName(planOrder.getPlan().getPlanType().getPlanName());
+//        }
+//
+//        // 轉換房型資訊
+//        List<OrderRoomDTO> roomDTOs = new ArrayList<>();
+//        if (planOrder.getRoomOrders() != null) {
+//            for (ROVO rovo : planOrder.getRoomOrders()) {
+//                OrderRoomDTO roomDTO = new OrderRoomDTO();
+//                roomDTO.setRoomTypeName(rovo.getRtVO().getRoomTypeName());
+//                roomDTO.setRoomPrice(rovo.getRoomPrice());
+//                roomDTOs.add(roomDTO);
+//            }
+//        }
+//        dto.setRooms(roomDTOs);
+//
+//        return dto;
+//    }
+
+
 
