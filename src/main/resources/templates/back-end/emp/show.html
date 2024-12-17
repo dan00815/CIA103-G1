@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>員工資訊 | 個人檔案</title>
+    <title>員工資訊 | 鄰星嗨嗨員工詳情</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -16,9 +16,18 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #34495e;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .profile-card {
@@ -154,38 +163,39 @@
 </head>
 <body>
 <div th:replace="~{back-end/backend_sideBar}"></div>
-<div class="profile-card">
-    <div class="decoration-blob blob-1"></div>
-    <div class="decoration-blob blob-2"></div>
+    <div class="title">鄰星嗨嗨員工詳情</div>
+    <div class="profile-card">
+        <div class="decoration-blob blob-1"></div>
+        <div class="decoration-blob blob-2"></div>
 
-    <div class="profile-header">
-        <img th:src="${base64Image != null ? 'data:image/jpeg;base64,' + base64Image : '/api/placeholder/180/180'}"
-             alt="員工頭像" class="profile-image">
-        <h1 class="employee-name" th:text="${employee.empName}">王小明</h1>
-        <div class="status-badge">
-            <i class="fas fa-circle" style="font-size: 0.8em; margin-right: 5px;"></i>
-            在職
+        <div class="profile-header">
+            <img th:src="${base64Image != null ? 'data:image/jpeg;base64,' + base64Image : '/api/placeholder/180/180'}"
+                 alt="員工頭像" class="profile-image">
+            <h1 class="employee-name" th:text="${employee.empName}">王小明</h1>
+            <div class="status-badge">
+                <i class="fas fa-circle" style="font-size: 0.8em; margin-right: 5px;"></i>
+                在職
+            </div>
         </div>
+
+        <div class="info-container">
+            <div class="info-item">
+                <i class="fas fa-id-card"></i>
+                <span>員工編號：</span>
+                <span th:text="${employee.empId}">EMP001</span>
+            </div>
+
+            <div class="info-item">
+                <i class="fas fa-briefcase"></i>
+                <span>職稱：</span>
+                <span th:text="${employee.empJobTitle}">資深工程師</span>
+            </div>
+        </div>
+
+        <a href="/emp/list" class="action-button">
+            <i class="fas fa-users" style="margin-right: 8px;"></i>
+            查看員工列表
+        </a>
     </div>
-
-    <div class="info-container">
-        <div class="info-item">
-            <i class="fas fa-id-card"></i>
-            <span>員工編號：</span>
-            <span th:text="${employee.empId}">EMP001</span>
-        </div>
-
-        <div class="info-item">
-            <i class="fas fa-briefcase"></i>
-            <span>職稱：</span>
-            <span th:text="${employee.empJobTitle}">資深工程師</span>
-        </div>
-    </div>
-
-    <a href="/emp/list" class="action-button">
-        <i class="fas fa-users" style="margin-right: 8px;"></i>
-        查看員工列表
-    </a>
-</div>
 </body>
 </html>
