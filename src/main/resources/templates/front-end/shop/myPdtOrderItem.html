@@ -134,7 +134,7 @@ html, body {
 		          <span class="blob"></span>
 		        </span>
 	        </a>
-	        <button class="btn" id="submitOrder" th:if="${orderStat == 0}">結帳</button>
+	        <button class="btn" id="submitOrder" th:if="${orderStat == 0 or orderStat == 2}">結帳</button>
 	    </div>
 	    </main>
 	</div>
