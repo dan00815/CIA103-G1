@@ -85,7 +85,7 @@ public class PlanController {
         return ResponseEntity.ok(endDate);
     }
 
-//    //前端端面
+    //前端端面 (未鎖住)
 //    @GetMapping("/planfront")
 //    public String frontlistall(Model model) {
 //        List<Plan> plans = planService.getAllPlans();
@@ -97,6 +97,7 @@ public class PlanController {
 //    }
 
 
+    //前端端面 ( 鎖住重複)
     @GetMapping("/planfront")
     public String frontlistall(HttpSession session, Model model) {
         List<Plan> plans = planService.getAllPlans();

@@ -219,6 +219,9 @@
                     <span th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}" class="status-full">已額滿</span>
                     <span th:unless="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}">可報名</span>
                 </td>
+
+
+<!--                         如果想測試 請把這段打開-->
 <!--                <td>-->
 <!--                    <a th:if="*{attEnd >= attMax || (planRoom != null ? #aggregates.sum(planRoom.![roomQty]) : 0) == 0}"-->
 <!--                       href="javascript:void(0)"-->
@@ -233,6 +236,10 @@
 <!--                    </a>-->
 
 <!--                </td>-->
+
+
+<!--                   這段會鎖住重複參加-->
+
                 <td>
                     <!-- 已參加的行程，按鈕鎖定 -->
                     <a th:if="${joinedPlanIds.contains(plan.planId + 0L)}"
