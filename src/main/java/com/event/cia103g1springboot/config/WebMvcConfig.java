@@ -32,7 +32,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/productType/*",
                         "/rImg/*",
                         "/roomOrder/*",
-                        "/rt/*")
+                        "/rt/*",
+                        "/plans/query",
+                        "/plans/plantype/query",
+                        "/planroom/listall")
         .excludePathPatterns(
                 "/emp/login",        // 排除登入頁
                 "/emp/register",     // 排除註冊頁
