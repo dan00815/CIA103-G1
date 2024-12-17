@@ -25,8 +25,8 @@
         	
         	<div>
 			    <label for="rtp-sel">房型編號:</label>
-			    <select id="rtp-sel" th:field="*{rtVO.roomTypeId}" onchange="updateRoomTypeName()">
-			        <option th:each="rtVO : ${rtListData}" 
+			    <select name="rtVO.roomTypeId" id="rtp-sel" th:field="*{rtVO.roomTypeId}" onchange="updateRoomTypeName()">
+			        <option name="roomTypeId" th:each="rtVO : ${rtListData}" 
 			                th:value="${rtVO.roomTypeId}" 
 			                th:data-roomtypename="${rtVO.roomTypeName}" 
 			                th:text="${rtVO.roomTypeId}+'['+${rtVO.roomTypeName}+']'">

@@ -144,12 +144,18 @@ public class ROController {
 				return "back-end/roomOrder/update_RO_input";
 			}
 			
-			System.out.println("0000000000000000000");
-			roVO.setPlanOrder(poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId()));
-			roVO.setRtVO(rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId()));
-			roVO.setOrderQty(roVO.getOrderQty());
-			roVO.setRoomPrice(roVO.getRoomPrice());
-			System.out.println("111111111111111111");
+//			roVO.setPlanOrder(poSvc.getOnePlanOrder(roVO.getPlanOrder().getPlanOrderId()));
+//			roVO.setRtVO(rtSvc.getOneRT(roVO.getRtVO().getRoomTypeId()));
+//			roVO.setOrderQty(roVO.getOrderQty());
+//			roVO.setRoomPrice(roVO.getRoomPrice());
+			
+			System.out.println("RoomOrderId"+roVO.getRoomOrderId());
+			System.out.println("OrderQty"+roVO.getOrderQty());
+			System.out.println("RoomPrice"+roVO.getRoomPrice());
+			System.out.println("PlanOrderId"+roVO.getPlanOrder().getPlanOrderId());
+			System.out.println("RoomTypeId"+roVO.getRtVO().getRoomTypeId());
+			System.out.println("RoomTypeId"+roVO.getRtVO().getRoomTypeName());
+			
 			roSvc.updateRO(roVO);
 			model.addAttribute("success", "- (修改成功)");
 			System.out.println("22222222222222222");
