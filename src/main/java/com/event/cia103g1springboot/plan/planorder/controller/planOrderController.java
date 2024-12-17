@@ -8,6 +8,7 @@ import com.event.cia103g1springboot.plan.planorder.model.PlanOrderDTO;
 import com.event.cia103g1springboot.plan.planorder.model.PlanOrderDTOService;
 import com.event.cia103g1springboot.plan.planroom.model.PlanRoom;
 import com.event.cia103g1springboot.room.roomorder.model.ROVO;
+import com.event.cia103g1springboot.room.roomtype.model.RTService;
 import com.event.cia103g1springboot.room.roomtype.model.RTVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -68,6 +69,9 @@ public class planOrderController {
 
     @Autowired
     PlanOrderDTOService planOrderDTOService;
+
+    @Autowired
+    RTService  rtService;
 
 
 
@@ -293,16 +297,15 @@ public class planOrderController {
             Set<ROVO> roomOrders = selectedRooms.stream().map(room -> {
                 ROVO rovo = new ROVO();
                 rovo.setOrderQty(room.getQuantity());       // 訂房數量
-                rovo.setRoomPrice(room.getRoomPrice());     // 房價
+                rovo.setRoomPrice(room.getRoomPrice());
+                rovo.setRoomTypeName(room.getRoomTypeName()); // 房價
 
                 // 設置關聯的 RTVO（房型）
-                RTVO rtvo = new RTVO();
-                rtvo.setRoomTypeId(room.getRoomTypeId());
-                rtvo.setRoomTypeName(room.getRoomTypeName());
+                RTVO rtvo = rtService.getOneRT(room.getRoomTypeId());
+                rovo.setRoomTypeName(rtvo.getRoomTypeName());
                 rovo.setRtVO(rtvo);
-
-                // 關聯 PlanOrder（稍後設置）
                 rovo.setPlanOrder(planOrder);
+                // 關聯 PlanOrder（稍後設置）
                 return rovo;
             }).collect(Collectors.toSet());
 

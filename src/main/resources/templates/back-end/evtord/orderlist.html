@@ -6,9 +6,9 @@
     <title>活動訂單列表</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/backend_sideBar.css}"/>
     <link rel="stylesheet" th:href="@{/css/elm.css}"/>
 </head>
-<body>
 <style>
     h2 {
         text-align: center;
@@ -192,6 +192,7 @@
         color: white;
     }
 </style>
+<body>
 <div th:replace="~{back-end/backend_sideBar}"></div>
 <h2>活動訂單列表</h2>
 <a href="/event/listall" class="management-btn">活動管理頁面</a>
@@ -285,5 +286,6 @@
     </div>
 </div>
 <div th:replace="~{back-end/footer :: f}"></div>
+
 </body>
 </html>

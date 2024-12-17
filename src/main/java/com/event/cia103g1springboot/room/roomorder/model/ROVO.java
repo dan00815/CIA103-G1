@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
@@ -25,6 +26,10 @@ public class ROVO {
 	@Column(name="roomOrderId")
 	public Integer roomOrderId;
 
+	@Column(name = "roomTypeName", nullable = false)
+	@NotEmpty(message = "房型名稱不能為空")
+	private String roomTypeName;
+
 	@Column(name = "roomPrice")
 	@NotNull(message="訂房售價:請勿空白")
 	@Min(value=0 , message="訂房售價:請勿小於{value}")
@@ -35,16 +40,13 @@ public class ROVO {
 	@Min(value=0 , message="訂房數量:不可小於{value}")
 	public Integer orderQty;
 
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "roomTypeId", referencedColumnName = "roomTypeId", nullable = false),
-//			@JoinColumn(name = "roomTypeName", referencedColumnName = "roomTypeName", nullable = false)
-	})
-	public RTVO rtVO;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "roomTypeId", referencedColumnName = "roomTypeId", nullable = false)
+	private RTVO rtVO;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "planOrderId", referencedColumnName = "planOrderId")
-	public PlanOrder planOrder;
+	private PlanOrder planOrder;
 
 	@Override
 	public String toString() {
