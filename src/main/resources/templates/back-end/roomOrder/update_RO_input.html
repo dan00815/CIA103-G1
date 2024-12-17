@@ -43,7 +43,7 @@
             
             <div>
                 <label for="poid-text">行程訂單編號:</label>
-                <input class="form-control" id="poid-text" type="text" th:field="*{planOrder.planOrderId}" name="planOrderId" onclick="hideContent('planOrder.planOrderId.errors');" /><br/>
+                <input class="form-control" id="poid-text" type="text" th:field="*{planOrder.planOrderId}" name="planOrderId"  readonly="readonly"  onclick="hideContent('planOrder.planOrderId.errors');" /><br/>
                 <span th:if="${#fields.hasErrors('planOrder.planOrderId')}" th:errors="*{planOrder.planOrderId}" class="error" id="planOrder.planOrderId.errors"></span>
             </div>
             
@@ -52,8 +52,8 @@
                 <input class="form-control" id="rp-text" type="text" th:field="*{roomPrice}"  onclick="hideContent('roomPrice.errors');" placeholder="請輸入訂房售價"/><br/>
                 <span th:if="${#fields.hasErrors('roomPrice')}" th:errors="*{roomPrice}" class="error" id="roomPrice.errors"></span>
             </div>
-            
-            <div>
+			<input type="hidden" th:field="*{roomOrderId}" />
+			<div>
                 <label for="oq-text">訂房數量:</label>
                 <input class="form-control" id="oq-text" type="text" th:field="*{orderQty}" onclick="hideContent('orderQty.errors');" placeholder="請輸入訂房數量"/><br/>
                 <span th:if="${#fields.hasErrors('orderQty')}" th:errors="*{orderQty}" class="error" id="orderQty.errors"></span>
