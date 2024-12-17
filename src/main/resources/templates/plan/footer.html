@@ -22,9 +22,9 @@
   <h1 class="text-center mb-4" style="color: #0080ff; font-weight: bold;">所有行程</h1>
 
   <!-- 行動按鈕區塊 -->
-  <div class="d-flex justify-content-between mb-3">
-    <form action="/plans/addplan" method="get">
-      <button type="submit" class="btn">行程建立
+  <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
+    <form action="/plans/addplan" method="get" class="flex-grow-1">
+      <button type="submit" class="btn w-100">行程建立
         <div class="inner">
           <div class="blob"></div>
           <div class="blob"></div>
@@ -33,8 +33,8 @@
         </div>
       </button>
     </form>
-    <form action="/plans/plantype/query" method="get">
-      <button type="submit" class="btn">行程類別管理
+    <form action="/plans/plantype/query" method="get" class="flex-grow-1">
+      <button type="submit" class="btn w-100">行程類別管理
         <div class="inner">
           <div class="blob"></div>
           <div class="blob"></div>
@@ -43,8 +43,18 @@
         </div>
       </button>
     </form>
-    <form action="/planroom/listall" method="get">
-      <button type="submit" class="btn">行程房型管理
+    <form action="/planroom/listall" method="get" class="flex-grow-1">
+      <button type="submit" class="btn w-100">行程房型管理
+        <div class="inner">
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+          <div class="blob"></div>
+        </div>
+      </button>
+    </form>
+    <form action="/planord/listall" method="get" class="flex-grow-1">
+      <button type="submit" class="btn w-100">行程訂單管理
         <div class="inner">
           <div class="blob"></div>
           <div class="blob"></div>
