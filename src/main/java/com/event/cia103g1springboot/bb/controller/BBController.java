@@ -84,8 +84,6 @@ public class BBController {
 			   if(dateTime.isBefore(LocalDateTime.now())) {
 				   model.addAttribute("errorMessage","發佈日期:不可早於當下日期時間");
 				   return "back-end/bb/addMsg";
-			   }else if(bbVO.getPoststat()==1 && dateTime.isAfter(LocalDateTime.now())) {
-				   bbVO.setPoststat((byte)0);
 			   }
 			   
 			   bbVO.setPosttime(Timestamp.valueOf(dateTime));
@@ -164,8 +162,6 @@ public class BBController {
 		   if(dateTime.isBefore(LocalDateTime.now())) {
 			   model.addAttribute("errorMessage","發佈日期:不可早於當下日期時間");
 			   return "back-end/bb/addMsg";
-		   }else if(bbVO.getPoststat()==1 && dateTime.isAfter(LocalDateTime.now())) {
-			   bbVO.setPoststat((byte)0);
 		   }
 		   
 		   bbVO.setPosttime(Timestamp.valueOf(dateTime));		
