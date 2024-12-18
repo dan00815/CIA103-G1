@@ -36,7 +36,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/plans/query",
                         "/plans/plantype/query",
                         "/planroom/listall",
-        				"/pdtorder/*")
+        				"/pdtorder/*",
+        				"/backChatRoom")
         .excludePathPatterns(
                 "/emp/login",        // 排除登入頁
                 "/emp/register",     // 排除註冊頁
