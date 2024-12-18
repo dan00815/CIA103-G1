@@ -100,7 +100,15 @@ public class PlanController {
     //前端端面 ( 鎖住重複)
     @GetMapping("/planfront")
     public String frontlistall(HttpSession session, Model model) {
-        List<Plan> plans = planService.getAllPlans();
+
+        // 現在日期
+        LocalDate today = LocalDate.now();
+
+        // 抓取所有行程，並篩選 startDate > 現在日期的行程
+        List<Plan> plans = planService.getAllPlans().stream()
+                .filter(plan -> plan.getStartDate().isAfter(today)) // 直接比較 LocalDate
+                .collect(Collectors.toList());
+
         MemVO memVO = (MemVO) session.getAttribute("auth");
 
         Set<Long> joinedPlanIds = new HashSet<>();
