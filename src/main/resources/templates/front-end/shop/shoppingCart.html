@@ -90,6 +90,10 @@ html, body {
 	text-align: right;
 	font-size: 18px;
 }
+
+a {
+	text-decoration: none;
+}
 </style>
 </head>
 <body>
@@ -118,10 +122,10 @@ html, body {
 							<td th:text="${cart.pdtId}" style="display: none;"></td>
 							<!--                 	<td><img src="https://via.placeholder.com/100" alt="Product Image" class="img-fluid"></td> -->
 							<td><img
-								th:src="@{/product/DBGifReader_pdtlist} + '?pdtId=' + ${cart.pdtId}"
+								th:src="@{/shop/DBGifReader_pdtlist} + '?pdtId=' + ${cart.pdtId}"
 								alt="商品圖片" width="100" height="100" /></td>
 							<td><a class="product-item"
-								th:href="@{/product/productDetail}+'?pdtId='+${cart.pdtId}"
+								th:href="@{/pdt/productDetail}+'?pdtId='+${cart.pdtId}"
 								th:text="${cart.pdtName}"></a></td>
 							<td th:text="${'NT$' + cart.pdtPrice}"></td>
 							<td>
@@ -158,7 +162,7 @@ html, body {
 					總計：<span id="total-price" th:text="'NT$' + ${session.total}">NT$0</span>
 				</div>
 				<div class="text-center mb-4">
-					<a th:href="@{/product/productlist}" class="btn">繼續購物 <span
+					<a th:href="@{/pdt/productlist}" class="btn">繼續購物 <span
 						class="inner"> <span class="blob"></span> <span
 							class="blob"></span> <span class="blob"></span> <span
 							class="blob"></span>
@@ -217,7 +221,7 @@ html, body {
 	            })
 	                .then(response => {
 	                    if (response.ok) {
-	                    	alert('購物車已更新');
+// 	                    	alert('購物車已更新');
 	                        location.reload(); // 刷新頁面以更新總計等數據
 	                    } else {
 	                        alert('購物車更新失敗，請稍後再試！');
@@ -295,7 +299,7 @@ html, body {
 	        })
 	            .then(response => {
 	                if (response.ok) {
-	                	alert('購物車已更新');
+// 	                	alert('購物車已更新');
                         location.reload(); // 刷新頁面以更新總計等數據
 	                } else {
 	                    throw new Error('更新失敗');
@@ -342,11 +346,7 @@ html, body {
 	                }
 	            })
 	    }
-	    
 
-
-
-      
     </script>
 
 
