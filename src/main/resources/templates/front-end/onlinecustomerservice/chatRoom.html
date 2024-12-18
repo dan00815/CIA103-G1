@@ -11,10 +11,19 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css" />
 <link rel="stylesheet" href="../static/css/testElmHuan.css" />
-<link rel="stylesheet" th:href="@{/css/profile.css}" />
+<!-- <link rel="stylesheet" th:href="@{/css/profile.css}" /> -->
+<link rel="stylesheet" href="../static/css/new_elm.css" />
 
 <title>客服聊天室</title>
 <style>
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* 限制最大寬度 */
+  height: auto;
+}
 
 .chatBox {
 	width: 800px;
@@ -25,6 +34,12 @@
 	display: flex;
 	flex-direction: column;
 	z-index: 9; /* Ensure chat container stays below button */
+	
+	max-width: 100%; /* 防止超出父容器 */
+    max-height: 100%;
+    box-sizing: border-box; /* 包含 padding 和 border */
+    overflow: hidden; /* 避免超出 */
+	
 }
 
 .chat-header {
@@ -155,13 +170,18 @@ min-width: 40%;
     align-self: flex-end;
 }
 
+
+
+
+
+
 </style>
 </head>
 
 <body  onunload="connect();">
 	<div th:replace="~{front-end/nav}"></div>
 	<main>
-		<div th:insert="~{/front-end/profile_sidebar :: profileSB}"></div>
+<!-- 		<div th:insert="~{/front-end/profile_sidebar :: profileSB}"></div> -->
 		
 		<div class="content">
 	

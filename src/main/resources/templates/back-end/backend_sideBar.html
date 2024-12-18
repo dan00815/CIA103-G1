@@ -30,7 +30,7 @@
 				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/bb/select_page_bb}"></a>     <!-- 消息管理 -->
 			</li>	
 			<li class="li_item" th:if="${auth.systemFunctionVO.funId == 108}">
-				<a th:text="${auth.systemFunctionVO.funName}"></a>   <!-- 訊息回復 -->
+				<a th:text="${auth.systemFunctionVO.funName}" th:href="@{/backChatRoom}"></a>   <!-- 訊息回復 -->
 			</li>	
 		</th:block>
 
