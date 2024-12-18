@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
     <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
+    <link rel="stylesheet" href="../static/css/backend_sideBar.css" />
     <style>
         body {
             display: flex;
@@ -129,9 +130,33 @@
         #delete:hover{
         	background-color:rgb(252, 90, 95);
         }
+        #historyRO {
+        border: none;
+        padding: 10px 10px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: fixed;
+        bottom: 20px; /* 距離底部 20px */
+        right: 20px;  /* 距離右側 20px */
+        z-index: 1000;
+    }
+
+    #historyRO:hover {
+        transform: scale(1.1); /* 放大效果 */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    #historyRO i {
+        margin-right: 8px;
+    }
     </style>
 </head>
 <body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
     <!-- 頁面標題 -->
     <div id="header"><i class="fa-solid fa-hotel"></i> 房型管理</div>
     <div id="sub-header"><i class="fa fa-search"></i> 房型查詢</div>
@@ -192,6 +217,17 @@
             <div th:insert="~{/back-end/rt/listAllRT :: rtTable-div}"></div>
         </div>
     </div>
+    <div >
+         <a th:href="@{/roomOrder/select_page_RO}" class="btn" id="historyRO">
+             <span class="inner">
+                 <span class="blob"></span>
+                 <span class="blob"></span>
+                 <span class="blob"></span>
+                 <span class="blob"></span>
+             </span>
+             <i class="fa-solid fa-clipboard-list"></i> 訂房明細查詢
+         </a>
+     </div>
 
    
     <!-- 頁腳 -->

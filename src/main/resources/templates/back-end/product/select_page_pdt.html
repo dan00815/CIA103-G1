@@ -17,6 +17,7 @@
     <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/css/new_elm.css}" />
     <link rel="stylesheet" th:href="@{/css/bb.css}" />
+    <link rel="stylesheet" href="../static/css/backend_sideBar.css" />
     <style>
         .container {
             display: flex;
@@ -131,6 +132,7 @@
     </style>
 </head>
 <body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
     <!-- 頁面標題 -->
     <div id="header"><i class="fa-solid fa-box"></i> 商品管理</div>
     <div id="sub-header"><i class="fa fa-search"></i> 商品查詢</div>

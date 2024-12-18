@@ -10,6 +10,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.1.3/hamburgers.min.css"
     />
+    <link rel="stylesheet" href="../static/css/backend_sideBar.css" />
     <style>
         /* 顯示所有表單在同一排 */
         .form-container {
@@ -50,6 +51,7 @@
     </style>
 </head>  
 <body>
+	<div th:replace="~{back-end/backend_sideBar}"></div>
     <div id="header"><i class="fa-solid fa-hotel"></i> 房型管理</div>
     <div id="sub-header"><i class="fa fa-search"></i> 訂房明細查詢</div>
     <div class="form-container">
